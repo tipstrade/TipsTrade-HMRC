@@ -5,14 +5,22 @@ using TipsTrade.HMRC.Api.CreateTestUser.Model;
 
 namespace TipsTrade.HMRC.Tests {
   public class TestBase {
-    // Move these into appsetings...
-    protected const string AccessToken = "abfc94eb90f7179f2f2b32ed14615bc";
-    protected const string State = "4f00d15e-de25-4796-999f-266ea4429889";
-
-    // Move this into a string typed object
-    protected OrganisationResult OrganisationUser { get; }
-
     protected IConfiguration Configuration { get; }
+
+    #region State properties
+    protected string AccessToken => Configuration["AccessToken"];
+
+    protected string RefreshToken => Configuration["RefreshToken"];
+
+    protected string State => Configuration["State"];
+    #endregion
+
+    #region User properties
+    protected OrganisationResult OrganisationUser { get; }
+    #endregion
+
+    #region Client properties
+    protected Client Client => new Client(ClientId, ClientSecret, ServerToken, IsSandbox);
 
     protected string ClientId => Configuration["ClientID"];
 
@@ -21,14 +29,14 @@ namespace TipsTrade.HMRC.Tests {
     protected bool IsSandbox => true;
 
     protected string ServerToken => Configuration["ServerToken"];
-
-    protected Client Client => new Client(ClientId, ClientSecret, ServerToken, IsSandbox);
+    #endregion
 
     public TestBase() {
       // See https://patrickhuber.github.io/2017/07/26/avoid-secrets-in-dot-net-core-tests.html
       // From CLI: dotnet user-secrets set <Name> <Value>
       var builder = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
+        .AddJsonFile("appsettings.tokens.json")
         .AddUserSecrets<TestBase>();
 
       Configuration = builder.Build();

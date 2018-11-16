@@ -4,8 +4,6 @@ using Xunit;
 
 namespace TipsTrade.HMRC.Tests {
   public class HelloWorldTests : TestBase {
-    private const string AccessToken = "7ff6875821a5894bd4a64840d0c57d48";
-
     [Fact]
     public void TestApplication() {
       var client = Client;

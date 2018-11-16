@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using TipsTrade.HMRC.Api;
 using Xunit;
 
@@ -26,7 +27,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TestHandleRedirectUrlSuccess() {
-      var uri = "https://www.example.com/hmrc/callback?code=51e6b4e29e0145d09e3e659bbcf04cdd&state=4f00d15e-de25-4796-999f-266ea4429889";
+      var uri = "https://www.example.com/hmrc/callback?code=640f35efde314a91b32d696710759a5d&state=4f00d15e-de25-4796-999f-266ea4429889";
 
       var tokens = Client.HandleEndpointResult(uri, State);
       Assert.NotNull(tokens.AccessToken);
@@ -34,13 +35,13 @@ namespace TipsTrade.HMRC.Tests {
       Assert.NotEqual(0, tokens.Expires);
       Assert.NotNull(tokens.Scope);
       Assert.NotNull(tokens.TokenType);
+
+      var json = JsonConvert.SerializeObject(tokens);
     }
 
     [Fact]
     public void TestRefreshToken() {
-      var refreshToken = "d64845601c938213788fac8123b922f";
-
-      var tokens = Client.RefreshAccessToken(refreshToken);
+      var tokens = Client.RefreshAccessToken(RefreshToken);
       Assert.NotNull(tokens.AccessToken);
       Assert.NotNull(tokens.RefreshToken);
       Assert.NotEqual(0, tokens.Expires);
