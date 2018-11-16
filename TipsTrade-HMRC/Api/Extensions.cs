@@ -9,6 +9,12 @@ namespace TipsTrade.HMRC.Api {
     /// <summary>The default content type to be expected.</summary>
     private const string DefaultContentType = "json";
 
+    /// <summary>Shorthand method for serializing the body using Newtonsoft.Json.</summary>
+    internal static void AddJsonBodyNewtonsoft(this IRestRequest request, object value) {
+      request.RequestFormat = DataFormat.Json;
+      request.AddParameter(request.JsonSerializer.ContentType, JsonConvert.SerializeObject(value), ParameterType.RequestBody);
+    }
+
     /// <summary>Creates a api request for the specified method.</summary>
     internal static RestRequest CreateRequest(this IApi api, string methodName, Method method = Method.GET, Authorization authorization = Authorization.Open, string contentType = DefaultContentType) {
       var client = api.GetClient();

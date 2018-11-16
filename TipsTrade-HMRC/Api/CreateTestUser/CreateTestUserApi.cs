@@ -30,9 +30,8 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     public OrganisationResult CreateOrganisation(CreateOrganisationRequest request) {
       var restRequest = this.CreateRequest("organisations", Method.POST, Authorization.Application);
       restRequest.AddHeader("Content-Type", "application/json");
-      restRequest.AddJsonBody(request);
+      restRequest.AddJsonBodyNewtonsoft(request);
       
-      // TODO: Fix a nigh-on empty user being returned
       return this.ExecuteRequest<OrganisationResult>(restRequest);
     }
     #endregion
