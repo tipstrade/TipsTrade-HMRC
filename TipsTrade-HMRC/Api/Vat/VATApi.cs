@@ -27,16 +27,17 @@ namespace TipsTrade.HMRC.Api.Vat {
     #region Methods
     /// <summary>Retrieve VAT obligations.</summary>
     /// <param name="obligations"></param>
-    public object GetObligations(ObligationsRequest obligations) {
+    public Obligation[] GetObligations(ObligationsRequest obligations) {
       var request = this.CreateRequest($"{obligations.Vrn}/obligations", RestSharp.Method.GET, authorization: Authorization.User);
       request.AddHeader("Content-Type", "application/json");
 
       request.AddParameter("from", $"{obligations.From:yyyy-MM-dd}");
       request.AddParameter("to", $"{obligations.To:yyyy-MM-dd}");
-      request.AddParameter("status", $"{obligations.Status}"[0]);
+      if (obligations.Status != null) {
+        request.AddParameter("status", $"{obligations.Status}"[0]);
+      }
 
-      // TODO: Implement ObligationsResult
-      return this.ExecuteRequest<MessageResponse>(request).Message;
+      return this.ExecuteRequest<ObligationsResponse>(request).Obligations.ToArray();
     }
     #endregion
   }

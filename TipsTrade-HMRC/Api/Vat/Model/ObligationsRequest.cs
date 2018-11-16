@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public DateTime To { get; set; }
 
     /// <summary>Which obligation statuses to return (O=Open, F=Fulfilled).</summary>
-    public ObligationStatus Status { get; set; }
+    public ObligationStatus? Status { get; set; }
 
     /// <summary>The VAT registration number.</summary>
     public string Vrn { get; set; }
