@@ -1,4 +1,6 @@
-﻿using TipsTrade.HMRC.Api.Vat.Model;
+﻿using System.Collections.Generic;
+using System.Linq;
+using TipsTrade.HMRC.Api.Vat.Model;
 using TipsTrade.HMRC.HelloWorld.Api.Model;
 
 namespace TipsTrade.HMRC.Api.Vat {
@@ -26,18 +28,25 @@ namespace TipsTrade.HMRC.Api.Vat {
 
     #region Methods
     /// <summary>Retrieve VAT obligations.</summary>
-    /// <param name="obligations"></param>
-    public Obligation[] GetObligations(ObligationsRequest obligations) {
-      var request = this.CreateRequest($"{obligations.Vrn}/obligations", RestSharp.Method.GET, authorization: Authorization.User);
-      request.AddHeader("Content-Type", "application/json");
+    /// <param name="request">The obligations request.</param>
+    public Obligation[] GetObligations(ObligationsRequest request) {
+      var restRequest = this.CreateRequest($"{request.Vrn}/obligations", RestSharp.Method.GET, authorization: Authorization.User);
+      restRequest.AddHeader("Content-Type", "application/json");
 
-      request.AddParameter("from", $"{obligations.From:yyyy-MM-dd}");
-      request.AddParameter("to", $"{obligations.To:yyyy-MM-dd}");
-      if (obligations.Status != null) {
-        request.AddParameter("status", $"{obligations.Status}"[0]);
+      restRequest.AddParameter("from", $"{request.From:yyyy-MM-dd}");
+      restRequest.AddParameter("to", $"{request.To:yyyy-MM-dd}");
+      if (request.Status != null) {
+        restRequest.AddParameter("status", $"{request.Status}"[0]);
       }
 
-      return this.ExecuteRequest<ObligationsResponse>(request).Obligations.ToArray();
+      IEnumerable<Obligation> resp = this.ExecuteRequest<ObligationsResponse>(restRequest).Obligations;
+
+      // HACK: The Api appears to return all obligations, regardless of status, filter them here
+      if (request.Status != null) {
+        resp = resp.Where(x => x.Status == request.Status);
+      }
+
+      return resp.ToArray();
     }
     #endregion
   }
