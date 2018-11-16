@@ -5,8 +5,7 @@ using Xunit;
 
 namespace TipsTrade.HMRC.Tests {
   public  class CreateUserTests :TestBase {
-    // Disable this by default do as not to create tonnes of users
-    ///[Fact]
+    [Fact(Skip = "Skipped so we don't keep creating new users.")]
     public void CreateOganisation() {
       var request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUserFull();
       Assert.NotEmpty(request.ServiceNames);

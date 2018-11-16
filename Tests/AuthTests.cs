@@ -39,7 +39,7 @@ namespace TipsTrade.HMRC.Tests {
       var json = JsonConvert.SerializeObject(tokens);
     }
 
-    [Fact]
+    [Fact(Skip = "Skipped so we don't accidentally expire our RefreshToken")]
     public void TestRefreshToken() {
       var tokens = Client.RefreshAccessToken(RefreshToken);
       Assert.NotNull(tokens.AccessToken);
