@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TipsTrade.HMRC.Api.Vat.Model;
-using TipsTrade.HMRC.HelloWorld.Api.Model;
 
 namespace TipsTrade.HMRC.Api.Vat {
   /// <summary>The API that exposes VAT functions.</summary>
