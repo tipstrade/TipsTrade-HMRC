@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.IO;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 
 namespace TipsTrade.HMRC.Tests {
@@ -9,7 +10,7 @@ namespace TipsTrade.HMRC.Tests {
     protected const string State = "4f00d15e-de25-4796-999f-266ea4429889";
 
     // Move this into a string typed object
-    protected OrganisationResult OrganisationUsers => Configuration.GetSection("hmrc-organisation").Get<OrganisationResult>();
+    protected OrganisationResult OrganisationUser { get; }
 
     protected IConfiguration Configuration { get; }
 
@@ -28,10 +29,19 @@ namespace TipsTrade.HMRC.Tests {
       // From CLI: dotnet user-secrets set <Name> <Value>
       var builder = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
-        .AddJsonFile("appsettings.hmrc.json")
         .AddUserSecrets<TestBase>();
 
       Configuration = builder.Build();
+
+      OrganisationUser = LoadFromJsonFile<OrganisationResult>("hmrc-user-organisation.json");
+    }
+
+    private T LoadFromJsonFile<T>(string fileName) {
+      using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
+        using (var reader = new StreamReader(fs)) {
+          return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+        }
+      }
     }
   }
 }

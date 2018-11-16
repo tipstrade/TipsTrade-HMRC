@@ -7,7 +7,7 @@ namespace TipsTrade.HMRC.Tests {
     [Fact]
     public void TestObligations() {
       var obligations = new ObligationsRequest() {
-        Vrn = OrganisationUsers.Vrn,
+        Vrn = OrganisationUser.Vrn,
         From = new DateTime(2018, 1, 1),
         To = new DateTime(2018, 11, 1).AddDays(-1),
         Status = ObligationStatus.Fulfilled
