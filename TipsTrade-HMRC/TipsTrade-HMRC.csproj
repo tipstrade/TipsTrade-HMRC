@@ -1,8 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>TipsTrade_HMRC</RootNamespace>
+    <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
+    <RootNamespace>TipsTrade.HMRC</RootNamespace>
+    <Version>0.0.0.1</Version>
+    <Authors>John Bayly</Authors>
+    <Company>TipsTrade Ltd.</Company>
+    <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
+    <Copyright>TipsTrade Ltd. 2018</Copyright>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Product>TipsTrade-HMRC</Product>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="RestSharp" Version="106.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Api\HelloWorld\Model\" />
+  </ItemGroup>
 
 </Project>
