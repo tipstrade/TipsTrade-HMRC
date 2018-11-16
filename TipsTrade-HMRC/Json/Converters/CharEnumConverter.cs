@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 
 namespace TipsTrade.HMRC.Json.Converters {
   /// <summary>Converts an <see cref="Enum"/> to its name value initial.</summary>
   public class CharEnumConverter : JsonConverter {
     /// <summary>Gets a value indicating whether this Newtonsoft.Json.JsonConverter can read JSON.</summary>
-    public override bool CanRead => false;
+    public override bool CanRead => true;
 
     /// <summary>Gets a value indicating whether this Newtonsoft.Json.JsonConverter can write JSON.</summary>
     public override bool CanWrite => true;
@@ -19,7 +20,13 @@ namespace TipsTrade.HMRC.Json.Converters {
 
     /// <summary>Reads the JSON representation of the object.</summary>
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
-      throw new NotImplementedException();
+      var value = reader.Value as string;
+
+      var field = objectType.GetFields().Where(f => {
+        return f.GetCustomAttribute<DescriptionAttribute>()?.Description == value;
+      }).First();
+
+      return field.GetValue(null);
     }
 
     /// <summary>Writes the JSON representation of the object.</summary>
