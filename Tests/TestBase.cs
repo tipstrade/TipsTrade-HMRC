@@ -2,10 +2,13 @@
 using Newtonsoft.Json;
 using System.IO;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
+using Xunit.Abstractions;
 
 namespace TipsTrade.HMRC.Tests {
   public class TestBase {
     protected IConfiguration Configuration { get; }
+
+    protected ITestOutputHelper Output { get; }
 
     #region State properties
     protected string AccessToken => Configuration["AccessToken"];
@@ -31,7 +34,9 @@ namespace TipsTrade.HMRC.Tests {
     protected string ServerToken => Configuration["ServerToken"];
     #endregion
 
-    public TestBase() {
+    public TestBase(ITestOutputHelper output) {
+      Output = output;
+
       // See https://patrickhuber.github.io/2017/07/26/avoid-secrets-in-dot-net-core-tests.html
       // From CLI: dotnet user-secrets set <Name> <Value>
       var builder = new ConfigurationBuilder()

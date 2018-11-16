@@ -1,9 +1,13 @@
 ﻿using System;
 using TipsTrade.HMRC.Api;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace TipsTrade.HMRC.Tests {
   public class HelloWorldTests : TestBase {
+    public HelloWorldTests(ITestOutputHelper output) : base(output) {
+    }
+
     [Fact]
     public void TestApplication() {
       var client = Client;

@@ -1,9 +1,13 @@
 ﻿using System;
 using TipsTrade.HMRC.Api.Vat.Model;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace TipsTrade.HMRC.Tests {
   public class VatTests : TestBase {
+    public VatTests(ITestOutputHelper output) : base(output) {
+    }
+
     [Fact]
     public void TestObligations() {
       var obligations = new ObligationsRequest() {

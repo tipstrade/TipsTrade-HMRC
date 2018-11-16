@@ -2,9 +2,13 @@
 using TipsTrade.HMRC.Api.CreateTestUser;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace TipsTrade.HMRC.Tests {
   public  class CreateUserTests :TestBase {
+    public CreateUserTests(ITestOutputHelper output) : base(output) {
+    }
+
     [Fact(Skip = "Skipped so we don't keep creating new users.")]
     public void CreateOganisation() {
       var request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUserFull();
@@ -41,6 +45,9 @@ namespace TipsTrade.HMRC.Tests {
         var value = prop.GetValue(organisation);
         Assert.NotNull(value);
       }
+
+      Output.WriteLine("Created Organisation:");
+      Output.WriteLine(JsonConvert.SerializeObject(organisation, Formatting.Indented));
     }
   }
 }

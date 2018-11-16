@@ -2,9 +2,13 @@
 using System;
 using TipsTrade.HMRC.Api;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace TipsTrade.HMRC.Tests {
   public class AuthTests : TestBase {
+    public AuthTests(ITestOutputHelper output) : base(output) {
+    }
+
     [Fact]
     public void TestEndpointUrl() {
       var client = Client;
@@ -12,9 +16,14 @@ namespace TipsTrade.HMRC.Tests {
       var scopes = new string[] { "hello", "read:vat", "write:vat" };
       var redirecUrl = "https://www.example.com/hmrc/callback";
 
+      var url = client.GetAuthorizatoinEndpoint(State, redirecUrl, scopes);
+
       Assert.Equal(
         "https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=7Y7IDapnKX7uGrPhN1SIRe63e1Ya&scope=hello+read%3avat+write%3avat&state=4f00d15e-de25-4796-999f-266ea4429889&redirect_uri=https%3a%2f%2fwww.example.com%2fhmrc%2fcallback",
-        client.GetAuthorizatoinEndpoint(State, redirecUrl, scopes));
+        url);
+
+      Output.WriteLine("Authorization Endpoint:");
+      Output.WriteLine(url);
     }
 
     [Fact]
@@ -36,7 +45,8 @@ namespace TipsTrade.HMRC.Tests {
       Assert.NotNull(tokens.Scope);
       Assert.NotNull(tokens.TokenType);
 
-      var json = JsonConvert.SerializeObject(tokens);
+      Output.WriteLine("Token Response:");
+      Output.WriteLine(JsonConvert.SerializeObject(tokens, Formatting.Indented));
     }
 
     [Fact(Skip = "Skipped so we don't accidentally expire our RefreshToken")]
@@ -47,6 +57,9 @@ namespace TipsTrade.HMRC.Tests {
       Assert.NotEqual(0, tokens.Expires);
       Assert.NotNull(tokens.Scope);
       Assert.NotNull(tokens.TokenType);
+
+      Output.WriteLine("Refresh Token Response:");
+      Output.WriteLine(JsonConvert.SerializeObject(tokens, Formatting.Indented));
     }
   }
 }
