@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
@@ -11,18 +12,25 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
       return Activator.CreateInstance<T>();
     }
 
-    /// <summary>Creates an ICreateTestUserRequest object with all possible service names.</summary>
-    public static T CreateTestUserFull() {
+    /// <summary>Creates an ICreateTestUserRequest object with service names matching the specified predicate.</summary>
+    public static T CreateTestUser(Func<string, bool> predicate) {
       var request = CreateTestUser();
 
-      var serviceNames = typeof(T)
+      request.ServiceNames.AddRange(GetServiceNames<T>().Where(predicate));
+
+      return request;
+    }
+
+    /// <summary>Creates an ICreateTestUserRequest object with all possible service names.</summary>
+    public static T CreateTestUserFull() {
+      return CreateTestUser(s => true);
+    }
+
+    private static IEnumerable<string> GetServiceNames<T>() {
+      return typeof(T)
         .GetFields(BindingFlags.Public | BindingFlags.Static)
         .Where(f => f.GetCustomAttribute<ServiceNameAttribute>() != null)
         .Select(f => (string)f.GetValue(null));
-
-      request.ServiceNames.AddRange(serviceNames);
-
-      return request;
     }
   }
 }
