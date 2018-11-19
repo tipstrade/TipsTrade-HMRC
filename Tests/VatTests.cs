@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Vat.Model;
 using Xunit;
 using Xunit.Abstractions;
@@ -9,18 +10,23 @@ namespace TipsTrade.HMRC.Tests {
     public VatTests(ITestOutputHelper output) : base(output) {
     }
 
-    [Fact]
-    public void TestObligations() {
+    private void PopulateDateRange(IDateRange value) {
       var year = DateTime.Now.Year;
       if (DateTime.Now.Month < 3) {
         year--;
       }
 
+      value.From = new DateTime(year, 1, 1);
+      value.To = value.From.AddYears(1).AddDays(-1);
+    }
+
+    [Fact]
+    public void TestObligations() {
       var obligations = new ObligationsRequest() {
         Vrn = OrganisationUser.Vrn,
-        From = new DateTime(year, 1, 1),
       };
-      obligations.To = obligations.From.AddYears(1).AddDays(-1);
+
+      PopulateDateRange(obligations);
 
       var client = Client;
       client.AccessToken = AccessToken;
@@ -60,6 +66,11 @@ namespace TipsTrade.HMRC.Tests {
         Assert.Equal(ObligationStatus.Open, item.Status);
         Assert.Null(item.Received);
       }
+    }
+
+    [Fact]
+    public void TestPayments() {
+
     }
   }
 }
