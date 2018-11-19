@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using TipsTrade.HMRC.Json.Converters;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
@@ -23,5 +24,10 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     /// <summary>Which obligation statuses to return.</summary>
     [JsonConverter(typeof(CharEnumConverter))]
     public ObligationStatus Status { get; set; }
+  }
+
+  internal class ObligationsResponse {
+    [JsonProperty("obligations")]
+    public IEnumerable<ObligationResult> Obligations { get; set; }
   }
 }
