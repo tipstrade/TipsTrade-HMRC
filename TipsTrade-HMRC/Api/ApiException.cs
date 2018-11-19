@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Net;
+using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api {
   /// <summary>Represents errors that are thrown by the HMRC API.</summary>
   public class ApiException : Exception {
-    /// <summary>A code indicating the error that occurred.</summary>
-    public string ErrorCode { get; set; }
-
-    /// <summary>A message describing the error that occurred.</summary>
-    public string ErrorMessage { get; set; }
+    /// <summary>The API error that caused to exception to be thrown.</summary>
+    public ErrorResponse ApiError { get; set; }
 
     /// <summary>
     /// A flag indicating whether the exception was 404 - NOT_FOUND.
     /// Needed as some APIs return this for empty collections, not to be confused with 404 - MATCHING_RESOURCE_NOT_FOUND.
     /// </summary>
-    public bool IsNotFound => "NOT_FOUND".Equals(ErrorCode);
+    public bool IsNotFound => "NOT_FOUND".Equals(ApiError.Code);
 
     /// <summary>The HTTP Status Code that was returned.</summary>
     public HttpStatusCode Status { get; internal set; }

@@ -158,8 +158,10 @@ namespace TipsTrade.HMRC {
         string errorCode = HttpUtility.UrlDecode(qs["error_code"]);
         var errorMessage = HttpUtility.UrlDecode(qs["error_description"]);
         throw new ApiException(errorMessage) {
-          ErrorCode = errorCode,
-          ErrorMessage = errorMessage
+          ApiError = new ErrorResponse() {
+            Code = errorCode,
+            Message = errorMessage
+          }
         };
       }
 
