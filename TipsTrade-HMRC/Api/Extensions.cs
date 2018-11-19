@@ -89,6 +89,15 @@ namespace TipsTrade.HMRC.Api {
         ((ICorrelationId)data).CorrelationId = Guid.Parse($"{id}");
       }
 
+      if (typeof(IReceipt).IsAssignableFrom(typeof(T))) {
+        var id = response.Headers.Where(h => "Receipt-ID".Equals(h.Name, StringComparison.CurrentCultureIgnoreCase)).First().Value;
+        var timestamp = response.Headers.Where(h => "Receipt-Timestamp".Equals(h.Name, StringComparison.CurrentCultureIgnoreCase)).First().Value;
+
+        var receipt = data as IReceipt;
+        receipt.ReceiptID = Guid.Parse($"{id}");
+        receipt.ReceiptTimestamp = DateTime.Parse($"{timestamp}");
+      }
+
       return data;
     }
 
