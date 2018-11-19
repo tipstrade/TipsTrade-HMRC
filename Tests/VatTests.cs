@@ -34,7 +34,7 @@ namespace TipsTrade.HMRC.Tests {
       client.AccessToken = AccessToken;
 
       var obligations = client.Vat.GetObligations(obRequest);
-      var periodKey = obligations.Value.Where(o => o.Status == ObligationStatus.Fulfilled).FirstOrDefault().PeriodKey;
+      var periodKey = obligations.Value.Where(o => o.Status == ObligationStatus.Fulfilled).LastOrDefault().PeriodKey;
 
       var returnRequest = new ReturnRequest() {
         Vrn = OrganisationUser.Vrn,
@@ -181,6 +181,34 @@ namespace TipsTrade.HMRC.Tests {
       Assert.Equal(8405M, resp.TotalValuePurchasesExVAT);
       Assert.Equal(200M, resp.TotalValueGoodsSuppliedExVAT);
       Assert.Equal(300M, resp.TotalAcquisitionsExVAT);
+    }
+
+    [Fact]
+    public void TestSubmission() {
+      var request = new SubmitRequest() {
+        Return = new VatReturn() {
+          PeriodKey = "18AF",
+          VatDueSales = 7724.92m,
+          VatDueAcquisitions = 0,
+          TotalVatDue = 7724.92m,
+          VatReclaimedCurrPeriod = 1681.08m,
+          NetVatDue = 6043.84m,
+          TotalValueSalesExVAT = 38622,
+          TotalValuePurchasesExVAT = 8405,
+          TotalValueGoodsSuppliedExVAT  = 0,
+          TotalAcquisitionsExVAT = 0,
+          Finalised = true
+        },
+        Vrn = OrganisationUser.Vrn
+      };
+
+      var client = Client;
+      client.AccessToken = AccessToken;
+
+      var resp = client.Vat.SubmitReturn(request);
+
+      Output.WriteLine("VAT Submission:");
+      Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
   }
 }
