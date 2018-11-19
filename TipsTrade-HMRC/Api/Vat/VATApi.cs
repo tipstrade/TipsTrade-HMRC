@@ -30,10 +30,9 @@ namespace TipsTrade.HMRC.Api.Vat {
     /// <param name="request">The obligations request.</param>
     public ObligationResult[] GetObligations(ObligationsRequest request) {
       var restRequest = this.CreateRequest($"{request.Vrn}/obligations", RestSharp.Method.GET, authorization: Authorization.User);
-      restRequest.AddHeader("Content-Type", "application/json");
+      restRequest.IsJsonContent();
 
-      restRequest.AddParameter("from", $"{request.From:yyyy-MM-dd}");
-      restRequest.AddParameter("to", $"{request.To:yyyy-MM-dd}");
+      restRequest.AddDateRangeParameters(request);
       if (request.Status != null) {
         restRequest.AddParameter("status", $"{request.Status}"[0]);
       }

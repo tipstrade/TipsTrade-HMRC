@@ -9,11 +9,22 @@ namespace TipsTrade.HMRC.Api {
     /// <summary>The default content type to be expected.</summary>
     private const string DefaultContentType = "json";
 
+    /// <summary>Json content type.</summary>
+    private const string JsonContentType = "application/json";
+
     /// <summary>Shorthand method for serializing the body using Newtonsoft.Json.</summary>
     internal static void AddJsonBodyNewtonsoft(this IRestRequest request, object value) {
-      request.AddHeader("Content-Type", "application/json");
+      request.IsJsonContent();
       request.RequestFormat = DataFormat.Json;
       request.AddParameter(request.JsonSerializer.ContentType, JsonConvert.SerializeObject(value), ParameterType.RequestBody);
+    }
+
+    /// <summary>Add the date range parameters to the specified request.</summary>
+    internal static IRestRequest AddDateRangeParameters(this IRestRequest request, IDateRange range, ParameterType type = ParameterType.QueryString) {
+      request.AddParameter("from", $"{range.From:YYYY-MM-dd}", type);
+      request.AddParameter("to", $"{range.To:YYYY-MM-dd}", type);
+
+      return request;
     }
 
     /// <summary>Creates a api request for the specified method.</summary>
@@ -70,6 +81,12 @@ namespace TipsTrade.HMRC.Api {
     /// <summary>Gets the rest client for the specified API.</summary>
     internal static RestClient GetRestClient(this IApi api) {
       return new RestClient(api.GetClient().BaseUrl);
+    }
+
+    /// <summary>Sets the Content-Type of the request to application/json</summary>
+    internal static IRestRequest IsJsonContent(this IRestRequest request) {
+      request.AddHeader("Content-Type", JsonContentType);
+      return request;
     }
 
     /// <summary>Throws an ApiException if an error is encountered.</summary>
