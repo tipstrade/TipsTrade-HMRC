@@ -28,7 +28,7 @@ namespace TipsTrade.HMRC.Api.Vat {
     #region Methods
     /// <summary>Retrieve VAT obligations.</summary>
     /// <param name="request">The obligations request.</param>
-    public Obligation[] GetObligations(ObligationsRequest request) {
+    public ObligationResult[] GetObligations(ObligationsRequest request) {
       var restRequest = this.CreateRequest($"{request.Vrn}/obligations", RestSharp.Method.GET, authorization: Authorization.User);
       restRequest.AddHeader("Content-Type", "application/json");
 
@@ -38,7 +38,7 @@ namespace TipsTrade.HMRC.Api.Vat {
         restRequest.AddParameter("status", $"{request.Status}"[0]);
       }
 
-      IEnumerable<Obligation> resp = this.ExecuteRequest<ObligationsResponse>(restRequest).Obligations;
+      IEnumerable<ObligationResult> resp = this.ExecuteRequest<ObligationsResponse>(restRequest).Obligations;
 
       // HACK: The Api appears to return all obligations, regardless of status, filter them here
       if (request.Status != null) {

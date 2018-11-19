@@ -6,7 +6,7 @@ using TipsTrade.HMRC.Json.Converters;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
   /// <summary>Represents a response containing VAT obligations.</summary>
-  public class Obligation {
+  public class ObligationResult {
     /// <summary>The due date for this obligation period.</summary>
     public DateTime Due { get; set; }
 

@@ -25,7 +25,7 @@ namespace TipsTrade.HMRC.Tests {
       var client = Client;
       client.AccessToken = AccessToken;
 
-      Obligation[] resp;
+      ObligationResult[] resp;
 
       // All
       resp = client.Vat.GetObligations(obligations);
