@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using TipsTrade.HMRC.Json.Converters;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
-  /// <summary>Represents a response containing VAT obligations.</summary>
-  public class ObligationResult {
+  /// <summary>Represents a result containing a VAT obligation.</summary>
+  public class ObligationsResult {
     /// <summary>The due date for this obligation period.</summary>
     public DateTime Due { get; set; }
 

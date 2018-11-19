@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using TipsTrade.HMRC.Api.Vat.Model;
 
 namespace TipsTrade.HMRC.Api.Vat {
@@ -29,25 +27,25 @@ namespace TipsTrade.HMRC.Api.Vat {
     #region Methods
     /// <summary>Retrieve VAT obligations.</summary>
     /// <param name="request">The obligations request.</param>
-    public ObligationResult[] GetObligations(ObligationsRequest request) {
+    public ObligationResponse GetObligations(ObligationsRequest request) {
       var restRequest = this.CreateRequest(request);
 
-      var resp = this.ExecuteRequestList<ObligationResult>(restRequest, "obligations");
+      var resp = this.ExecuteRequest<ObligationResponse>(restRequest);
 
       // HACK: The Api appears to return all obligations, regardless of status, filter them here
       if (request.Status != null) {
-        resp = resp.Where(x => x.Status == request.Status);
+        resp.Value = resp.Value.Except(resp.Value.Where(x => x.Status != request.Status));
       }
 
-      return resp.ToArray();
+      return resp;
     }
 
     /// <summary>Retrieve VAT payments.</summary>
     /// <param name="request">The date range request.</param>
-    public PaymentResult[] GetPayments(PaymentsRequest request) {
+    public PaymentsResponse GetPayments(PaymentsRequest request) {
       var restRequest = this.CreateRequest(request);
 
-      return this.ExecuteRequestList<PaymentResult>(restRequest, "payments").ToArray();
+      return this.ExecuteRequest<PaymentsResponse>(restRequest);
     }
     #endregion
   }

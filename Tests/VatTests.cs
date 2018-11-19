@@ -33,14 +33,14 @@ namespace TipsTrade.HMRC.Tests {
       var client = Client;
       client.AccessToken = AccessToken;
 
-      ObligationResult[] resp;
+      ObligationResponse resp;
 
       // All, expect only two to be fulfilled
       resp = client.Vat.GetObligations(obligations);
       Assert.NotNull(resp);
-      Assert.NotEmpty(resp);
-      Assert.Equal(2, resp.Where(x => x.Status == ObligationStatus.Fulfilled).Count());
-      foreach (var item in resp) {
+      Assert.NotEmpty(resp.Value);
+      Assert.Equal(2, resp.Value.Where(x => x.Status == ObligationStatus.Fulfilled).Count());
+      foreach (var item in resp.Value) {
         Assert.NotEqual(default(DateTime), item.Start);
         Assert.NotEqual(default(DateTime), item.End);
         Assert.NotEqual(default(DateTime), item.Due);
@@ -52,20 +52,22 @@ namespace TipsTrade.HMRC.Tests {
 
       // Fulfulled
       obligations.Status = ObligationStatus.Fulfilled;
+      obligations.GovTestScenario = null;
       resp = client.Vat.GetObligations(obligations);
       Assert.NotNull(resp);
-      Assert.NotEmpty(resp);
-      foreach (var item in resp) {
+      Assert.NotEmpty(resp.Value);
+      foreach (var item in resp.Value) {
         Assert.Equal(ObligationStatus.Fulfilled, item.Status);
         Assert.NotNull(item.Received);
       }
 
       // Open
       obligations.Status = ObligationStatus.Open;
+      obligations.GovTestScenario = null;
       resp = client.Vat.GetObligations(obligations);
       Assert.NotNull(resp);
-      Assert.NotEmpty(resp);
-      foreach (var item in resp) {
+      Assert.NotEmpty(resp.Value);
+      foreach (var item in resp.Value) {
         Assert.Equal(ObligationStatus.Open, item.Status);
         Assert.Null(item.Received);
       }
@@ -85,9 +87,9 @@ namespace TipsTrade.HMRC.Tests {
 
       var resp = client.Vat.GetPayments(request);
       Assert.NotNull(resp);
-      Assert.NotEmpty(resp);
+      Assert.NotEmpty(resp.Value);
 
-      foreach (var item in resp) {
+      foreach (var item in resp.Value) {
         Assert.NotEqual(default(decimal), item.Amount);
         if (item.Received != null) {
           Assert.NotEqual(default(DateTime), item.Received);

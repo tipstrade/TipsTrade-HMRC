@@ -82,20 +82,14 @@ namespace TipsTrade.HMRC.Api {
       var response =  client.Execute(request);
       response.ThrowOnError();
 
-      return response.DeserializeContent<T>();
-    }
+      var data =  response.DeserializeContent<T>();
 
-    /// <summary>Executes the specified request for the API, returning a list contained in the specified key.</summary>
-    internal static IEnumerable<T> ExecuteRequestList<T>(this IApi api, IRestRequest request, string key) {
-      try {
-        return api.ExecuteRequest<JObject>(request)[key].ToObject<IEnumerable<T>>();
-      } catch (ApiException ex) {
-        // API returns 404 - NOT_FOUND for an empty collection
-        if (ex.IsNotFound) {
-          return Enumerable.Empty<T>();
-        }
-        throw;
+      if (typeof(ICorrelationId).IsAssignableFrom(typeof(T))) {
+        var id = response.Headers.Where(h => "X-CorrelationId".Equals(h.Name, StringComparison.CurrentCultureIgnoreCase)).First().Value;
+        ((ICorrelationId)data).CorrelationId = Guid.Parse($"{id}");
       }
+
+      return data;
     }
 
     /// <summary>
