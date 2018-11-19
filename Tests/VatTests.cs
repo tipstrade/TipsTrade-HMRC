@@ -22,6 +22,29 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
+    public void TestGetReturn() {
+      var obRequest = new ObligationsRequest() {
+        GovTestScenario = ObligationsRequest.ScenarioMonthlylyMet2,
+        Vrn = OrganisationUser.Vrn,
+      };
+
+      PopulateDateRange(obRequest);
+
+      var client = Client;
+      client.AccessToken = AccessToken;
+
+      var obligations = client.Vat.GetObligations(obRequest);
+      var periodKey = obligations.Value.Where(o => o.Status == ObligationStatus.Fulfilled).FirstOrDefault().PeriodKey;
+
+      var returnRequest = new ReturnRequest() {
+        Vrn = OrganisationUser.Vrn,
+        PeriodKey = periodKey
+      };
+
+      var resp = client.Vat.GetReturn(returnRequest);
+    }
+
+    [Fact]
     public void TestLiabilities() {
       var request = new LiabilitiesRequest() {
         GovTestScenario = LiabilitiesRequest.ScenarioMultipleLiabilities,
@@ -129,6 +152,35 @@ namespace TipsTrade.HMRC.Tests {
 
       Output.WriteLine("VAT Payments");
       Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+    }
+
+    [Fact]
+    public void TestReturnSerialization() {
+      var json = @"{
+  ""periodKey"": ""#001"",
+  ""vatDueSales"": 7724.92,
+  ""vatDueAcquisitions"": 100.00,
+  ""totalVatDue"": 7824.92,
+  ""vatReclaimedCurrPeriod"": 1681.08,
+  ""netVatDue"": 6143.84,
+  ""totalValueSalesExVAT"": 38622,
+  ""totalValuePurchasesExVAT"": 8405,
+  ""totalValueGoodsSuppliedExVAT"": 200,
+  ""totalAcquisitionsExVAT"": 300
+}";
+
+      var resp = JsonConvert.DeserializeObject<VatReturn>(json);
+
+      Assert.Equal("#001", resp.PeriodKey);
+      Assert.Equal(7724.92M, resp.VatDueSales);
+      Assert.Equal(100.00M, resp.VatDueAcquisitions);
+      Assert.Equal(7824.92M, resp.TotalVatDue);
+      Assert.Equal(1681.08M, resp.VatReclaimedCurrPeriod);
+      Assert.Equal(6143.84M, resp.NetVatDue);
+      Assert.Equal(38622M, resp.TotalValueSalesExVAT);
+      Assert.Equal(8405M, resp.TotalValuePurchasesExVAT);
+      Assert.Equal(200M, resp.TotalValueGoodsSuppliedExVAT);
+      Assert.Equal(300M, resp.TotalAcquisitionsExVAT);
     }
   }
 }
