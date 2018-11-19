@@ -58,6 +58,11 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
       /// <summary>Organisation address.</summary>
       [JsonProperty("address")]
       public Address Address { get; set; }
+
+      /// <summary>Returns a string that represents the current object.</summary>
+      public override string ToString() {
+        return $"{Name}";
+      }
     }
   }
 }

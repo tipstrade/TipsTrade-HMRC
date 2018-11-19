@@ -18,5 +18,10 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
     /// <summary>Government Gateway user's email address.</summary>
     [JsonProperty("emailAddress")]
     public string Email { get; set; }
+
+    /// <summary>Returns a string that represents the current object.</summary>
+    public override string ToString() {
+      return $"Email: {Email}, Password: {Password}";
+    }
   }
 }

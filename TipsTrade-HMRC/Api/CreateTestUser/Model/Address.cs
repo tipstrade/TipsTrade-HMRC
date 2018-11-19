@@ -14,5 +14,10 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
     /// <summary>Organisation's postcode.</summary>
     [JsonProperty("postcode")]
     public string Postcode { get; set; }
+
+    /// <summary>Returns a string that represents the current object.</summary>
+    public override string ToString() {
+      return $"{Line1}, {Line2}, {Postcode}";
+    }
   }
 }
