@@ -29,7 +29,6 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     /// <param name="request">The services to request.</param>
     public OrganisationResult CreateOrganisation(CreateOrganisationRequest request) {
       var restRequest = this.CreateRequest("organisations", Method.POST, Authorization.Application);
-      restRequest.AddHeader("Content-Type", "application/json");
       restRequest.AddJsonBodyNewtonsoft(request);
       
       return this.ExecuteRequest<OrganisationResult>(restRequest);

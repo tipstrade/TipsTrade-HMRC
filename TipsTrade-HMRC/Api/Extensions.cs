@@ -11,6 +11,7 @@ namespace TipsTrade.HMRC.Api {
 
     /// <summary>Shorthand method for serializing the body using Newtonsoft.Json.</summary>
     internal static void AddJsonBodyNewtonsoft(this IRestRequest request, object value) {
+      request.AddHeader("Content-Type", "application/json");
       request.RequestFormat = DataFormat.Json;
       request.AddParameter(request.JsonSerializer.ContentType, JsonConvert.SerializeObject(value), ParameterType.RequestBody);
     }
