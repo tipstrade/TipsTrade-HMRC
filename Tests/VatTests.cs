@@ -70,7 +70,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TestPayments() {
-      var request = new DateRangeRequest() {
+      var request = new PaymentsRequest() {
         GovTestScenario = "MULTIPLE_PAYMENTS",
         Vrn = OrganisationUser.Vrn,
       };

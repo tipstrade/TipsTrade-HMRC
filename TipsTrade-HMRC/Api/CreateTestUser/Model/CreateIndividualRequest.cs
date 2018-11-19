@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
+using RestSharp;
 using System.Collections.Generic;
-using TipsTrade.HMRC.Api.Attributes;
 using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
+using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>The parameters used to create an individual test user.</summary>
-  [Endpoint("individuals")]
-  public class CreateIndividualRequest : ICreateTestUserRequest {
+  public class CreateIndividualRequest : IApiRequest, ICreateTestUserRequest {
     /// <summary>Generates an EORI number and enrols the user for Customs Services.</summary>
     [ServiceName]
     public const string CustomsServices = "customs-services";
@@ -26,5 +26,19 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
     /// <summary>The list of services that the user should be enrolled for.</summary>
     [JsonProperty("serviceNames")]
     public List<string> ServiceNames { get; set; } = new List<string>();
+
+    string IApiRequest.AcceptType => "json";
+
+    Authorization IApiRequest.Authorization => Authorization.Application;
+
+    string IApiRequest.ContentType => "application/json";
+
+    Method IApiRequest.Method => Method.POST;
+
+    string IApiRequest.Location => "individuals";
+
+    void IApiRequest.PopulateRequest(IRestRequest request) {
+      request.AddJsonBodyNewtonsoft(this);
+    }
   }
 }

@@ -30,15 +30,7 @@ namespace TipsTrade.HMRC.Api.Vat {
     /// <summary>Retrieve VAT obligations.</summary>
     /// <param name="request">The obligations request.</param>
     public ObligationResult[] GetObligations(ObligationsRequest request) {
-      var restRequest = this.CreateRequest($"{request.Vrn}/obligations", RestSharp.Method.GET, authorization: Authorization.User);
-      restRequest.IsJsonContent();
-
-      restRequest.AddGovTestScenario(request);
-
-      restRequest.AddDateRangeParameters(request);
-      if (request.Status != null) {
-        restRequest.AddParameter("status", $"{request.Status}"[0]);
-      }
+      var restRequest = this.CreateRequest(request);
 
       var resp = this.ExecuteRequestList<ObligationResult>(restRequest, "obligations");
 
@@ -52,13 +44,8 @@ namespace TipsTrade.HMRC.Api.Vat {
 
     /// <summary>Retrieve VAT payments.</summary>
     /// <param name="request">The date range request.</param>
-    public PaymentResult[] GetPayments(DateRangeRequest request) {
-      var restRequest = this.CreateRequest($"{request.Vrn}/payments", RestSharp.Method.GET, authorization: Authorization.User);
-      restRequest.IsJsonContent();
-
-      restRequest.AddGovTestScenario(request);
-
-      restRequest.AddDateRangeParameters(request);
+    public PaymentResult[] GetPayments(PaymentsRequest request) {
+      var restRequest = this.CreateRequest(request);
 
       return this.ExecuteRequestList<PaymentResult>(restRequest, "payments").ToArray();
     }

@@ -34,25 +34,40 @@ namespace TipsTrade.HMRC.Api {
 
     /// <summary>Add the Gov-Test-Scenario header to the specified request.</summary>
     internal static IRestRequest AddGovTestScenario(this IRestRequest request, IGovTestScenario scenario) {
-      request.AddHeader("Gov-Test-Scenario", scenario.GovTestScenario);
+      if (!string.IsNullOrEmpty(scenario.GovTestScenario)) {
+        request.AddHeader("Gov-Test-Scenario", scenario.GovTestScenario);
+      }
 
       return request;
     }
 
-    /// <summary>Creates a api request for the specified method.</summary>
-    internal static RestRequest CreateRequest(this IApi api, string methodName, Method method = Method.GET, Authorization authorization = Authorization.Open, string contentType = DefaultContentType) {
+    internal static IRestRequest CreateRequest(this IApi api, IApiRequest request) {
       var client = api.GetClient();
 
-      var req = new RestRequest($"{api.Location}/{methodName}", method);
-      req.AddHeader("Accept", api.GetAcceptHeader());
+      var restRequest = new RestRequest($"{api.Location}/{request.Location}", request.Method);
+      restRequest.AddHeader("Accept", api.GetAcceptHeader(request.AcceptType));
 
-      if (authorization == Authorization.Application) {
-        req.AddHeader("Authorization", $"Bearer {client.ServerToken}");
-      } else if (authorization == Authorization.User) {
-        req.AddHeader("Authorization", $"Bearer {client.AccessToken}");
+      if (!string.IsNullOrEmpty(request.ContentType)) {
+        restRequest.AddHeader("Content-Type", request.ContentType);
       }
 
-      return req;
+      if (request is IGovTestScenario) {
+        restRequest.AddGovTestScenario(request as IGovTestScenario);
+      }
+
+      if (request is IDateRange) {
+        restRequest.AddDateRangeParameters(request as IDateRange);
+      }
+
+      if (request.Authorization == Authorization.Application) {
+        restRequest.AddHeader("Authorization", $"Bearer {client.ServerToken}");
+      } else if (request.Authorization == Authorization.User) {
+        restRequest.AddHeader("Authorization", $"Bearer {client.AccessToken}");
+      }
+
+      request.PopulateRequest(restRequest);
+
+      return restRequest;
     }
 
     /// <summary>Deserializes the content.</summary>

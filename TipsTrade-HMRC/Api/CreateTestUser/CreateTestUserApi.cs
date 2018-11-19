@@ -29,21 +29,28 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     #endregion
 
     #region Methods
-    /// <summary>Creates a test user  with the specified services.</summary>
+    /// <summary>Creates a test agent user with the specified services.</summary>
     /// <param name="request">The requested service names.</param>
-    /// <typeparam name="T">The type of user to create.</typeparam>
-    public T CreateUser<T>(ICreateTestUserRequest request) where T : UserResultBase {
-      var expectedRequestType = typeof(T).GetCustomAttribute<RequestTypeAttribute>().RequestType;
-      if (request.GetType() != expectedRequestType) {
-        throw new InvalidOperationException($"{typeof(T)} expects a request type of {expectedRequestType}.");
-      }
+    public AgentResult CreateUser(CreateAgentRequest request) {
+      var restRequest = this.CreateRequest(request);
 
-      var endpoint = expectedRequestType.GetCustomAttribute<EndpointAttribute>().Endpoint;
+      return this.ExecuteRequest<AgentResult>(restRequest);
+    }
 
-      var restRequest = this.CreateRequest(endpoint, Method.POST, Authorization.Application);
-      restRequest.AddJsonBodyNewtonsoft(request);
+    /// <summary>Creates a test individual user with the specified services.</summary>
+    /// <param name="request">The requested service names.</param>
+    public IndividualResult CreateUser(CreateIndividualRequest request) {
+      var restRequest = this.CreateRequest(request);
 
-      return this.ExecuteRequest<T>(restRequest);
+      return this.ExecuteRequest<IndividualResult>(restRequest);
+    }
+
+    /// <summary>Creates a test organisation user with the specified services.</summary>
+    /// <param name="request">The requested service names.</param>
+    public OrganisationResult CreateUser(CreateOrganisationRequest request) {
+      var restRequest = this.CreateRequest(request);
+
+      return this.ExecuteRequest<OrganisationResult>(restRequest);
     }
     #endregion
   }

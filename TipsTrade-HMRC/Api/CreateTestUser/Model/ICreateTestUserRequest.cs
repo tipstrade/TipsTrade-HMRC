@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>Represents a model that provides a list of service names.</summary>

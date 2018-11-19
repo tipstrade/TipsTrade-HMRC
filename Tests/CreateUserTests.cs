@@ -1,15 +1,17 @@
 ﻿using Newtonsoft.Json;
+using System.Linq;
+using System.Reflection;
 using TipsTrade.HMRC.Api.CreateTestUser;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace TipsTrade.HMRC.Tests {
-  public  class CreateUserTests :TestBase {
+  public class CreateUserTests : TestBase {
     public CreateUserTests(ITestOutputHelper output) : base(output) {
     }
 
-    private void TestCreateTestUserFactory<T>(string json) where T : class,ICreateTestUserRequest {
+    private void TestCreateTestUserFactory<T>(string json) where T : class, ICreateTestUserRequest {
       var request = CreateTestUserFactory<T>.CreateTestUserFull();
       Assert.NotEmpty(request.ServiceNames);
 
@@ -27,7 +29,14 @@ namespace TipsTrade.HMRC.Tests {
     private void TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest where TUser : UserResultBase {
       var request = CreateTestUserFactory<TRequest>.CreateTestUserFull();
 
-      var result = Client.CreateTestUser.CreateUser<TUser>(request);
+      var method = Client.CreateTestUser.GetType().GetMethods()
+        .Where(m => {
+          return m.Name.Equals(nameof(Client.CreateTestUser.CreateUser)) && m.GetParameters().All(p => {
+            return p.ParameterType == typeof(TRequest);
+          });
+        }).First();
+      var result = (TUser)method.Invoke(Client.CreateTestUser, new object[] { request });
+      //var result = Client.CreateTestUser.CreateUser(request);
       Assert.NotNull(result);
 
       foreach (var prop in result.GetType().GetProperties()) {
@@ -83,7 +92,7 @@ namespace TipsTrade.HMRC.Tests {
     void TestCreateTestUserFactoryPredicate() {
       CreateOrganisationRequest request;
 
-      request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUser(s => s== null);
+      request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUser(s => s == null);
       Assert.Empty(request.ServiceNames);
 
       request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUser(s => CreateOrganisationRequest.CorporationTax.Equals(s));

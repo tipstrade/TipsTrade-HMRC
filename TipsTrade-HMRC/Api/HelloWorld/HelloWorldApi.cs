@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using TipsTrade.HMRC.Api;
+using TipsTrade.HMRC.Api.HelloWorld.Model;
 using TipsTrade.HMRC.HelloWorld.Api.Model;
 
 namespace TipsTrade.HMRC.HelloWorld.Api {
@@ -28,20 +29,20 @@ namespace TipsTrade.HMRC.HelloWorld.Api {
     #region Methods
     /// <summary>Says "Hello Application"</summary>
     public string SayHelloApplication() {
-      var request = this.CreateRequest("application", authorization: Authorization.Application);
-      return this.ExecuteRequest<MessageResponse>(request).Message;
+      var restRequest = this.CreateRequest(new HelloRequest("application", Authorization.Application));
+      return this.ExecuteRequest<MessageResponse>(restRequest).Message;
     }
 
     /// <summary>Says "Hello User"</summary>
     public string SayHelloUser() {
-      var request = this.CreateRequest("user", authorization: Authorization.User);
-      return this.ExecuteRequest<MessageResponse>(request).Message;
+      var restRequest = this.CreateRequest(new HelloRequest("user", Authorization.User));
+      return this.ExecuteRequest<MessageResponse>(restRequest).Message;
     }
 
     /// <summary>Says "Hello World"</summary>
     public string SayHelloWorld() {
-      var request = this.CreateRequest("world");
-      return this.ExecuteRequest<MessageResponse>(request).Message;
+      var restRequest = this.CreateRequest(new HelloRequest("world", Authorization.Open));
+      return this.ExecuteRequest<MessageResponse>(restRequest).Message;
     }
     #endregion
   }
