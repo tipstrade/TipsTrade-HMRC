@@ -64,6 +64,17 @@ namespace TipsTrade.HMRC.Tests {
 }");
     }
 
+    [Fact]
+    void TestCreateTestUserFactoryPredicate() {
+      CreateOrganisationRequest request;
+
+      request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUser(s => s== null);
+      Assert.Empty(request.ServiceNames);
+
+      request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUser(s => CreateOrganisationRequest.CorporationTax.Equals(s));
+      Assert.Single(request.ServiceNames);
+    }
+
     [Fact(Skip = "Skipped so we don't keep creating new users.")]
     public void CreateOganisation() {
       var request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUserFull();
