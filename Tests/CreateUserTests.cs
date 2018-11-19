@@ -9,13 +9,45 @@ namespace TipsTrade.HMRC.Tests {
     public CreateUserTests(ITestOutputHelper output) : base(output) {
     }
 
-    [Fact(Skip = "Skipped so we don't keep creating new users.")]
-    public void CreateOganisation() {
-      var request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUserFull();
+    private void TestCreateTestUserFactory<T>(string json) where T : class,ICreateTestUserRequest {
+      var request = CreateTestUserFactory<T>.CreateTestUserFull();
       Assert.NotEmpty(request.ServiceNames);
 
-      // Compare to the request from the docs
-      var fromDocs = JsonConvert.DeserializeObject<CreateOrganisationRequest>(@"{
+      var fromDocs = JsonConvert.DeserializeObject<T>(json);
+
+      request.ServiceNames.Sort();
+      fromDocs.ServiceNames.Sort();
+
+      Assert.Equal(fromDocs.ServiceNames.Count, request.ServiceNames.Count);
+      for (int i = 0; i < request.ServiceNames.Count; i++) {
+        Assert.Equal(fromDocs.ServiceNames[i], request.ServiceNames[i]);
+      }
+    }
+
+    [Fact]
+    public void TestCreateTestUserFactoryAgent() {
+      TestCreateTestUserFactory<CreateAgentRequest>(@"{
+  ""serviceNames"": [
+    ""agent-services""
+  ]
+}");
+    }
+
+    [Fact]
+    public void TestCreateTestUserFactoryIndividual() {
+      TestCreateTestUserFactory<CreateIndividualRequest>(@"{
+  ""serviceNames"": [
+    ""national-insurance"",
+    ""self-assessment"",
+    ""mtd-income-tax"",
+    ""customs-services""
+  ]
+}");
+    }
+
+    [Fact]
+    public void TestCreateTestUserFactoryOrganisation() {
+      TestCreateTestUserFactory<CreateOrganisationRequest>(@"{
   ""serviceNames"": [
     ""corporation-tax"",
     ""paye-for-employers"",
@@ -30,14 +62,11 @@ namespace TipsTrade.HMRC.Tests {
     ""customs-services""
   ]
 }");
+    }
 
-      request.ServiceNames.Sort();
-      fromDocs.ServiceNames.Sort();
-
-      Assert.Equal(fromDocs.ServiceNames.Count, request.ServiceNames.Count);
-      for (int i = 0; i < request.ServiceNames.Count; i++) {
-        Assert.Equal(fromDocs.ServiceNames[i], request.ServiceNames[i]);
-      }
+    [Fact(Skip = "Skipped so we don't keep creating new users.")]
+    public void CreateOganisation() {
+      var request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUserFull();
 
       var organisation = Client.CreateTestUser.CreateOrganisation(request);
 
