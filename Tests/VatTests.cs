@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Linq;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Vat.Model;
 using Xunit;
@@ -23,6 +24,7 @@ namespace TipsTrade.HMRC.Tests {
     [Fact]
     public void TestObligations() {
       var obligations = new ObligationsRequest() {
+        GovTestScenario = ObligationsRequest.ScenarioMonthlylyMet2,
         Vrn = OrganisationUser.Vrn,
       };
 
@@ -33,10 +35,11 @@ namespace TipsTrade.HMRC.Tests {
 
       ObligationResult[] resp;
 
-      // All
+      // All, expect only two to be fulfilled
       resp = client.Vat.GetObligations(obligations);
       Assert.NotNull(resp);
       Assert.NotEmpty(resp);
+      Assert.Equal(2, resp.Where(x => x.Status == ObligationStatus.Fulfilled).Count());
       foreach (var item in resp) {
         Assert.NotEqual(default(DateTime), item.Start);
         Assert.NotEqual(default(DateTime), item.End);
@@ -71,12 +74,11 @@ namespace TipsTrade.HMRC.Tests {
     [Fact]
     public void TestPayments() {
       var request = new PaymentsRequest() {
-        GovTestScenario = "MULTIPLE_PAYMENTS",
+        GovTestScenario = PaymentsRequest.ScenarioMultiplePayment,
+        From = new DateTime(2017, 2, 27),
+        To = new DateTime(2017, 12, 31),
         Vrn = OrganisationUser.Vrn,
       };
-
-      request.From = new DateTime(2017, 2, 27);
-      request.To = new DateTime(2017, 12, 31);
 
       var client = Client;
       client.AccessToken = AccessToken;
