@@ -9,6 +9,9 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     [JsonProperty("from")]
     public DateTime From { get; set; }
 
+    /// <summary>The Gov-Test-Scenario, only in the sandbox environment.</summary>
+    public string GovTestScenario { get; set; }
+
     /// <summary>Date to which to return values.</summary>
     [JsonProperty("to")]
     public DateTime To { get; set; }

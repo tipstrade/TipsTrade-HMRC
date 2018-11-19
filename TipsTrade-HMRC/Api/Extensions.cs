@@ -16,16 +16,25 @@ namespace TipsTrade.HMRC.Api {
     private const string JsonContentType = "application/json";
 
     /// <summary>Shorthand method for serializing the body using Newtonsoft.Json.</summary>
-    internal static void AddJsonBodyNewtonsoft(this IRestRequest request, object value) {
+    internal static IRestRequest AddJsonBodyNewtonsoft(this IRestRequest request, object value) {
       request.IsJsonContent();
       request.RequestFormat = DataFormat.Json;
       request.AddParameter(request.JsonSerializer.ContentType, JsonConvert.SerializeObject(value), ParameterType.RequestBody);
+
+      return request;
     }
 
     /// <summary>Add the date range parameters to the specified request.</summary>
     internal static IRestRequest AddDateRangeParameters(this IRestRequest request, IDateRange range, ParameterType type = ParameterType.QueryString) {
       request.AddParameter("from", $"{range.From:yyyy-MM-dd}", type);
       request.AddParameter("to", $"{range.To:yyyy-MM-dd}", type);
+
+      return request;
+    }
+
+    /// <summary>Add the Gov-Test-Scenario header to the specified request.</summary>
+    internal static IRestRequest AddGovTestScenario(this IRestRequest request, IGovTestScenario scenario) {
+      request.AddHeader("Gov-Test-Scenario", scenario.GovTestScenario);
 
       return request;
     }
