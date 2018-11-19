@@ -24,6 +24,21 @@ namespace TipsTrade.HMRC.Tests {
       }
     }
 
+    private void TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest where TUser : UserResultBase {
+      var request = CreateTestUserFactory<TRequest>.CreateTestUserFull();
+
+      var result = Client.CreateTestUser.CreateUser<TUser>(request);
+      Assert.NotNull(result);
+
+      foreach (var prop in result.GetType().GetProperties()) {
+        var value = prop.GetValue(result);
+        Assert.NotNull(value);
+      }
+
+      Output.WriteLine($"Created {result.GetType()}:");
+      Output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
+    }
+
     [Fact]
     public void TestCreateTestUserFactoryAgent() {
       TestCreateTestUserFactory<CreateAgentRequest>(@"{
@@ -76,18 +91,18 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact(Skip = "Skipped so we don't keep creating new users.")]
+    public void TestCreateAgent() {
+      TestCreateUser<CreateAgentRequest, AgentResult>();
+    }
+
+    [Fact(Skip = "Skipped so we don't keep creating new users.")]
+    public void TestCreateIndividual() {
+      TestCreateUser<CreateIndividualRequest, IndividualResult>();
+    }
+
+    [Fact(Skip = "Skipped so we don't keep creating new users.")]
     public void TestCreateOganisation() {
-      var request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUserFull();
-
-      var organisation = Client.CreateTestUser.CreateOrganisation(request);
-
-      foreach (var prop  in organisation.GetType().GetProperties()) {
-        var value = prop.GetValue(organisation);
-        Assert.NotNull(value);
-      }
-
-      Output.WriteLine("Created Organisation:");
-      Output.WriteLine(JsonConvert.SerializeObject(organisation, Formatting.Indented));
+      TestCreateUser<CreateOrganisationRequest, OrganisationResult>();
     }
   }
 }
