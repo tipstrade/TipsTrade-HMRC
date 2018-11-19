@@ -22,6 +22,37 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
+    public void TestLiabilities() {
+      var request = new LiabilitiesRequest() {
+        GovTestScenario = LiabilitiesRequest.ScenarioMultipleLiabilities,
+        From = new DateTime(2017, 2, 27),
+        To = new DateTime(2017, 12, 31),
+        Vrn = OrganisationUser.Vrn,
+      };
+
+      var client = Client;
+      client.AccessToken = AccessToken;
+
+      var resp = client.Vat.GetLiabilities(request);
+      Assert.NotNull(resp);
+      Assert.NotEmpty(resp.Value);
+
+      foreach (var item in resp.Value) {
+        Assert.NotNull(item.TaxPeriod);
+        Assert.NotEqual(default(DateTime), item.TaxPeriod.From);
+        Assert.NotEqual(default(DateTime), item.TaxPeriod.To);
+        Assert.NotNull(item.Type);
+        Assert.NotEqual(default(decimal), item.OriginalAmount);
+        if (item.Due != null) {
+          Assert.NotEqual(default(DateTime), item.Due);
+        }
+      }
+
+      Output.WriteLine("VAT Liabilities");
+      Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+    }
+
+    [Fact]
     public void TestObligations() {
       var obligations = new ObligationsRequest() {
         GovTestScenario = ObligationsRequest.ScenarioMonthlylyMet2,

@@ -25,6 +25,14 @@ namespace TipsTrade.HMRC.Api.Vat {
     #endregion
 
     #region Methods
+    /// <summary>Retrieve VAT liabilities.</summary>
+    /// <param name="request">The date range request.</param>
+    public LiabilitiesResponse GetLiabilities(LiabilitiesRequest request) {
+      var restRequest = this.CreateRequest(request);
+
+      return this.ExecuteRequest<LiabilitiesResponse>(restRequest);
+    }
+
     /// <summary>Retrieve VAT obligations.</summary>
     /// <param name="request">The obligations request.</param>
     public ObligationResponse GetObligations(ObligationsRequest request) {
