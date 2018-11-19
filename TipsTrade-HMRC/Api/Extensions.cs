@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
+using System.Collections.Generic;
 using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api {
@@ -56,6 +58,11 @@ namespace TipsTrade.HMRC.Api {
       response.ThrowOnError();
 
       return response.DeserializeContent<T>();
+    }
+
+    /// <summary>Executes the specified request for the API, returning a list contained in the specified key.</summary>
+    internal static IEnumerable<T> ExecuteRequestList<T>(this IApi api, IRestRequest request, string key) {
+      return api.ExecuteRequest<JObject>(request)[key].ToObject<IEnumerable<T>>();
     }
 
     /// <summary>
