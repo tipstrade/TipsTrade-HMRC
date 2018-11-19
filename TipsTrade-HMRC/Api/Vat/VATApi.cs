@@ -33,6 +33,8 @@ namespace TipsTrade.HMRC.Api.Vat {
       var restRequest = this.CreateRequest($"{request.Vrn}/obligations", RestSharp.Method.GET, authorization: Authorization.User);
       restRequest.IsJsonContent();
 
+      restRequest.AddGovTestScenario(request);
+
       restRequest.AddDateRangeParameters(request);
       if (request.Status != null) {
         restRequest.AddParameter("status", $"{request.Status}"[0]);
@@ -46,6 +48,19 @@ namespace TipsTrade.HMRC.Api.Vat {
       }
 
       return resp.ToArray();
+    }
+
+    /// <summary>Retrieve VAT payments.</summary>
+    /// <param name="request">The date range request.</param>
+    public PaymentResult[] GetPayments(DateRangeRequest request) {
+      var restRequest = this.CreateRequest($"{request.Vrn}/payments", RestSharp.Method.GET, authorization: Authorization.User);
+      restRequest.IsJsonContent();
+
+      restRequest.AddGovTestScenario(request);
+
+      restRequest.AddDateRangeParameters(request);
+
+      return this.ExecuteRequestList<PaymentResult>(restRequest, "payments").ToArray();
     }
     #endregion
   }

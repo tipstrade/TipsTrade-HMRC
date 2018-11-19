@@ -70,7 +70,30 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TestPayments() {
+      var request = new DateRangeRequest() {
+        GovTestScenario = "MULTIPLE_PAYMENTS",
+        Vrn = OrganisationUser.Vrn,
+      };
 
+      request.From = new DateTime(2017, 2, 27);
+      request.To = new DateTime(2017, 12, 31);
+
+      var client = Client;
+      client.AccessToken = AccessToken;
+
+      var resp = client.Vat.GetPayments(request);
+      Assert.NotNull(resp);
+      Assert.NotEmpty(resp);
+
+      foreach (var item in resp) {
+        Assert.NotEqual(default(decimal), item.Amount);
+        if (item.Received != null) {
+          Assert.NotEqual(default(DateTime), item.Received);
+        }
+      }
+
+      Output.WriteLine("VAT Payments");
+      Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
   }
 }
