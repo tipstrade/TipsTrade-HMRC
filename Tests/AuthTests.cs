@@ -34,7 +34,8 @@ namespace TipsTrade.HMRC.Tests {
       Assert.Throws<ApiException>(() => Client.HandleEndpointResult(uri, State));
     }
 
-    [Fact]
+    [Fact(Skip = "Skipped so the code is one-use only.")]
+    //[Fact]
     public void TestHandleRedirectUrlSuccess() {
       var uri = "https://www.example.com/hmrc/callback?code=640f35efde314a91b32d696710759a5d&state=4f00d15e-de25-4796-999f-266ea4429889";
 
@@ -49,7 +50,8 @@ namespace TipsTrade.HMRC.Tests {
       Output.WriteLine(JsonConvert.SerializeObject(tokens, Formatting.Indented));
     }
 
-    [Fact(Skip = "Skipped so we don't accidentally expire our RefreshToken")]
+    [Fact(Skip = "Skipped so we don't accidentally expire our RefreshToken.")]
+    //[Fact]
     public void TestRefreshToken() {
       var tokens = Client.RefreshAccessToken(RefreshToken);
       Assert.NotNull(tokens.AccessToken);
