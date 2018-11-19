@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Linq;
 using TipsTrade.HMRC.Api.Vat.Model;
 
@@ -37,7 +38,7 @@ namespace TipsTrade.HMRC.Api.Vat {
         restRequest.AddParameter("status", $"{request.Status}"[0]);
       }
 
-      IEnumerable<ObligationResult> resp = this.ExecuteRequest<ObligationsResponse>(restRequest).Obligations;
+      var resp = this.ExecuteRequestList<ObligationResult>(restRequest, "obligations");
 
       // HACK: The Api appears to return all obligations, regardless of status, filter them here
       if (request.Status != null) {

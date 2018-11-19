@@ -25,9 +25,4 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     [JsonConverter(typeof(CharEnumConverter))]
     public ObligationStatus Status { get; set; }
   }
-
-  internal class ObligationsResponse {
-    [JsonProperty("obligations")]
-    public IEnumerable<ObligationResult> Obligations { get; set; }
-  }
 }
