@@ -63,6 +63,14 @@ namespace TipsTrade.HMRC.Api.Vat {
 
       return this.ExecuteRequest<ReturnResponse>(restRequest);
     }
+
+    /// <summary>Submit VAT return for period.</summary>
+    /// <param name="request">The submission request.</param>
+    public SubmitResponse SubmitReturn(SubmitRequest request) {
+      var restRequest = this.CreateRequest(request);
+
+      return this.ExecuteRequest<SubmitResponse>(restRequest);
+    }
     #endregion
   }
 }
