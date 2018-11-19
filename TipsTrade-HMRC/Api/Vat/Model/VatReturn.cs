@@ -3,6 +3,10 @@
 namespace TipsTrade.HMRC.Api.Vat.Model {
   /// <summary>Represents a result containing a VAT return.</summary>
   public class VatReturn {
+    /// <summary>Declaration that the user has finalised their VAT return.</summary>
+    [JsonProperty("finalised")]
+    public bool? Finalised { get; set; }
+
     /// <summary>
     /// The ID code for the period that this obligation belongs to.
     /// The format is a string of four alphanumeric characters.
