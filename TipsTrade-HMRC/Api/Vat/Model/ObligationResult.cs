@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using TipsTrade.HMRC.Json.Converters;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
