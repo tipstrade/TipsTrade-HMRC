@@ -1,0 +1,53 @@
+{
+  "agent": {
+    "agentServicesAccountNumber": "YARN0761166",
+    "userId": "133493287500",
+    "password": "gybsgw1qmqot",
+    "userFullName": "Iona Lawrence",
+    "emailAddress": "iona.lawrence@example.com"
+  },
+  "individual": {
+    "individualDetails": {
+      "dateOfBirth": "1964-09-20T00:00:00",
+      "firstName": "Carol",
+      "lastName": "Walker",
+      "address": {
+        "line1": "42 Palace Gardens Terrace",
+        "line2": "Bath",
+        "postcode": "TS6 1PA"
+      }
+    },
+    "saUtr": "5000016909",
+    "nino": "LZ968526A",
+    "eoriNumber": "GB6402963603",
+    "mtdItId": "XNIT00000977164",
+    "userId": "128737666283",
+    "password": "7znkmp1cfr5y",
+    "userFullName": "Carol Walker",
+    "emailAddress": "carol.walker@example.com"
+  },
+  "organisation": {
+    "userId": "221708564283",
+    "password": "tbtdmsijpaam",
+    "userFullName": "Jagger Young",
+    "emailAddress": "jagger.young@example.com",
+    "organisationDetails": {
+      "name": "Company YKYX39",
+      "address": {
+        "line1": "43 Queensland Road",
+        "line2": "Rothwell",
+        "postcode": "TS9 1PA"
+      }
+    },
+    "saUtr": "2000091547",
+    "nino": "KH251878D",
+    "mtdItId": "XCIT00000434290",
+    "empRef": "518/EVFFZNWNLI",
+    "ctUtr": "7000061946",
+    "vrn": "666960213",
+    "lisaManagerReferenceNumber": "Z4306",
+    "secureElectronicTransferReferenceNumber": "111111111199",
+    "pensionSchemeAdministratorIdentifier": "a4008174",
+    "eoriNumber": "GB4320438620"
+  }
+}

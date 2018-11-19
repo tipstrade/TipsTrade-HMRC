@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.IO;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using Xunit.Abstractions;
@@ -19,7 +20,11 @@ namespace TipsTrade.HMRC.Tests {
     #endregion
 
     #region User properties
-    protected OrganisationResult OrganisationUser { get; }
+    protected AgentResult AgentUser { get; private set; }
+
+    protected IndividualResult IndividualUser { get; private set; }
+
+    protected OrganisationResult OrganisationUser { get; private set; }
     #endregion
 
     #region Client properties
@@ -46,7 +51,14 @@ namespace TipsTrade.HMRC.Tests {
 
       Configuration = builder.Build();
 
-      OrganisationUser = LoadFromJsonFile<OrganisationResult>("hmrc-user-organisation.json");
+      LoadUsersFromJsonFile();
+    }
+
+    private void LoadUsersFromJsonFile() {
+      var users = LoadFromJsonFile<JObject>("hmrc-users.json");
+      AgentUser = users["agent"].ToObject<AgentResult>();
+      IndividualUser = users["individual"].ToObject<IndividualResult>();
+      OrganisationUser = users["organisation"].ToObject<OrganisationResult>();
     }
 
     private T LoadFromJsonFile<T>(string fileName) {

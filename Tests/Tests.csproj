@@ -40,7 +40,7 @@
     <None Update="appsettings.tokens.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="hmrc-user-organisation.json">
+    <None Update="hmrc-users.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="appsettings.json">
