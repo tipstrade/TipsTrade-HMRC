@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
+using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser {
   /// <summary>The factory used for creating ICreateTestUserRequest objects.</summary>
@@ -16,7 +17,7 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     public static T CreateTestUser(Func<string, bool> predicate) {
       var request = CreateTestUser();
 
-      request.ServiceNames.AddRange(GetServiceNames<T>().Where(predicate));
+      request.ServiceNames.AddRange(GetServiceNames().Where(predicate));
 
       return request;
     }
@@ -26,7 +27,7 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
       return CreateTestUser(s => true);
     }
 
-    private static IEnumerable<string> GetServiceNames<T>() {
+    private static IEnumerable<string> GetServiceNames() {
       return typeof(T)
         .GetFields(BindingFlags.Public | BindingFlags.Static)
         .Where(f => f.GetCustomAttribute<ServiceNameAttribute>() != null)

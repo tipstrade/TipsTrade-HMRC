@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using TipsTrade.HMRC.Api.Attributes;
+using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>The parameters used to create an individual test user.</summary>
+  [Endpoint("individuals")]
   public class CreateIndividualRequest : ICreateTestUserRequest {
     /// <summary>Generates an EORI number and enrols the user for Customs Services.</summary>
     [ServiceName]

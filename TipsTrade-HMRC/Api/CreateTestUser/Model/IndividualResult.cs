@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
+using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>Represents a response containing a created individual.</summary>
+  [RequestType(typeof(CreateIndividualRequest))]
   public class IndividualResult : UserResultBase {
     /// <summary></summary>
     [JsonProperty("individualDetails")]

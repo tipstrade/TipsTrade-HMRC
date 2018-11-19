@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using TipsTrade.HMRC.Api.Attributes;
+using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>The parameters used to create an organisation test user.</summary>
+  [Endpoint("organisations")]
   public class CreateOrganisationRequest : ICreateTestUserRequest {
     /// <summary>Generates a Corporation Tax UTR and enrols the user for Corporation Tax.</summary>
     [ServiceName]

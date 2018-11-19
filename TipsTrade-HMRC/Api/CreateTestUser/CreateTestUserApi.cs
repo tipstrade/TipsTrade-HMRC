@@ -1,5 +1,9 @@
 ﻿using RestSharp;
+using System;
+using System.Reflection;
+using TipsTrade.HMRC.Api.Attributes;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
+using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser {
   /// <summary>The API that exposes Create Test User functions.</summary>
@@ -25,13 +29,21 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     #endregion
 
     #region Methods
-    /// <summary>Creates a test organisation user with the specified services.</summary>
-    /// <param name="request">The services to request.</param>
-    public OrganisationResult CreateOrganisation(CreateOrganisationRequest request) {
-      var restRequest = this.CreateRequest("organisations", Method.POST, Authorization.Application);
+    /// <summary>Creates a test user  with the specified services.</summary>
+    /// <param name="request">The requested service names.</param>
+    /// <typeparam name="T">The type of user to create.</typeparam>
+    public T CreateUser<T>(ICreateTestUserRequest request) where T : UserResultBase {
+      var expectedRequestType = typeof(T).GetCustomAttribute<RequestTypeAttribute>().RequestType;
+      if (request.GetType() != expectedRequestType) {
+        throw new InvalidOperationException($"{typeof(T)} expects a request type of {expectedRequestType}.");
+      }
+
+      var endpoint = expectedRequestType.GetCustomAttribute<EndpointAttribute>().Endpoint;
+
+      var restRequest = this.CreateRequest(endpoint, Method.POST, Authorization.Application);
       restRequest.AddJsonBodyNewtonsoft(request);
-      
-      return this.ExecuteRequest<OrganisationResult>(restRequest);
+
+      return this.ExecuteRequest<T>(restRequest);
     }
     #endregion
   }
