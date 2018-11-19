@@ -82,7 +82,7 @@ namespace TipsTrade.HMRC.Api {
       var response =  client.Execute(request);
       response.ThrowOnError();
 
-      var data =  response.DeserializeContent<T>();
+      var data = response.DeserializeContent<T>();
 
       if (typeof(ICorrelationId).IsAssignableFrom(typeof(T))) {
         var id = response.Headers.Where(h => "X-CorrelationId".Equals(h.Name, StringComparison.CurrentCultureIgnoreCase)).First().Value;
