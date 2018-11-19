@@ -76,7 +76,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact(Skip = "Skipped so we don't keep creating new users.")]
-    public void CreateOganisation() {
+    public void TestCreateOganisation() {
       var request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUserFull();
 
       var organisation = Client.CreateTestUser.CreateOrganisation(request);
