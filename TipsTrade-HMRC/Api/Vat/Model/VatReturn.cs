@@ -55,28 +55,28 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     /// This corresponds to box 6 on the VAT Return form.
     /// </summary>
     [JsonProperty("totalValueSalesExVAT")]
-    public decimal TotalValueSalesExVAT { get; set; }
+    public long TotalValueSalesExVAT { get; set; }
 
     /// <summary>
     /// Total value of purchases and all other inputs excluding any VAT (including exempt purchases).
     /// This corresponds to box 7 on the VAT Return form. 
     /// </summary>
     [JsonProperty("totalValuePurchasesExVAT")]
-    public decimal TotalValuePurchasesExVAT { get; set; }
+    public long TotalValuePurchasesExVAT { get; set; }
 
     /// <summary>
     /// Total value of all supplies of goods and related costs, excluding any VAT, to other EC member states.
     /// This corresponds to box 8 on the VAT Return form.
     /// </summary>
     [JsonProperty("totalValueGoodsSuppliedExVAT")]
-    public decimal TotalValueGoodsSuppliedExVAT { get; set; }
+    public long TotalValueGoodsSuppliedExVAT { get; set; }
 
     /// <summary>
     /// Total value of acquisitions of goods and related costs excluding any VAT, from other EC member states.
     /// This corresponds to box 9 on the VAT Return form.
     /// </summary>
     [JsonProperty("totalAcquisitionsExVAT")]
-    public decimal TotalAcquisitionsExVAT { get; set; }
+    public long TotalAcquisitionsExVAT { get; set; }
 
     /// <summary>Returns a string that represents the current object.</summary>
     public override string ToString() {
