@@ -96,12 +96,12 @@ namespace TipsTrade.HMRC.Tests {
 
       foreach (var item in resp.Value) {
         Assert.NotNull(item.TaxPeriod);
-        Assert.NotEqual(default(DateTime), item.TaxPeriod.From);
-        Assert.NotEqual(default(DateTime), item.TaxPeriod.To);
+        Assert.NotDefault(item.TaxPeriod.From);
+        Assert.NotDefault(item.TaxPeriod.To);
         Assert.NotNull(item.Type);
-        Assert.NotEqual(default(decimal), item.OriginalAmount);
+        Assert.NotDefault(item.OriginalAmount);
         if (item.Due != null) {
-          Assert.NotEqual(default(DateTime), item.Due);
+          Assert.NotDefault(item.Due);
         }
       }
 
@@ -129,9 +129,9 @@ namespace TipsTrade.HMRC.Tests {
       Assert.NotEmpty(resp.Value);
       Assert.Equal(2, resp.Value.Where(x => x.Status == ObligationStatus.Fulfilled).Count());
       foreach (var item in resp.Value) {
-        Assert.NotEqual(default(DateTime), item.Start);
-        Assert.NotEqual(default(DateTime), item.End);
-        Assert.NotEqual(default(DateTime), item.Due);
+        Assert.NotDefault(item.Start);
+        Assert.NotDefault(item.End);
+        Assert.NotDefault(item.Due);
         Assert.NotNull(item.PeriodKey);
       }
 
@@ -178,9 +178,9 @@ namespace TipsTrade.HMRC.Tests {
       Assert.NotEmpty(resp.Value);
 
       foreach (var item in resp.Value) {
-        Assert.NotEqual(default(decimal), item.Amount);
+        Assert.NotDefault(item.Amount);
         if (item.Received != null) {
-          Assert.NotEqual(default(DateTime), item.Received);
+          Assert.NotDefault(item.Received);
         }
       }
 

@@ -47,7 +47,7 @@ namespace TipsTrade.HMRC.Tests {
       Assert.NotNull(tokens.AccessToken);
       Assert.NotNull(tokens.RefreshToken);
       Assert.NotEqual(0, tokens.ExpiresIn);
-      Assert.NotEqual(default(DateTime), tokens.ExpiresTimestamp);
+      Assert.NotDefault(tokens.ExpiresTimestamp);
       Assert.NotNull(tokens.Scope);
       Assert.NotNull(tokens.TokenType);
 
@@ -64,7 +64,7 @@ namespace TipsTrade.HMRC.Tests {
       Assert.NotNull(tokens.AccessToken);
       Assert.NotNull(tokens.RefreshToken);
       Assert.NotEqual(0, tokens.ExpiresIn);
-      Assert.NotEqual(default(DateTime), tokens.ExpiresTimestamp);
+      Assert.NotDefault(tokens.ExpiresTimestamp);
       Assert.NotNull(tokens.Scope);
       Assert.NotNull(tokens.TokenType);
 
