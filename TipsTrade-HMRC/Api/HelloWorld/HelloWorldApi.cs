@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json;
-using TipsTrade.HMRC.Api;
-using TipsTrade.HMRC.Api.HelloWorld.Model;
+﻿using TipsTrade.HMRC.Api.HelloWorld.Model;
 using TipsTrade.HMRC.HelloWorld.Api.Model;
 
-namespace TipsTrade.HMRC.HelloWorld.Api {
+namespace TipsTrade.HMRC.Api.HelloWorld {
   /// <summary>The API that exposes Hello World function.</summary>
   public class HelloWorldApi : IApi, IClient {
     #region Properties

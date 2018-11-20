@@ -7,9 +7,9 @@ using System.Linq;
 using System.Web;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser;
+using TipsTrade.HMRC.Api.HelloWorld;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Vat;
-using TipsTrade.HMRC.HelloWorld.Api;
 
 namespace TipsTrade.HMRC {
   /// <summary>The Api client used to interact with the HMRC API.</summary>
