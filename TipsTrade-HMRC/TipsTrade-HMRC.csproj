@@ -13,6 +13,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>0.0.1.0
 * Initial release</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/tipstrade/TipsTrade-HMRC</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/tipstrade/TipsTrade-HMRC/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>
