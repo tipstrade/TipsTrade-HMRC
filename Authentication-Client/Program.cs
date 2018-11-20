@@ -43,18 +43,29 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       Configuration = builder.Build();
 
-      var client = GetClient();
+      try {
+        var client = GetClient();
 
-      switch (ShowMainMenu()) {
-        case MainMenu.RefreshToken:
-          RefreshToken(client);
-          break;
+        switch (ShowMainMenu()) {
+          case MainMenu.RefreshToken:
+            RefreshToken(client);
+            break;
 
-        case MainMenu.CreateUser:
-          Authenticate(client);
-          break;
+          case MainMenu.CreateUser:
+            Authenticate(client);
+            break;
 
+        }
+
+      } catch (Exception ex) {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Error.WriteLine("");
+        Console.Error.WriteLine($"An {ex.GetType()} was thrown: {ex.Message}");
+        Console.Error.WriteLine(ex.StackTrace);
+        Console.ResetColor();
+        Console.Write("");
       }
+
 
       Console.WriteLine();
       Console.Write("Press any key to continue...");
