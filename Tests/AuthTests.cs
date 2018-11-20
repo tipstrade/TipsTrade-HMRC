@@ -46,7 +46,8 @@ namespace TipsTrade.HMRC.Tests {
       var tokens = client.HandleEndpointResult(uri, State);
       Assert.NotNull(tokens.AccessToken);
       Assert.NotNull(tokens.RefreshToken);
-      Assert.NotEqual(0, tokens.Expires);
+      Assert.NotEqual(0, tokens.ExpiresIn);
+      Assert.NotEqual(default(DateTime), tokens.ExpiresTimestamp);
       Assert.NotNull(tokens.Scope);
       Assert.NotNull(tokens.TokenType);
 
@@ -62,7 +63,8 @@ namespace TipsTrade.HMRC.Tests {
       var tokens = client.RefreshAccessToken(RefreshToken);
       Assert.NotNull(tokens.AccessToken);
       Assert.NotNull(tokens.RefreshToken);
-      Assert.NotEqual(0, tokens.Expires);
+      Assert.NotEqual(0, tokens.ExpiresIn);
+      Assert.NotEqual(default(DateTime), tokens.ExpiresTimestamp);
       Assert.NotNull(tokens.Scope);
       Assert.NotNull(tokens.TokenType);
 
