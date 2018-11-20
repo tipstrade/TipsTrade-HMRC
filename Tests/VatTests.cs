@@ -30,7 +30,7 @@ namespace TipsTrade.HMRC.Tests {
 
       PopulateDateRange(obRequest);
 
-      var client = Client;
+      var client = GetClient();
       client.AccessToken = AccessToken;
 
       var obligations = client.Vat.GetObligations(obRequest);
@@ -53,7 +53,7 @@ namespace TipsTrade.HMRC.Tests {
         Vrn = OrganisationUser.Vrn,
       };
 
-      var client = Client;
+      var client = GetClient();
       client.AccessToken = AccessToken;
 
       var resp = client.Vat.GetLiabilities(request);
@@ -84,7 +84,7 @@ namespace TipsTrade.HMRC.Tests {
 
       PopulateDateRange(obligations);
 
-      var client = Client;
+      var client = GetClient();
       client.AccessToken = AccessToken;
 
       ObligationResponse resp;
@@ -136,7 +136,7 @@ namespace TipsTrade.HMRC.Tests {
         Vrn = OrganisationUser.Vrn,
       };
 
-      var client = Client;
+      var client = GetClient();
       client.AccessToken = AccessToken;
 
       var resp = client.Vat.GetPayments(request);
@@ -202,7 +202,7 @@ namespace TipsTrade.HMRC.Tests {
         Vrn = OrganisationUser.Vrn
       };
 
-      var client = Client;
+      var client = GetClient();
       client.AccessToken = AccessToken;
 
       var resp = client.Vat.SubmitReturn(request);

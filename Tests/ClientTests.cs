@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TestCredentials() {
-      var client = Client;
+      var client = GetClient();
       Assert.Equal(ClientId, client.ClientID);
       Assert.Equal(ClientSecret, client.ClientSecret);
       Assert.Equal(ServerToken, client.ServerToken);
@@ -19,7 +19,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TestUrls() {
-      var client = Client;
+      var client = GetClient();
 
       client.IsSandbox = true;
       Assert.Equal(client.BaseUrl, Client.SandboxUrl);

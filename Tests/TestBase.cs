@@ -28,8 +28,6 @@ namespace TipsTrade.HMRC.Tests {
     #endregion
 
     #region Client properties
-    protected Client Client => new Client(ClientId, ClientSecret, ServerToken, IsSandbox);
-
     protected string ClientId => Configuration["ClientID"];
 
     protected string ClientSecret => Configuration["ClientSecret"];
@@ -41,18 +39,18 @@ namespace TipsTrade.HMRC.Tests {
 
     public TestBase(ITestOutputHelper output) {
       Output = output;
-
-      // See https://patrickhuber.github.io/2017/07/26/avoid-secrets-in-dot-net-core-tests.html
-      // From CLI: dotnet user-secrets set <Name> <Value>
       var builder = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
+        .AddJsonFile("appsettings.secrets.json")
         .AddJsonFile("appsettings.tokens.json")
-        .AddUserSecrets<TestBase>();
+        ;
 
       Configuration = builder.Build();
 
       LoadUsersFromJsonFile();
     }
+
+    protected Client GetClient() => new Client(ClientId, ClientSecret, ServerToken, IsSandbox);
 
     private void LoadUsersFromJsonFile() {
       var users = LoadFromJsonFile<JObject>("hmrc-users.json");

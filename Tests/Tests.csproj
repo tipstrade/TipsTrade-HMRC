@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
-    <UserSecretsId>TipsTrade-HMRC-Tests-f781a650-d476-4af7-b3f9-9fe913a60648</UserSecretsId>
     <RootNamespace>TipsTrade.HMRC.Tests</RootNamespace>
     <Version>0.0.0.1</Version>
     <Authors>John Bayly</Authors>
@@ -37,6 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.secrets.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="appsettings.tokens.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -29,14 +29,15 @@ namespace TipsTrade.HMRC.Tests {
     private void TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest where TUser : UserResultBase {
       var request = CreateTestUserFactory<TRequest>.CreateTestUserFull();
 
-      var method = Client.CreateTestUser.GetType().GetMethods()
+      var client = GetClient();
+
+      var method = client.CreateTestUser.GetType().GetMethods()
         .Where(m => {
           return m.Name.Equals(nameof(Client.CreateTestUser.CreateUser)) && m.GetParameters().All(p => {
             return p.ParameterType == typeof(TRequest);
           });
         }).First();
-      var result = (TUser)method.Invoke(Client.CreateTestUser, new object[] { request });
-      //var result = Client.CreateTestUser.CreateUser(request);
+      var result = (TUser)method.Invoke(client.CreateTestUser, new object[] { request });
       Assert.NotNull(result);
 
       foreach (var prop in result.GetType().GetProperties()) {
