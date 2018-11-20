@@ -1,5 +1,6 @@
 ﻿using RestSharp;
 using System;
+using System.Linq;
 using System.Reflection;
 using TipsTrade.HMRC.Api.Attributes;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
@@ -29,6 +30,16 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     #endregion
 
     #region Methods
+    /// <summary>Creates a test agent user with the specified services.</summary>
+    /// <param name="request">The requested service names.</param>
+    public UserResultBase CreateUser(ICreateTestUserRequest request) {
+      var method = GetType().GetMethods().Where(t => {
+        return nameof(CreateUser).Equals(t.Name) && t.GetParameters().First().ParameterType == request.GetType();
+      }).First();
+
+      return method.Invoke(this, new object[] { request }) as UserResultBase;
+    }
+
     /// <summary>Creates a test agent user with the specified services.</summary>
     /// <param name="request">The requested service names.</param>
     public AgentResult CreateUser(CreateAgentRequest request) {
