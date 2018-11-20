@@ -4,6 +4,9 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using TipsTrade.HMRC.Api.CreateTestUser.Model;
+using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api {
@@ -124,6 +127,14 @@ namespace TipsTrade.HMRC.Api {
     /// <summary>Gets the rest client for the specified API.</summary>
     internal static RestClient GetRestClient(this IApi api) {
       return new RestClient(api.GetClient().BaseUrl);
+    }
+
+    /// <summary>Gets all the service names for the current ICreateTestUserRequest.</summary>
+    public static IEnumerable<string> GetServiceNames(this ICreateTestUserRequest request) {
+      return request.GetType()
+        .GetFields(BindingFlags.Public | BindingFlags.Static)
+        .Where(f => f.GetCustomAttribute<ServiceNameAttribute>() != null)
+        .Select(f => (string)f.GetValue(null));
     }
 
     /// <summary>Sets the Content-Type of the request to application/json</summary>
