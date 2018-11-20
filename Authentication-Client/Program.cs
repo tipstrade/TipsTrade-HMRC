@@ -81,10 +81,14 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       Console.WriteLine();
       Console.WriteLine("Copy these details into appsettings.tokens.json for testing:");
+
+      Console.ForegroundColor = ConsoleColor.DarkGreen;
       Console.WriteLine(JsonConvert.SerializeObject(new {
         User = user,
         Tokens = tokens
       }, Formatting.Indented));
+      Console.ResetColor();
+      Console.Write("");
     }
 
     private static UserResultBase CreateUser(Client client, Type userType) {
@@ -126,7 +130,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
     private static Type GetUserType(Client client) {
       var types = client.GetType().Assembly.GetTypes().Where(t => {
         return (t != typeof(ICreateTestUserRequest)) && typeof(ICreateTestUserRequest).IsAssignableFrom(t);
-      }).OrderBy(t=> t.Name).ToArray();
+      }).OrderBy(t => t.Name).ToArray();
 
       for (int i = 0; i < types.Length; i++) {
         Console.WriteLine($"{i + 1}: {types[i].Name}");
@@ -154,9 +158,13 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       Console.WriteLine();
       Console.WriteLine("Copy these details into appsettings.tokens.json for testing:");
+
+      Console.ForegroundColor = ConsoleColor.DarkGreen;
       Console.WriteLine(JsonConvert.SerializeObject(new {
         Tokens = tokens
       }, Formatting.Indented));
+      Console.ResetColor();
+      Console.Write("");
     }
 
     private static MainMenu ShowMainMenu() {
