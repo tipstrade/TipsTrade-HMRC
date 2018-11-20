@@ -11,6 +11,23 @@ namespace TipsTrade.HMRC.Tests {
     public VatTests(ITestOutputHelper output) : base(output) {
     }
 
+    /// <summary>This is the VAT return used for testing submissions and retrievals.</summary>
+    private VatReturn CreateVatReturn(string periodKey) {
+      return new VatReturn() {
+        PeriodKey = periodKey,
+        VatDueSales = 7724.92m,
+        VatDueAcquisitions = 703.49m,
+        TotalVatDue = 7724.92m + 703.49m,
+        VatReclaimedCurrPeriod = 1681.08m,
+        NetVatDue = 7724.92m + 703.49m - 1681.08m,
+        TotalValueSalesExVAT = 38622,
+        TotalValuePurchasesExVAT = 8405,
+        TotalValueGoodsSuppliedExVAT = 3703,
+        TotalAcquisitionsExVAT = 500,
+        Finalised = true
+      };
+    }
+
     private void PopulateDateRange(IDateRange value) {
       var year = DateTime.Now.Year;
       if (DateTime.Now.Month < 3) {
@@ -24,17 +41,15 @@ namespace TipsTrade.HMRC.Tests {
     [Fact]
     public void TestGetReturn() {
       var obRequest = new ObligationsRequest() {
-        GovTestScenario = ObligationsRequest.ScenarioMonthlylyMet2,
         Vrn = Users.Organisation.User.Vrn,
       };
-
       PopulateDateRange(obRequest);
 
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       var obligations = client.Vat.GetObligations(obRequest);
-      var periodKey = obligations.Value.Where(o => o.Status == ObligationStatus.Fulfilled).LastOrDefault().PeriodKey;
+      var periodKey = obligations.Value.Where(o => o.Status == ObligationStatus.Open).LastOrDefault().PeriodKey;
 
       var returnRequest = new ReturnRequest() {
         Vrn = Users.Organisation.User.Vrn,
@@ -42,6 +57,25 @@ namespace TipsTrade.HMRC.Tests {
       };
 
       var resp = client.Vat.GetReturn(returnRequest);
+      Assert.NotNull(resp);
+
+      // Compare to the expected return
+      var expected = CreateVatReturn(periodKey);
+      foreach (var prop in expected.GetType().GetProperties()) {
+        object expectedValue = prop.GetValue(expected);
+
+        var returnedProp = typeof(ReturnResponse).GetProperty(prop.Name);
+        object returnedValue = returnedProp.GetValue(resp);
+
+        if (prop.Name == nameof(VatReturn.Finalised)) {
+          Assert.Null(returnedValue); // Finalised isn't returned by GetReturn
+        } else {
+          Assert.Equal(expectedValue, returnedValue);
+        }
+      }
+
+      Output.WriteLine("VAT Retrieved return:");
+      Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
 
     [Fact]
@@ -156,6 +190,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TestReturnSerialization() {
+      // Taken from the docs
       var json = @"{
   ""periodKey"": ""#001"",
   ""vatDueSales"": 7724.92,
@@ -185,25 +220,21 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TestSubmission() {
-      var request = new SubmitRequest() {
-        Return = new VatReturn() {
-          PeriodKey = "18AF",
-          VatDueSales = 7724.92m,
-          VatDueAcquisitions = 0,
-          TotalVatDue = 7724.92m,
-          VatReclaimedCurrPeriod = 1681.08m,
-          NetVatDue = 6043.84m,
-          TotalValueSalesExVAT = 38622,
-          TotalValuePurchasesExVAT = 8405,
-          TotalValueGoodsSuppliedExVAT  = 0,
-          TotalAcquisitionsExVAT = 0,
-          Finalised = true
-        },
-        Vrn = Users.Organisation.User.Vrn
+      var obRequest = new ObligationsRequest() {
+        Vrn = Users.Organisation.User.Vrn,
       };
+      PopulateDateRange(obRequest);
 
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
+
+      var obligations = client.Vat.GetObligations(obRequest);
+      var periodKey = obligations.Value.Where(o => o.Status == ObligationStatus.Open).LastOrDefault().PeriodKey;
+
+      var request = new SubmitRequest() {
+        Return = CreateVatReturn(periodKey),
+        Vrn = Users.Organisation.User.Vrn
+      };
 
       var resp = client.Vat.SubmitReturn(request);
 
