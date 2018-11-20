@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.IO;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
@@ -17,7 +16,7 @@ namespace TipsTrade.HMRC.Tests {
     #endregion
 
     #region User properties
-   protected HmrcUsers Users { get; private set; }
+    protected HmrcUsers Users { get; private set; }
     #endregion
 
     #region Client properties
