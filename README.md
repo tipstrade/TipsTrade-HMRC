@@ -1,5 +1,9 @@
 # TipsTrade-HMRC
-A strongly type .Net client for interacting with the HMRC APIs
+A strongly type .Net client for interacting with the HMRC APIs.
+The following APIs are supported:
+* Hello World
+* VAT (MTD)
+* Create Test User
 
 ## HMRC Developer Account
 A HMRC developer account is required - [Login Here][1]. To make requests you need to create an application which provides the following credentials:
