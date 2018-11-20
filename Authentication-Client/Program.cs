@@ -38,8 +38,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       var builder = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
-        .AddJsonFile("appsettings.secrets.json")
-        .AddJsonFile("appsettings.tokens.json")
+        .AddUserSecrets<Program>()
         ;
 
       Configuration = builder.Build();

@@ -1,53 +1,14 @@
 {
-  "agent": {
-    "agentServicesAccountNumber": "YARN0761166",
-    "userId": "133493287500",
-    "password": "gybsgw1qmqot",
-    "userFullName": "Iona Lawrence",
-    "emailAddress": "iona.lawrence@example.com"
+  "Agent": {
+    "User": null,
+    "Tokens": null
   },
-  "individual": {
-    "individualDetails": {
-      "dateOfBirth": "1964-09-20T00:00:00",
-      "firstName": "Carol",
-      "lastName": "Walker",
-      "address": {
-        "line1": "42 Palace Gardens Terrace",
-        "line2": "Bath",
-        "postcode": "TS6 1PA"
-      }
-    },
-    "saUtr": "5000016909",
-    "nino": "LZ968526A",
-    "eoriNumber": "GB6402963603",
-    "mtdItId": "XNIT00000977164",
-    "userId": "128737666283",
-    "password": "7znkmp1cfr5y",
-    "userFullName": "Carol Walker",
-    "emailAddress": "carol.walker@example.com"
+  "Individual": {
+    "User": null,
+    "Tokens": null
   },
-  "organisation": {
-    "organisationDetails": {
-      "name": "Company NRYL0X",
-      "address": {
-        "line1": "42 Palace Gardens Terrace",
-        "line2": "Crewe",
-        "postcode": "TS18 1PA"
-      }
-    },
-    "saUtr": "6000096163",
-    "nino": "MG122404A",
-    "empRef": "494/MWLQPWLLRK",
-    "ctUtr": "1000027166",
-    "vrn": "666763284",
-    "mtdItId": "XLIT00000548546",
-    "lisaManagerReferenceNumber": "Z6942",
-    "secureElectronicTransferReferenceNumber": "307703077030",
-    "pensionSchemeAdministratorIdentifier": "A2133620",
-    "eoriNumber": "GB5933099647",
-    "userId": "695841328782",
-    "password": "ggcqczd9xdzw",
-    "userFullName": "Nell Jackson",
-    "emailAddress": "nell.jackson@example.com"
+  "Organisation": {
+    "User": null,
+    "Tokens": null
   }
 }

@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>TipsTrade.HMRC.Tests.Authentication_Client</RootNamespace>
+    <UserSecretsId>TipsTrade-HMRC-Tests-f781a650-d476-4af7-b3f9-9fe913a60648</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,13 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="appsettings.secrets.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="appsettings.tokens.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -27,7 +27,7 @@ namespace TipsTrade.HMRC.Tests {
     public void TestUser() {
       var client = GetClient();
 
-      client.AccessToken = AccessToken;
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
       Assert.Equal("Hello User", client.HelloWorld.SayHelloUser());
 
       client.AccessToken = $"{Guid.Empty}";

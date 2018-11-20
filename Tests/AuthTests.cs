@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Web;
 using TipsTrade.HMRC.Api;
 using Xunit;
 using Xunit.Abstractions;
@@ -14,13 +15,12 @@ namespace TipsTrade.HMRC.Tests {
       var client = GetClient();
 
       var scopes = new string[] { "hello", "read:vat", "write:vat" };
-      var redirecUrl = "https://www.example.com/hmrc/callback";
 
-      var url = client.GetAuthorizatoinEndpoint(State, redirecUrl, scopes);
+      var encodedRedirect = HttpUtility.UrlEncode(RedirectUrl);
+      var expected = $"https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=7Y7IDapnKX7uGrPhN1SIRe63e1Ya&scope=hello+read%3avat+write%3avat&state=4f00d15e-de25-4796-999f-266ea4429889&redirect_uri={encodedRedirect}";
+      var url = client.GetAuthorizatoinEndpoint(State, RedirectUrl, scopes);
 
-      Assert.Equal(
-        "https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=7Y7IDapnKX7uGrPhN1SIRe63e1Ya&scope=hello+read%3avat+write%3avat&state=4f00d15e-de25-4796-999f-266ea4429889&redirect_uri=https%3a%2f%2fwww.example.com%2fhmrc%2fcallback",
-        url);
+      Assert.Equal(expected, url);
 
       Output.WriteLine("Authorization Endpoint:");
       Output.WriteLine(url);
@@ -28,7 +28,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TestHandleRedirectUrlError() {
-      var uri = "https://www.example.com/hmrc/callback?error=access_denied&error_description=user+denied+the+authorization&state=4f00d15e-de25-4796-999f-266ea4429889&error_code=USER_DENIED_AUTHORIZATION";
+      var uri = $"{RedirectUrl}?error=access_denied&error_description=user+denied+the+authorization&state=4f00d15e-de25-4796-999f-266ea4429889&error_code=USER_DENIED_AUTHORIZATION";
 
       var client = GetClient();
 
@@ -39,7 +39,7 @@ namespace TipsTrade.HMRC.Tests {
     [Fact(Skip = "Skipped so the code is one-use only.")]
     //[Fact]
     public void TestHandleRedirectUrlSuccess() {
-      var uri = "https://www.example.com/hmrc/callback?code=640f35efde314a91b32d696710759a5d&state=4f00d15e-de25-4796-999f-266ea4429889";
+      var uri = $"{RedirectUrl}?code=640f35efde314a91b32d696710759a5d&state=4f00d15e-de25-4796-999f-266ea4429889";
 
       var client = GetClient();
 
@@ -60,7 +60,7 @@ namespace TipsTrade.HMRC.Tests {
     public void TestRefreshToken() {
       var client = GetClient();
 
-      var tokens = client.RefreshAccessToken(RefreshToken);
+      var tokens = client.RefreshAccessToken(Users.Organisation.Tokens.RefreshToken);
       Assert.NotNull(tokens.AccessToken);
       Assert.NotNull(tokens.RefreshToken);
       Assert.NotEqual(0, tokens.ExpiresIn);

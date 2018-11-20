@@ -25,19 +25,19 @@ namespace TipsTrade.HMRC.Tests {
     public void TestGetReturn() {
       var obRequest = new ObligationsRequest() {
         GovTestScenario = ObligationsRequest.ScenarioMonthlylyMet2,
-        Vrn = OrganisationUser.Vrn,
+        Vrn = Users.Organisation.User.Vrn,
       };
 
       PopulateDateRange(obRequest);
 
       var client = GetClient();
-      client.AccessToken = AccessToken;
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       var obligations = client.Vat.GetObligations(obRequest);
       var periodKey = obligations.Value.Where(o => o.Status == ObligationStatus.Fulfilled).LastOrDefault().PeriodKey;
 
       var returnRequest = new ReturnRequest() {
-        Vrn = OrganisationUser.Vrn,
+        Vrn = Users.Organisation.User.Vrn,
         PeriodKey = periodKey
       };
 
@@ -50,11 +50,11 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = LiabilitiesRequest.ScenarioMultipleLiabilities,
         From = new DateTime(2017, 2, 27),
         To = new DateTime(2017, 12, 31),
-        Vrn = OrganisationUser.Vrn,
+        Vrn = Users.Organisation.User.Vrn,
       };
 
       var client = GetClient();
-      client.AccessToken = AccessToken;
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       var resp = client.Vat.GetLiabilities(request);
       Assert.NotNull(resp);
@@ -79,13 +79,13 @@ namespace TipsTrade.HMRC.Tests {
     public void TestObligations() {
       var obligations = new ObligationsRequest() {
         GovTestScenario = ObligationsRequest.ScenarioMonthlylyMet2,
-        Vrn = OrganisationUser.Vrn,
+        Vrn = Users.Organisation.User.Vrn,
       };
 
       PopulateDateRange(obligations);
 
       var client = GetClient();
-      client.AccessToken = AccessToken;
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       ObligationResponse resp;
 
@@ -133,11 +133,11 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = PaymentsRequest.ScenarioMultiplePayment,
         From = new DateTime(2017, 2, 27),
         To = new DateTime(2017, 12, 31),
-        Vrn = OrganisationUser.Vrn,
+        Vrn = Users.Organisation.User.Vrn,
       };
 
       var client = GetClient();
-      client.AccessToken = AccessToken;
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       var resp = client.Vat.GetPayments(request);
       Assert.NotNull(resp);
@@ -199,11 +199,11 @@ namespace TipsTrade.HMRC.Tests {
           TotalAcquisitionsExVAT = 0,
           Finalised = true
         },
-        Vrn = OrganisationUser.Vrn
+        Vrn = Users.Organisation.User.Vrn
       };
 
       var client = GetClient();
-      client.AccessToken = AccessToken;
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       var resp = client.Vat.SubmitReturn(request);
 

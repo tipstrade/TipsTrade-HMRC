@@ -10,6 +10,7 @@
     <Company>TipsTrade Ltd.</Company>
     <Product>TipsTrade-HMRC-Tests</Product>
     <Copyright>TipsTrade Ltd. 2018</Copyright>
+    <UserSecretsId>TipsTrade-HMRC-Tests-f781a650-d476-4af7-b3f9-9fe913a60648</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,12 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="appsettings.secrets.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="appsettings.tokens.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="hmrc-users.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
