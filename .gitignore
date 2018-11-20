@@ -4,6 +4,7 @@
 # The session tokens for tests
 appsettings.tokens.json
 appsettings.secrets.json
+hmrc-users.json
 
 # User-specific files
 *.suo
