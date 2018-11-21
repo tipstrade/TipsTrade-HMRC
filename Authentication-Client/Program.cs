@@ -82,7 +82,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       Console.WriteLine();
       Console.WriteLine("Copy these details into appsettings.tokens.json for testing:");
 
-      Console.ForegroundColor = ConsoleColor.DarkGreen;
+      Console.ForegroundColor = ConsoleColor.Green;
       Console.WriteLine(JsonConvert.SerializeObject(new {
         User = user,
         Tokens = tokens
@@ -159,7 +159,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       Console.WriteLine();
       Console.WriteLine("Copy these details into appsettings.tokens.json for testing:");
 
-      Console.ForegroundColor = ConsoleColor.DarkGreen;
+      Console.ForegroundColor = ConsoleColor.Green;
       Console.WriteLine(JsonConvert.SerializeObject(new {
         Tokens = tokens
       }, Formatting.Indented));
