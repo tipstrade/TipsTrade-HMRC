@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.1.0</Version>
+    <Version>0.0.1.1</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -11,7 +11,10 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Product>TipsTrade-HMRC</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>0.0.1.0
+    <PackageReleaseNotes>0.0.1.1
+* Add fuel scale charges
+
+0.0.1.0
 * Initial release</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/tipstrade/TipsTrade-HMRC</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/tipstrade/TipsTrade-HMRC/blob/master/LICENSE</PackageLicenseUrl>
