@@ -1,9 +1,15 @@
-﻿using System.Linq;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using TipsTrade.HMRC.Api.Vat.Model;
 
 namespace TipsTrade.HMRC.Api.Vat {
   /// <summary>The API that exposes VAT functions.</summary>
   public class VatApi : IApi, IClient {
+    private const string FuelScaleChargesResource = "Resources.FuelScaleCharges.json";
+
     #region Properties
     /// <summary>The client used to make requests.</summary>
     Client IClient.Client { get; set; }
@@ -25,6 +31,49 @@ namespace TipsTrade.HMRC.Api.Vat {
     #endregion
 
     #region Methods
+    /// <summary>Gets the fuel scale chage</summary>
+    /// <param name="date">The date of the VAT return.</param>
+    /// <param name="periodLength">The length of the VAT period in months (1, 3, 12).</param>
+    /// <param name="co2">The CO2 emmissions (g/km) of the vehicle.</param>
+    public static FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, int periodLength, int co2) {
+      if (!new int[] { 1, 3, 12 }.Contains(periodLength)) {
+        throw new ArgumentException($"{periodLength} is not valid.", nameof(periodLength));
+      }
+
+      var assembly = typeof(FuelScaleChargeResult).Assembly;
+      var name = assembly.GetManifestResourceNames().Where(n => n.Contains(FuelScaleChargesResource)).First();
+
+      FuelScaleChargeGroup[] values;
+      using (var stream = assembly.GetManifestResourceStream(name)) {
+        using (var reader = new StreamReader(stream)) {
+          values = JsonConvert.DeserializeObject<FuelScaleChargeGroup[]>(reader.ReadToEnd());
+        }
+      }
+
+      var group = values.Where(g => (g.From <= date) && (g.To >= date)).FirstOrDefault();
+      if (group == null) {
+        throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found for {date}.");
+      }
+
+      IEnumerable<FuelScaleChargeResult> list;
+      if (periodLength == 1) {
+        list = group.Monthly;
+      } else if (periodLength == 3) {
+        list = group.Quarterly;
+      } else if (periodLength == 12) {
+        list = group.Annually;
+      } else {
+        throw new Exception("Already checked for.");
+      }
+
+      var result = list.Where(x => co2 >= x.CO2Band).LastOrDefault() ?? list.First();
+
+      result.From = group.From;
+      result.To = group.To;
+
+      return result;
+    }
+
     /// <summary>Retrieve VAT liabilities.</summary>
     /// <param name="request">The date range request.</param>
     public LiabilitiesResponse GetLiabilities(LiabilitiesRequest request) {

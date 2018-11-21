@@ -1,0 +1,3306 @@
+[
+  {
+    "Annually": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 562.00,
+        "Vat": 93.67,
+        "Nett": 468.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 842.00,
+        "Vat": 140.33,
+        "Nett": 701.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 900.0,
+        "Vat": 150.0,
+        "Nett": 750.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 954.0,
+        "Vat": 159.0,
+        "Nett": 795.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 1013.00,
+        "Vat": 168.83,
+        "Nett": 844.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 1067.00,
+        "Vat": 177.83,
+        "Nett": 889.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 1125.00,
+        "Vat": 187.50,
+        "Nett": 937.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 1179.00,
+        "Vat": 196.50,
+        "Nett": 982.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 1238.00,
+        "Vat": 206.33,
+        "Nett": 1031.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 1292.00,
+        "Vat": 215.33,
+        "Nett": 1076.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 1350.0,
+        "Vat": 225.0,
+        "Nett": 1125.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 1404.0,
+        "Vat": 234.0,
+        "Nett": 1170.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 1463.00,
+        "Vat": 243.83,
+        "Nett": 1219.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 1517.00,
+        "Vat": 252.83,
+        "Nett": 1264.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 1575.00,
+        "Vat": 262.50,
+        "Nett": 1312.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 1630.00,
+        "Vat": 271.67,
+        "Nett": 1358.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 1688.00,
+        "Vat": 281.33,
+        "Nett": 1406.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 1742.00,
+        "Vat": 290.33,
+        "Nett": 1451.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 1801.00,
+        "Vat": 300.17,
+        "Nett": 1500.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 1855.00,
+        "Vat": 309.17,
+        "Nett": 1545.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 1913.00,
+        "Vat": 318.83,
+        "Nett": 1594.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 1967.00,
+        "Vat": 327.83,
+        "Nett": 1639.17,
+        "VatRate": 0.200
+      }
+    ],
+    "From": "2018-05-01T00:00:00",
+    "Monthly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 46.00,
+        "Vat": 7.67,
+        "Nett": 38.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 70.00,
+        "Vat": 11.67,
+        "Nett": 58.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 74.00,
+        "Vat": 12.33,
+        "Nett": 61.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 79.00,
+        "Vat": 13.17,
+        "Nett": 65.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 84.0,
+        "Vat": 14.0,
+        "Nett": 70.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 88.00,
+        "Vat": 14.67,
+        "Nett": 73.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 93.00,
+        "Vat": 15.50,
+        "Nett": 77.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 98.00,
+        "Vat": 16.33,
+        "Nett": 81.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 102.0,
+        "Vat": 17.0,
+        "Nett": 85.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 107.00,
+        "Vat": 17.83,
+        "Nett": 89.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 111.00,
+        "Vat": 18.50,
+        "Nett": 92.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 116.00,
+        "Vat": 19.33,
+        "Nett": 96.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 121.00,
+        "Vat": 20.17,
+        "Nett": 100.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 125.00,
+        "Vat": 20.83,
+        "Nett": 104.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 130.00,
+        "Vat": 21.67,
+        "Nett": 108.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 135.00,
+        "Vat": 22.50,
+        "Nett": 112.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 140.00,
+        "Vat": 23.33,
+        "Nett": 116.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 145.00,
+        "Vat": 24.17,
+        "Nett": 120.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 149.00,
+        "Vat": 24.83,
+        "Nett": 124.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 154.00,
+        "Vat": 25.67,
+        "Nett": 128.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 159.00,
+        "Vat": 26.50,
+        "Nett": 132.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 163.00,
+        "Vat": 27.17,
+        "Nett": 135.83,
+        "VatRate": 0.200
+      }
+    ],
+    "Quarterly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 140.00,
+        "Vat": 23.33,
+        "Nett": 116.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 210.0,
+        "Vat": 35.0,
+        "Nett": 175.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 224.00,
+        "Vat": 37.33,
+        "Nett": 186.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 238.00,
+        "Vat": 39.67,
+        "Nett": 198.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 252.0,
+        "Vat": 42.0,
+        "Nett": 210.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 266.00,
+        "Vat": 44.33,
+        "Nett": 221.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 280.00,
+        "Vat": 46.67,
+        "Nett": 233.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 295.00,
+        "Vat": 49.17,
+        "Nett": 245.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 309.00,
+        "Vat": 51.50,
+        "Nett": 257.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 323.00,
+        "Vat": 53.83,
+        "Nett": 269.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 336.0,
+        "Vat": 56.0,
+        "Nett": 280.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 351.00,
+        "Vat": 58.50,
+        "Nett": 292.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 365.00,
+        "Vat": 60.83,
+        "Nett": 304.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 379.00,
+        "Vat": 63.17,
+        "Nett": 315.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 393.00,
+        "Vat": 65.50,
+        "Nett": 327.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 407.00,
+        "Vat": 67.83,
+        "Nett": 339.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 421.00,
+        "Vat": 70.17,
+        "Nett": 350.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 436.00,
+        "Vat": 72.67,
+        "Nett": 363.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 449.00,
+        "Vat": 74.83,
+        "Nett": 374.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 463.00,
+        "Vat": 77.17,
+        "Nett": 385.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 477.00,
+        "Vat": 79.50,
+        "Nett": 397.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 491.00,
+        "Vat": 81.83,
+        "Nett": 409.17,
+        "VatRate": 0.200
+      }
+    ],
+    "To": "2019-04-30T00:00:00"
+  },
+  {
+    "Annually": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 563.00,
+        "Vat": 93.83,
+        "Nett": 469.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 842.00,
+        "Vat": 140.33,
+        "Nett": 701.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 901.00,
+        "Vat": 150.17,
+        "Nett": 750.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 955.00,
+        "Vat": 159.17,
+        "Nett": 795.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 1013.00,
+        "Vat": 168.83,
+        "Nett": 844.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 1068.0,
+        "Vat": 178.0,
+        "Nett": 890.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 1126.00,
+        "Vat": 187.67,
+        "Nett": 938.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 1180.00,
+        "Vat": 196.67,
+        "Nett": 983.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 1239.00,
+        "Vat": 206.50,
+        "Nett": 1032.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 1293.00,
+        "Vat": 215.50,
+        "Nett": 1077.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 1351.00,
+        "Vat": 225.17,
+        "Nett": 1125.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 1405.00,
+        "Vat": 234.17,
+        "Nett": 1170.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 1464.0,
+        "Vat": 244.0,
+        "Nett": 1220.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 1518.0,
+        "Vat": 253.0,
+        "Nett": 1265.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 1577.00,
+        "Vat": 262.83,
+        "Nett": 1314.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 1631.00,
+        "Vat": 271.83,
+        "Nett": 1359.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 1689.00,
+        "Vat": 281.50,
+        "Nett": 1407.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 1743.00,
+        "Vat": 290.50,
+        "Nett": 1452.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 1802.00,
+        "Vat": 300.33,
+        "Nett": 1501.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 1856.00,
+        "Vat": 309.33,
+        "Nett": 1546.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 1914.0,
+        "Vat": 319.0,
+        "Nett": 1595.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 1969.00,
+        "Vat": 328.17,
+        "Nett": 1640.83,
+        "VatRate": 0.200
+      }
+    ],
+    "From": "2017-05-01T00:00:00",
+    "Monthly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 46.00,
+        "Vat": 7.67,
+        "Nett": 38.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 70.00,
+        "Vat": 11.67,
+        "Nett": 58.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 74.00,
+        "Vat": 12.33,
+        "Nett": 61.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 79.00,
+        "Vat": 13.17,
+        "Nett": 65.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 84.00,
+        "Vat": 14.00,
+        "Nett": 70.00,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 88.00,
+        "Vat": 14.67,
+        "Nett": 73.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 93.00,
+        "Vat": 15.50,
+        "Nett": 77.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 98.00,
+        "Vat": 16.33,
+        "Nett": 81.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 102.0,
+        "Vat": 17.0,
+        "Nett": 85.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 107.00,
+        "Vat": 17.83,
+        "Nett": 89.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 111.00,
+        "Vat": 18.50,
+        "Nett": 92.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 116.00,
+        "Vat": 19.33,
+        "Nett": 96.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 121.00,
+        "Vat": 20.17,
+        "Nett": 100.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 125.00,
+        "Vat": 20.83,
+        "Nett": 104.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 131.00,
+        "Vat": 21.83,
+        "Nett": 109.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 136.00,
+        "Vat": 22.67,
+        "Nett": 113.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 140.00,
+        "Vat": 23.33,
+        "Nett": 116.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 145.00,
+        "Vat": 24.17,
+        "Nett": 120.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 149.00,
+        "Vat": 24.83,
+        "Nett": 124.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 154.00,
+        "Vat": 25.67,
+        "Nett": 128.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 159.00,
+        "Vat": 26.50,
+        "Nett": 132.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 163.00,
+        "Vat": 27.17,
+        "Nett": 135.83,
+        "VatRate": 0.200
+      }
+    ],
+    "Quarterly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 140.00,
+        "Vat": 23.33,
+        "Nett": 116.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 211.00,
+        "Vat": 35.17,
+        "Nett": 175.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 224.00,
+        "Vat": 37.33,
+        "Nett": 186.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 238.00,
+        "Vat": 39.67,
+        "Nett": 198.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 252.0,
+        "Vat": 42.0,
+        "Nett": 210.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 267.00,
+        "Vat": 44.50,
+        "Nett": 222.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 281.00,
+        "Vat": 46.83,
+        "Nett": 234.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 295.00,
+        "Vat": 49.17,
+        "Nett": 245.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 309.00,
+        "Vat": 51.50,
+        "Nett": 257.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 323.00,
+        "Vat": 53.83,
+        "Nett": 269.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 337.00,
+        "Vat": 56.17,
+        "Nett": 280.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 351.00,
+        "Vat": 58.50,
+        "Nett": 292.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 365.00,
+        "Vat": 60.83,
+        "Nett": 304.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 379.00,
+        "Vat": 63.17,
+        "Nett": 315.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 393.00,
+        "Vat": 65.50,
+        "Nett": 327.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 408.00,
+        "Vat": 68.00,
+        "Nett": 340.0,
+        "VatRate": 0.20
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 422.00,
+        "Vat": 70.33,
+        "Nett": 351.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 436.00,
+        "Vat": 72.67,
+        "Nett": 363.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 449.00,
+        "Vat": 74.83,
+        "Nett": 374.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 463.00,
+        "Vat": 77.17,
+        "Nett": 385.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 478.00,
+        "Vat": 79.67,
+        "Nett": 398.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 492.0,
+        "Vat": 82.0,
+        "Nett": 410.0,
+        "VatRate": 0.2
+      }
+    ],
+    "To": "2018-04-30T00:00:00"
+  },
+  {
+    "Annually": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 467.00,
+        "Vat": 77.83,
+        "Nett": 389.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 699.00,
+        "Vat": 116.50,
+        "Nett": 582.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 747.00,
+        "Vat": 124.50,
+        "Nett": 622.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 792.0,
+        "Vat": 132.0,
+        "Nett": 660.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 841.00,
+        "Vat": 140.17,
+        "Nett": 700.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 886.00,
+        "Vat": 147.67,
+        "Nett": 738.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 934.00,
+        "Vat": 155.67,
+        "Nett": 778.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 979.00,
+        "Vat": 163.17,
+        "Nett": 815.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 1028.00,
+        "Vat": 171.33,
+        "Nett": 856.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 1073.00,
+        "Vat": 178.83,
+        "Nett": 894.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 1121.00,
+        "Vat": 186.83,
+        "Nett": 934.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 1166.00,
+        "Vat": 194.33,
+        "Nett": 971.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 1214.00,
+        "Vat": 202.33,
+        "Nett": 1011.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 1259.00,
+        "Vat": 209.83,
+        "Nett": 1049.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 1308.0,
+        "Vat": 218.0,
+        "Nett": 1090.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 1353.00,
+        "Vat": 225.50,
+        "Nett": 1127.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 1401.00,
+        "Vat": 233.50,
+        "Nett": 1167.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 1446.0,
+        "Vat": 241.0,
+        "Nett": 1205.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 1495.00,
+        "Vat": 249.17,
+        "Nett": 1245.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 1540.00,
+        "Vat": 256.67,
+        "Nett": 1283.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 1588.00,
+        "Vat": 264.67,
+        "Nett": 1323.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 1633.00,
+        "Vat": 272.17,
+        "Nett": 1360.83,
+        "VatRate": 0.200
+      }
+    ],
+    "From": "2016-05-01T00:00:00",
+    "Monthly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 38.00,
+        "Vat": 6.33,
+        "Nett": 31.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 58.00,
+        "Vat": 9.67,
+        "Nett": 48.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 61.00,
+        "Vat": 10.17,
+        "Nett": 50.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 65.00,
+        "Vat": 10.83,
+        "Nett": 54.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 69.00,
+        "Vat": 11.50,
+        "Nett": 57.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 73.00,
+        "Vat": 12.17,
+        "Nett": 60.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 77.00,
+        "Vat": 12.83,
+        "Nett": 64.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 81.00,
+        "Vat": 13.50,
+        "Nett": 67.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 85.00,
+        "Vat": 14.17,
+        "Nett": 70.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 89.00,
+        "Vat": 14.83,
+        "Nett": 74.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 92.00,
+        "Vat": 15.33,
+        "Nett": 76.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 96.0,
+        "Vat": 16.0,
+        "Nett": 80.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 101.00,
+        "Vat": 16.83,
+        "Nett": 84.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 104.00,
+        "Vat": 17.33,
+        "Nett": 86.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 108.0,
+        "Vat": 18.0,
+        "Nett": 90.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 112.00,
+        "Vat": 18.67,
+        "Nett": 93.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 116.00,
+        "Vat": 19.33,
+        "Nett": 96.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 120.0,
+        "Vat": 20.0,
+        "Nett": 100.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 123.00,
+        "Vat": 20.50,
+        "Nett": 102.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 128.00,
+        "Vat": 21.33,
+        "Nett": 106.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 132.0,
+        "Vat": 22.0,
+        "Nett": 110.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 135.00,
+        "Vat": 22.50,
+        "Nett": 112.50,
+        "VatRate": 0.2
+      }
+    ],
+    "Quarterly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 116.00,
+        "Vat": 19.33,
+        "Nett": 96.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 175.00,
+        "Vat": 29.17,
+        "Nett": 145.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 186.0,
+        "Vat": 31.0,
+        "Nett": 155.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 197.00,
+        "Vat": 32.83,
+        "Nett": 164.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 209.00,
+        "Vat": 34.83,
+        "Nett": 174.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 221.00,
+        "Vat": 36.83,
+        "Nett": 184.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 233.00,
+        "Vat": 38.83,
+        "Nett": 194.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 245.00,
+        "Vat": 40.83,
+        "Nett": 204.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 256.00,
+        "Vat": 42.67,
+        "Nett": 213.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 268.00,
+        "Vat": 44.67,
+        "Nett": 223.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 279.00,
+        "Vat": 46.50,
+        "Nett": 232.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 291.00,
+        "Vat": 48.50,
+        "Nett": 242.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 303.00,
+        "Vat": 50.50,
+        "Nett": 252.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 314.00,
+        "Vat": 52.33,
+        "Nett": 261.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 326.00,
+        "Vat": 54.33,
+        "Nett": 271.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 338.00,
+        "Vat": 56.33,
+        "Nett": 281.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 350.00,
+        "Vat": 58.33,
+        "Nett": 291.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 362.00,
+        "Vat": 60.33,
+        "Nett": 301.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 373.00,
+        "Vat": 62.17,
+        "Nett": 310.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 384.0,
+        "Vat": 64.0,
+        "Nett": 320.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 396.0,
+        "Vat": 66.0,
+        "Nett": 330.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 408.0,
+        "Vat": 68.0,
+        "Nett": 340.0,
+        "VatRate": 0.2
+      }
+    ],
+    "To": "2017-04-30T00:00:00"
+  },
+  {
+    "Annually": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 536.00,
+        "Vat": 89.33,
+        "Nett": 446.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 802.00,
+        "Vat": 133.67,
+        "Nett": 668.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 857.00,
+        "Vat": 142.83,
+        "Nett": 714.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 909.00,
+        "Vat": 151.50,
+        "Nett": 757.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 965.00,
+        "Vat": 160.83,
+        "Nett": 804.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 1016.00,
+        "Vat": 169.33,
+        "Nett": 846.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 1072.00,
+        "Vat": 178.67,
+        "Nett": 893.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 1123.00,
+        "Vat": 187.17,
+        "Nett": 935.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 1179.00,
+        "Vat": 196.50,
+        "Nett": 982.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 1231.00,
+        "Vat": 205.17,
+        "Nett": 1025.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 1286.00,
+        "Vat": 214.33,
+        "Nett": 1071.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 1338.0,
+        "Vat": 223.0,
+        "Nett": 1115.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 1393.00,
+        "Vat": 232.17,
+        "Nett": 1160.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 1445.00,
+        "Vat": 240.83,
+        "Nett": 1204.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 1501.00,
+        "Vat": 250.17,
+        "Nett": 1250.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 1552.00,
+        "Vat": 258.67,
+        "Nett": 1293.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 1608.0,
+        "Vat": 268.0,
+        "Nett": 1340.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 1660.00,
+        "Vat": 276.67,
+        "Nett": 1383.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 1715.00,
+        "Vat": 285.83,
+        "Nett": 1429.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 1767.00,
+        "Vat": 294.50,
+        "Nett": 1472.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 1822.00,
+        "Vat": 303.67,
+        "Nett": 1518.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 1874.00,
+        "Vat": 312.33,
+        "Nett": 1561.67,
+        "VatRate": 0.200
+      }
+    ],
+    "From": "2015-05-01T00:00:00",
+    "Monthly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 44.00,
+        "Vat": 7.33,
+        "Nett": 36.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 66.0,
+        "Vat": 11.0,
+        "Nett": 55.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 70.00,
+        "Vat": 11.67,
+        "Nett": 58.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 75.00,
+        "Vat": 12.50,
+        "Nett": 62.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 80.00,
+        "Vat": 13.33,
+        "Nett": 66.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 84.0,
+        "Vat": 14.0,
+        "Nett": 70.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 88.00,
+        "Vat": 14.67,
+        "Nett": 73.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 93.00,
+        "Vat": 15.50,
+        "Nett": 77.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 97.00,
+        "Vat": 16.17,
+        "Nett": 80.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 102.0,
+        "Vat": 17.0,
+        "Nett": 85.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 106.00,
+        "Vat": 17.67,
+        "Nett": 88.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 111.00,
+        "Vat": 18.50,
+        "Nett": 92.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 115.00,
+        "Vat": 19.17,
+        "Nett": 95.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 119.00,
+        "Vat": 19.83,
+        "Nett": 99.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 124.00,
+        "Vat": 20.67,
+        "Nett": 103.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 129.00,
+        "Vat": 21.50,
+        "Nett": 107.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 133.00,
+        "Vat": 22.17,
+        "Nett": 110.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 138.0,
+        "Vat": 23.0,
+        "Nett": 115.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 142.00,
+        "Vat": 23.67,
+        "Nett": 118.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 146.00,
+        "Vat": 24.33,
+        "Nett": 121.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 151.00,
+        "Vat": 25.17,
+        "Nett": 125.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 155.00,
+        "Vat": 25.83,
+        "Nett": 129.17,
+        "VatRate": 0.200
+      }
+    ],
+    "Quarterly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 133.00,
+        "Vat": 22.17,
+        "Nett": 110.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 200.00,
+        "Vat": 33.33,
+        "Nett": 166.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 213.00,
+        "Vat": 35.50,
+        "Nett": 177.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 227.00,
+        "Vat": 37.83,
+        "Nett": 189.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 240.0,
+        "Vat": 40.0,
+        "Nett": 200.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 254.00,
+        "Vat": 42.33,
+        "Nett": 211.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 267.00,
+        "Vat": 44.50,
+        "Nett": 222.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 281.00,
+        "Vat": 46.83,
+        "Nett": 234.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 294.0,
+        "Vat": 49.0,
+        "Nett": 245.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 308.00,
+        "Vat": 51.33,
+        "Nett": 256.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 320.00,
+        "Vat": 53.33,
+        "Nett": 266.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 334.00,
+        "Vat": 55.67,
+        "Nett": 278.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 347.00,
+        "Vat": 57.83,
+        "Nett": 289.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 361.00,
+        "Vat": 60.17,
+        "Nett": 300.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 374.00,
+        "Vat": 62.33,
+        "Nett": 311.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 388.00,
+        "Vat": 64.67,
+        "Nett": 323.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 401.00,
+        "Vat": 66.83,
+        "Nett": 334.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 415.00,
+        "Vat": 69.17,
+        "Nett": 345.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 428.00,
+        "Vat": 71.33,
+        "Nett": 356.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 441.00,
+        "Vat": 73.50,
+        "Nett": 367.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 455.00,
+        "Vat": 75.83,
+        "Nett": 379.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 468.0,
+        "Vat": 78.0,
+        "Nett": 390.0,
+        "VatRate": 0.2
+      }
+    ],
+    "To": "2016-04-30T00:00:00"
+  },
+  {
+    "Annually": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 627.00,
+        "Vat": 104.50,
+        "Nett": 522.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 939.00,
+        "Vat": 156.50,
+        "Nett": 782.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 1004.00,
+        "Vat": 167.33,
+        "Nett": 836.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 1064.00,
+        "Vat": 177.33,
+        "Nett": 886.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 1129.00,
+        "Vat": 188.17,
+        "Nett": 940.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 1190.00,
+        "Vat": 198.33,
+        "Nett": 991.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 1255.00,
+        "Vat": 209.17,
+        "Nett": 1045.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 1315.00,
+        "Vat": 219.17,
+        "Nett": 1095.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 1381.00,
+        "Vat": 230.17,
+        "Nett": 1150.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 1441.00,
+        "Vat": 240.17,
+        "Nett": 1200.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 1506.0,
+        "Vat": 251.0,
+        "Nett": 1255.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 1567.00,
+        "Vat": 261.17,
+        "Nett": 1305.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 1632.0,
+        "Vat": 272.0,
+        "Nett": 1360.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 1692.0,
+        "Vat": 282.0,
+        "Nett": 1410.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 1757.00,
+        "Vat": 292.83,
+        "Nett": 1464.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 1818.0,
+        "Vat": 303.0,
+        "Nett": 1515.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 1883.00,
+        "Vat": 313.83,
+        "Nett": 1569.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 1943.00,
+        "Vat": 323.83,
+        "Nett": 1619.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 2008.00,
+        "Vat": 334.67,
+        "Nett": 1673.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 2069.00,
+        "Vat": 344.83,
+        "Nett": 1724.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 2134.00,
+        "Vat": 355.67,
+        "Nett": 1778.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 2194.00,
+        "Vat": 365.67,
+        "Nett": 1828.33,
+        "VatRate": 0.200
+      }
+    ],
+    "From": "2014-05-01T00:00:00",
+    "Monthly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 52.00,
+        "Vat": 8.67,
+        "Nett": 43.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 78.0,
+        "Vat": 13.0,
+        "Nett": 65.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 83.00,
+        "Vat": 13.83,
+        "Nett": 69.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 88.00,
+        "Vat": 14.67,
+        "Nett": 73.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 94.00,
+        "Vat": 15.67,
+        "Nett": 78.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 99.00,
+        "Vat": 16.50,
+        "Nett": 82.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 104.00,
+        "Vat": 17.33,
+        "Nett": 86.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 109.00,
+        "Vat": 18.17,
+        "Nett": 90.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 115.00,
+        "Vat": 19.17,
+        "Nett": 95.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 120.0,
+        "Vat": 20.0,
+        "Nett": 100.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 125.00,
+        "Vat": 20.83,
+        "Nett": 104.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 130.00,
+        "Vat": 21.67,
+        "Nett": 108.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 136.00,
+        "Vat": 22.67,
+        "Nett": 113.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 141.00,
+        "Vat": 23.50,
+        "Nett": 117.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 146.00,
+        "Vat": 24.33,
+        "Nett": 121.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 151.00,
+        "Vat": 25.17,
+        "Nett": 125.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 156.0,
+        "Vat": 26.0,
+        "Nett": 130.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 161.00,
+        "Vat": 26.83,
+        "Nett": 134.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 167.00,
+        "Vat": 27.83,
+        "Nett": 139.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 172.00,
+        "Vat": 28.67,
+        "Nett": 143.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 177.00,
+        "Vat": 29.50,
+        "Nett": 147.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 182.00,
+        "Vat": 30.33,
+        "Nett": 151.67,
+        "VatRate": 0.200
+      }
+    ],
+    "Quarterly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 156.0,
+        "Vat": 26.0,
+        "Nett": 130.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 234.0,
+        "Vat": 39.0,
+        "Nett": 195.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 251.00,
+        "Vat": 41.83,
+        "Nett": 209.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 266.00,
+        "Vat": 44.33,
+        "Nett": 221.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 282.0,
+        "Vat": 47.0,
+        "Nett": 235.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 297.00,
+        "Vat": 49.50,
+        "Nett": 247.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 313.00,
+        "Vat": 52.17,
+        "Nett": 260.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 328.00,
+        "Vat": 54.67,
+        "Nett": 273.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 345.00,
+        "Vat": 57.50,
+        "Nett": 287.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 360.0,
+        "Vat": 60.0,
+        "Nett": 300.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 376.00,
+        "Vat": 62.67,
+        "Nett": 313.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 391.00,
+        "Vat": 65.17,
+        "Nett": 325.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 408.0,
+        "Vat": 68.0,
+        "Nett": 340.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 423.00,
+        "Vat": 70.50,
+        "Nett": 352.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 439.00,
+        "Vat": 73.17,
+        "Nett": 365.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 454.00,
+        "Vat": 75.67,
+        "Nett": 378.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 470.00,
+        "Vat": 78.33,
+        "Nett": 391.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 485.00,
+        "Vat": 80.83,
+        "Nett": 404.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 502.00,
+        "Vat": 83.67,
+        "Nett": 418.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 517.00,
+        "Vat": 86.17,
+        "Nett": 430.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 533.00,
+        "Vat": 88.83,
+        "Nett": 444.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 548.00,
+        "Vat": 91.33,
+        "Nett": 456.67,
+        "VatRate": 0.200
+      }
+    ],
+    "To": "2015-04-30T00:00:00"
+  },
+  {
+    "Annually": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 675.00,
+        "Vat": 112.50,
+        "Nett": 562.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 1010.00,
+        "Vat": 168.33,
+        "Nett": 841.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 1080.0,
+        "Vat": 180.0,
+        "Nett": 900.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 1145.00,
+        "Vat": 190.83,
+        "Nett": 954.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 1215.00,
+        "Vat": 202.50,
+        "Nett": 1012.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 1280.00,
+        "Vat": 213.33,
+        "Nett": 1066.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 1350.0,
+        "Vat": 225.0,
+        "Nett": 1125.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 1415.00,
+        "Vat": 235.83,
+        "Nett": 1179.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 1485.00,
+        "Vat": 247.50,
+        "Nett": 1237.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 1550.00,
+        "Vat": 258.33,
+        "Nett": 1291.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 1620.0,
+        "Vat": 270.0,
+        "Nett": 1350.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 1685.00,
+        "Vat": 280.83,
+        "Nett": 1404.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 1755.00,
+        "Vat": 292.50,
+        "Nett": 1462.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 1820.00,
+        "Vat": 303.33,
+        "Nett": 1516.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 1890.0,
+        "Vat": 315.0,
+        "Nett": 1575.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 1955.00,
+        "Vat": 325.83,
+        "Nett": 1629.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 2025.00,
+        "Vat": 337.50,
+        "Nett": 1687.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 2090.00,
+        "Vat": 348.33,
+        "Nett": 1741.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 2160.0,
+        "Vat": 360.0,
+        "Nett": 1800.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 2225.00,
+        "Vat": 370.83,
+        "Nett": 1854.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 2295.00,
+        "Vat": 382.50,
+        "Nett": 1912.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 2360.00,
+        "Vat": 393.33,
+        "Nett": 1966.67,
+        "VatRate": 0.200
+      }
+    ],
+    "From": "2013-05-01T00:00:00",
+    "Monthly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 56.00,
+        "Vat": 9.33,
+        "Nett": 46.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 84.0,
+        "Vat": 14.0,
+        "Nett": 70.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 89.00,
+        "Vat": 14.83,
+        "Nett": 74.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 95.00,
+        "Vat": 15.83,
+        "Nett": 79.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 101.00,
+        "Vat": 16.83,
+        "Nett": 84.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 106.00,
+        "Vat": 17.67,
+        "Nett": 88.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 112.00,
+        "Vat": 18.67,
+        "Nett": 93.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 118.00,
+        "Vat": 19.67,
+        "Nett": 98.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 123.00,
+        "Vat": 20.50,
+        "Nett": 102.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 129.00,
+        "Vat": 21.50,
+        "Nett": 107.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 134.00,
+        "Vat": 22.33,
+        "Nett": 111.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 140.00,
+        "Vat": 23.33,
+        "Nett": 116.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 146.00,
+        "Vat": 24.33,
+        "Nett": 121.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 151.00,
+        "Vat": 25.17,
+        "Nett": 125.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 157.00,
+        "Vat": 26.17,
+        "Nett": 130.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 163.00,
+        "Vat": 27.17,
+        "Nett": 135.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 168.0,
+        "Vat": 28.0,
+        "Nett": 140.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 174.0,
+        "Vat": 29.0,
+        "Nett": 145.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 179.00,
+        "Vat": 29.83,
+        "Nett": 149.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 185.00,
+        "Vat": 30.83,
+        "Nett": 154.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 191.00,
+        "Vat": 31.83,
+        "Nett": 159.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 196.00,
+        "Vat": 32.67,
+        "Nett": 163.33,
+        "VatRate": 0.200
+      }
+    ],
+    "Quarterly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 168.0,
+        "Vat": 28.0,
+        "Nett": 140.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 253.00,
+        "Vat": 42.17,
+        "Nett": 210.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 269.00,
+        "Vat": 44.83,
+        "Nett": 224.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 286.00,
+        "Vat": 47.67,
+        "Nett": 238.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 303.00,
+        "Vat": 50.50,
+        "Nett": 252.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 320.00,
+        "Vat": 53.33,
+        "Nett": 266.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 337.00,
+        "Vat": 56.17,
+        "Nett": 280.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 354.0,
+        "Vat": 59.0,
+        "Nett": 295.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 371.00,
+        "Vat": 61.83,
+        "Nett": 309.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 388.00,
+        "Vat": 64.67,
+        "Nett": 323.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 404.00,
+        "Vat": 67.33,
+        "Nett": 336.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 421.00,
+        "Vat": 70.17,
+        "Nett": 350.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 438.0,
+        "Vat": 73.0,
+        "Nett": 365.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 455.00,
+        "Vat": 75.83,
+        "Nett": 379.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 472.00,
+        "Vat": 78.67,
+        "Nett": 393.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 489.00,
+        "Vat": 81.50,
+        "Nett": 407.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 506.00,
+        "Vat": 84.33,
+        "Nett": 421.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 523.00,
+        "Vat": 87.17,
+        "Nett": 435.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 539.00,
+        "Vat": 89.83,
+        "Nett": 449.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 556.00,
+        "Vat": 92.67,
+        "Nett": 463.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 573.00,
+        "Vat": 95.50,
+        "Nett": 477.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 590.00,
+        "Vat": 98.33,
+        "Nett": 491.67,
+        "VatRate": 0.200
+      }
+    ],
+    "To": "2014-04-30T00:00:00"
+  },
+  {
+    "Annually": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 665.00,
+        "Vat": 110.83,
+        "Nett": 554.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 1000.00,
+        "Vat": 166.67,
+        "Nett": 833.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 1065.00,
+        "Vat": 177.50,
+        "Nett": 887.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 1135.00,
+        "Vat": 189.17,
+        "Nett": 945.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 1200.0,
+        "Vat": 200.0,
+        "Nett": 1000.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 1270.00,
+        "Vat": 211.67,
+        "Nett": 1058.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 1335.00,
+        "Vat": 222.50,
+        "Nett": 1112.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 1400.00,
+        "Vat": 233.33,
+        "Nett": 1166.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 1470.0,
+        "Vat": 245.0,
+        "Nett": 1225.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 1535.00,
+        "Vat": 255.83,
+        "Nett": 1279.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 1600.00,
+        "Vat": 266.67,
+        "Nett": 1333.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 1670.00,
+        "Vat": 278.33,
+        "Nett": 1391.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 1735.00,
+        "Vat": 289.17,
+        "Nett": 1445.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 1800.0,
+        "Vat": 300.0,
+        "Nett": 1500.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 1870.00,
+        "Vat": 311.67,
+        "Nett": 1558.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 1935.00,
+        "Vat": 322.50,
+        "Nett": 1612.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 2000.00,
+        "Vat": 333.33,
+        "Nett": 1666.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 2070.0,
+        "Vat": 345.0,
+        "Nett": 1725.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 2135.00,
+        "Vat": 355.83,
+        "Nett": 1779.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 2200.00,
+        "Vat": 366.67,
+        "Nett": 1833.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 2270.00,
+        "Vat": 378.33,
+        "Nett": 1891.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 2335.00,
+        "Vat": 389.17,
+        "Nett": 1945.83,
+        "VatRate": 0.200
+      }
+    ],
+    "From": "2012-05-01T00:00:00",
+    "Monthly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 55.00,
+        "Vat": 9.17,
+        "Nett": 45.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 83.00,
+        "Vat": 13.83,
+        "Nett": 69.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 88.00,
+        "Vat": 14.67,
+        "Nett": 73.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 94.00,
+        "Vat": 15.67,
+        "Nett": 78.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 100.00,
+        "Vat": 16.67,
+        "Nett": 83.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 105.00,
+        "Vat": 17.50,
+        "Nett": 87.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 111.00,
+        "Vat": 18.50,
+        "Nett": 92.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 116.00,
+        "Vat": 19.33,
+        "Nett": 96.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 122.00,
+        "Vat": 20.33,
+        "Nett": 101.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 127.00,
+        "Vat": 21.17,
+        "Nett": 105.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 133.00,
+        "Vat": 22.17,
+        "Nett": 110.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 138.0,
+        "Vat": 23.0,
+        "Nett": 115.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 144.0,
+        "Vat": 24.0,
+        "Nett": 120.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 150.0,
+        "Vat": 25.0,
+        "Nett": 125.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 155.00,
+        "Vat": 25.83,
+        "Nett": 129.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 161.00,
+        "Vat": 26.83,
+        "Nett": 134.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 166.00,
+        "Vat": 27.67,
+        "Nett": 138.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 172.00,
+        "Vat": 28.67,
+        "Nett": 143.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 177.00,
+        "Vat": 29.50,
+        "Nett": 147.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 183.00,
+        "Vat": 30.50,
+        "Nett": 152.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 189.00,
+        "Vat": 31.50,
+        "Nett": 157.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 194.00,
+        "Vat": 32.33,
+        "Nett": 161.67,
+        "VatRate": 0.200
+      }
+    ],
+    "Quarterly": [
+      {
+        "CO2Band": 120,
+        "ScaleCharge": 166.00,
+        "Vat": 27.67,
+        "Nett": 138.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 125,
+        "ScaleCharge": 250.00,
+        "Vat": 41.67,
+        "Nett": 208.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 130,
+        "ScaleCharge": 266.00,
+        "Vat": 44.33,
+        "Nett": 221.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 135,
+        "ScaleCharge": 283.00,
+        "Vat": 47.17,
+        "Nett": 235.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 140,
+        "ScaleCharge": 300.0,
+        "Vat": 50.0,
+        "Nett": 250.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 145,
+        "ScaleCharge": 316.00,
+        "Vat": 52.67,
+        "Nett": 263.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 150,
+        "ScaleCharge": 333.00,
+        "Vat": 55.50,
+        "Nett": 277.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 155,
+        "ScaleCharge": 350.00,
+        "Vat": 58.33,
+        "Nett": 291.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 160,
+        "ScaleCharge": 366.0,
+        "Vat": 61.0,
+        "Nett": 305.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 165,
+        "ScaleCharge": 383.00,
+        "Vat": 63.83,
+        "Nett": 319.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 170,
+        "ScaleCharge": 400.00,
+        "Vat": 66.67,
+        "Nett": 333.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 175,
+        "ScaleCharge": 416.00,
+        "Vat": 69.33,
+        "Nett": 346.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 180,
+        "ScaleCharge": 433.00,
+        "Vat": 72.17,
+        "Nett": 360.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 185,
+        "ScaleCharge": 450.0,
+        "Vat": 75.0,
+        "Nett": 375.0,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 190,
+        "ScaleCharge": 467.00,
+        "Vat": 77.83,
+        "Nett": 389.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 195,
+        "ScaleCharge": 483.00,
+        "Vat": 80.50,
+        "Nett": 402.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 200,
+        "ScaleCharge": 500.00,
+        "Vat": 83.33,
+        "Nett": 416.67,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 205,
+        "ScaleCharge": 517.00,
+        "Vat": 86.17,
+        "Nett": 430.83,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 210,
+        "ScaleCharge": 533.00,
+        "Vat": 88.83,
+        "Nett": 444.17,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 215,
+        "ScaleCharge": 550.00,
+        "Vat": 91.67,
+        "Nett": 458.33,
+        "VatRate": 0.200
+      },
+      {
+        "CO2Band": 220,
+        "ScaleCharge": 567.00,
+        "Vat": 94.50,
+        "Nett": 472.50,
+        "VatRate": 0.2
+      },
+      {
+        "CO2Band": 225,
+        "ScaleCharge": 583.00,
+        "Vat": 97.17,
+        "Nett": 485.83,
+        "VatRate": 0.200
+      }
+    ],
+    "To": "2013-04-30T00:00:00"
+  }
+]
