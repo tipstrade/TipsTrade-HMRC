@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using TipsTrade.HMRC.Api.Vat.Model;
 
@@ -16,7 +15,7 @@ namespace TipsTrade.HMRC.Api.Vat {
 
     private RestClient Client { get; } = new RestClient(BaseUri);
 
-    private string GetBand(string dates, string month, int co2) {
+    private IEnumerable<Band<int>> GetBands(string dates, string month) {
       var request = new RestRequest($"{InitialUri}/{dates}/{month}");
       var response = Client.Execute(request);
 
@@ -30,6 +29,7 @@ namespace TipsTrade.HMRC.Api.Vat {
 
       var numberRegex = new Regex("([0-9]+)");
       bool isFirst = true;
+      var list = new List<Band<int>>();
       foreach (var item in bands) {
         var value = item.Attributes["value"].Value;
         var matches = numberRegex.Matches(value);
@@ -43,28 +43,35 @@ namespace TipsTrade.HMRC.Api.Vat {
           upper = matches.Count == 1 ? int.MaxValue : int.Parse(matches[1].Value);
         }
 
-        if ((co2 >= lower) && (co2 <= upper)) {
-          return value;
-        }
+        list.Add(new Band<int>() {
+          Value = value,
+          From = lower,
+          To = upper
+        });
+
+        isFirst = false;
       }
 
-      throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found for {co2}.");
+      return list;
     }
 
     internal FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, byte periodLength, int co2) {
-      string month = GetMonth(periodLength);
+      string months = GetMonth(periodLength);
 
-      var dateString = GetDates().Where(d => (date >= d.From) && (date <= d.To))?.FirstOrDefault().Value;
-      if (dateString == null) {
+      var dates = GetDates().Where(d => (date >= d.From) && (date <= d.To))?.FirstOrDefault();
+      if (dates == null) {
         throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found for {date}.");
       }
 
-      var band = GetBand(dateString, month, co2);
+      var bands = GetBands(dates.Value, months).Where(b => (co2 >= b.From) && (co2 <= b.To))?.FirstOrDefault();
+      if (bands == null) {
+        throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found for {co2}.");
+      }
 
-      return GetValues(dateString, month, band);
+      return GetValues(dates, months, bands);
     }
 
-    private IEnumerable<DateRange> GetDates() {
+    private IEnumerable<Band<DateTime>> GetDates() {
       var request = new RestRequest(InitialUri);
       var response = Client.Execute(request);
 
@@ -76,8 +83,16 @@ namespace TipsTrade.HMRC.Api.Vat {
         throw new InvalidOperationException("No valid Fuel Scale Charge date ranges could be found.");
       }
 
+      const string DateFormat = "d-MMMM-yyyy";
+
       return dates.Select(d => {
-        return new DateRange(d.Attributes["value"].Value);
+        var value = d.Attributes["value"].Value;
+        var delimiter = value.IndexOf("-to-"); // 452 doesn't support string.Split(string)
+        return new Band<DateTime>() {
+          Value = value,
+          From = DateTime.ParseExact(value.Substring(0, delimiter), DateFormat, CultureInfo.CurrentCulture),
+          To = DateTime.ParseExact(value.Substring(delimiter + 4), DateFormat, CultureInfo.CurrentCulture)
+        };
       });
     }
 
@@ -98,25 +113,30 @@ namespace TipsTrade.HMRC.Api.Vat {
       }
     }
 
-    private FuelScaleChargeResult GetValues(string dates, string month, string band) {
-      var request = new RestRequest($"{InitialUri}/{dates}/{month}/{band}");
+    private FuelScaleChargeResult GetValues(Band<DateTime> dates, string month, Band<int> band) {
+      var request = new RestRequest($"{InitialUri}/{dates.Value}/{month}/{band.Value}");
       var response = Client.Execute(request);
 
       var doc = new HtmlDocument();
       doc.LoadHtml(response.Content);
 
-      var result = doc.DocumentNode.SelectSingleNode("//div[@class='result-info]/p");
+      var result = doc.DocumentNode.SelectSingleNode("//div[@class='result-info']/p");
       if (result == null) {
         throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found.");
       }
 
-      var matches = Regex.Matches(result.InnerText, "([0-9](+\\.[0-9]+)?)");
+      var matches = Regex.Matches(result.InnerText, "([0-9]+(\\.[0-9]+)?)");
+      if (matches.Count == 0) {
+        throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found.");
+      }
+
       return new FuelScaleChargeResult() {
+        CO2Band = band.To,
+        From = dates.From,
+        To = dates.To,
         Nett = decimal.Parse(matches[0].Value),
         Vat = decimal.Parse(matches[1].Value)
       };
-
-      return null;
     }
 
     #region Inner classes
@@ -125,24 +145,7 @@ namespace TipsTrade.HMRC.Api.Vat {
 
       internal T To { get; set; }
 
-      internal string Value { get; set}
-    }
-
-    private class DateRange {
-      private const string DateFormat = "d-MMMM-yyyy";
-
-      internal DateTime From { get; set; }
-
-      internal DateTime To { get; set; }
-
       internal string Value { get; set; }
-
-      internal DateRange(string value) {
-        var delimiter = value.IndexOf("-to-"); // 452 doesn't support string.Split(string)
-        Value = value;
-        From = DateTime.ParseExact(value.Substring(0, delimiter), DateFormat, CultureInfo.CurrentCulture);
-        To = DateTime.ParseExact(value.Substring(delimiter + 4), DateFormat, CultureInfo.CurrentCulture);
-      }
     }
     #endregion
   }
