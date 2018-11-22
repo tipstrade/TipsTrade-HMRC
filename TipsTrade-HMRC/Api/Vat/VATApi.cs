@@ -72,7 +72,7 @@ namespace TipsTrade.HMRC.Api.Vat {
         throw new Exception("Already checked for.");
       }
 
-      var result = list.Where(x => co2 >= x.CO2Band).LastOrDefault() ?? list.First();
+      var result = list.Where(x => co2 <= x.CO2Band).First();
 
       result.From = group.From;
       result.To = group.To;

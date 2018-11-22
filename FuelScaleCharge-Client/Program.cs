@@ -149,11 +149,16 @@ namespace FuelScaleCharge {
             Nett = decimal.Parse(cells[3].InnerText, NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, CultureInfo.CurrentCulture)
           };
 
+          // CO2Band is actually the upper bound, but these pages use round-down to next 5g/km
+          scaleCharge.CO2Band += 4;
+
           resp.Add(scaleCharge);
         } catch (Exception) {
           throw;
         }
       }
+
+      resp.Last().CO2Band = int.MaxValue;
 
       return resp;
     }

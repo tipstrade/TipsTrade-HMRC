@@ -6,7 +6,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
   /// See <see cref="!:https://www.gov.uk/government/publications/vat-road-fuel-scale-charges-table"></see>
   /// </summary>
   public class FuelScaleChargeResult {
-    /// <summary>The CO2 band.</summary>
+    /// <summary>The upper bounds of the CO2 band.</summary>
     public int CO2Band { get; set; }
 
     /// <summary>The date from when the Scale Charge is valid.</summary>
