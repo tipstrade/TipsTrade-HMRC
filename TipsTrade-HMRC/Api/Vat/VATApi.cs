@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,11 +32,16 @@ namespace TipsTrade.HMRC.Api.Vat {
     #endregion
 
     #region Methods
+    public static FuelScaleChargeResult GetFuelScaleChargeFromCO2Beta(DateTime date, byte periodLength, int co2) {
+      var client = new FuelScaleChargeClient();
+      return client.GetFuelScaleChargeFromCO2(date, periodLength, co2);
+    }
+
     /// <summary>Gets the fuel scale chage</summary>
     /// <param name="date">The date of the VAT return.</param>
     /// <param name="periodLength">The length of the VAT period in months (1, 3, 12).</param>
     /// <param name="co2">The CO2 emmissions (g/km) of the vehicle.</param>
-    public static FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, int periodLength, int co2) {
+    public static FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, byte periodLength, int co2) {
       if (!new int[] { 1, 3, 12 }.Contains(periodLength)) {
         throw new ArgumentException($"{periodLength} is not valid.", nameof(periodLength));
       }

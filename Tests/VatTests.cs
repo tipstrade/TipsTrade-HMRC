@@ -78,6 +78,44 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
+    public void TestFuelScaleChargesBeta() {
+      Assert.Throws<ArgumentException>(() => VatApi.GetFuelScaleChargeFromCO2Beta(DateTime.Today, 0, 0));
+      //Assert.Throws<InvalidOperationException>(() => VatApi.GetFuelScaleChargeFromCO2Beta(DateTime.MinValue, 1, 0));
+
+      FuelScaleChargeResult resp;
+
+      // Minimum CO2 annually
+      resp = VatApi.GetFuelScaleChargeFromCO2Beta(new DateTime(2018, 12, 31), 12, 0);
+      Assert.Equal(93.67m, resp.Vat);
+      Assert.Equal(468.33m, resp.Nett);
+      Assert.Equal(562, resp.ScaleCharge);
+      Assert.Equal(new DateTime(2018, 5, 1), resp.From);
+      Assert.Equal(new DateTime(2019, 4, 30), resp.To);
+      Assert.Equal(0.2m, resp.VatRate);
+      Assert.Equal(120, resp.CO2Band);
+
+      // 169g/km CO2 quarterly
+      resp = VatApi.GetFuelScaleChargeFromCO2Beta(new DateTime(2018, 12, 31), 3, 169);
+      Assert.Equal(53.83m, resp.Vat);
+      Assert.Equal(269.17m, resp.Nett);
+      Assert.Equal(323, resp.ScaleCharge);
+      Assert.Equal(new DateTime(2018, 5, 1), resp.From);
+      Assert.Equal(new DateTime(2019, 4, 30), resp.To);
+      Assert.Equal(0.2m, resp.VatRate);
+      Assert.Equal(165, resp.CO2Band);
+
+      // Maximum CO2 monthly
+      resp = VatApi.GetFuelScaleChargeFromCO2Beta(new DateTime(2018, 12, 31), 1, int.MaxValue);
+      Assert.Equal(27.17m, resp.Vat);
+      Assert.Equal(135.83m, resp.Nett);
+      Assert.Equal(163, resp.ScaleCharge);
+      Assert.Equal(new DateTime(2018, 5, 1), resp.From);
+      Assert.Equal(new DateTime(2019, 4, 30), resp.To);
+      Assert.Equal(0.2m, resp.VatRate);
+      Assert.Equal(225, resp.CO2Band);
+    }
+
+    [Fact]
     public void TestGetReturn() {
       var obRequest = new ObligationsRequest() {
         Vrn = Users.Organisation.User.Vrn,
