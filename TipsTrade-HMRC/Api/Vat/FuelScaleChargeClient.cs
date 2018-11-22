@@ -8,7 +8,11 @@ using System.Text.RegularExpressions;
 using TipsTrade.HMRC.Api.Vat.Model;
 
 namespace TipsTrade.HMRC.Api.Vat {
-  internal class FuelScaleChargeClient {
+  /// <summary>
+  /// Represents a client that fetches VAT Fuel Scale Charge from the HMRC online calculator.
+  /// See: <see cref="!:https://www.gov.uk/fuel-scale-charge"></see>
+  /// </summary>
+  public class FuelScaleChargeClient {
     private const string BaseUri = "https://www.gov.uk";
 
     private const string InitialUri = "fuel-scale-charge/y";
@@ -55,7 +59,11 @@ namespace TipsTrade.HMRC.Api.Vat {
       return list;
     }
 
-    internal FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, byte periodLength, int co2) {
+    /// <summary>Gets the Fuel Scale Charge.</summary>
+    /// <param name="date">The accounting period for which the scale charge should be retrieved.</param>
+    /// <param name="periodLength">The length of the VAT period in months (1, 3, 12).</param>
+    /// <param name="co2">The CO2 emmissions (g/km) of the vehicle.</param>
+    public FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, byte periodLength, int co2) {
       string months = GetMonth(periodLength);
 
       var dates = GetDates().Where(d => (date >= d.From) && (date <= d.To))?.FirstOrDefault();
