@@ -22,7 +22,7 @@ namespace TipsTrade.HMRC.Api {
     internal static IRestRequest AddJsonBodyNewtonsoft(this IRestRequest request, object value) {
       request.IsJsonContent();
       request.RequestFormat = DataFormat.Json;
-      request.AddParameter(request.JsonSerializer.ContentType, JsonConvert.SerializeObject(value), ParameterType.RequestBody);
+      request.AddParameter(request.JsonSerializer?.ContentType ?? JsonContentType, JsonConvert.SerializeObject(value), ParameterType.RequestBody);
 
       return request;
     }
