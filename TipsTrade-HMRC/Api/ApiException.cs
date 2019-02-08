@@ -8,6 +8,9 @@ namespace TipsTrade.HMRC.Api {
     /// <summary>The API error that caused to exception to be thrown.</summary>
     public ErrorResponse ApiError { get; set; }
 
+    /// <summary>A flag indicating whether the credentials are invalid.</summary>
+    public bool IsInvalidCredentials => "INVALID_CREDENTIALS".Equals(ApiError.Code);
+
     /// <summary>
     /// A flag indicating whether the exception was 404 - NOT_FOUND.
     /// Needed as some APIs return this for empty collections, not to be confused with 404 - MATCHING_RESOURCE_NOT_FOUND.
