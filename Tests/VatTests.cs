@@ -219,7 +219,7 @@ namespace TipsTrade.HMRC.Tests {
       Assert.Equal(300M, resp.TotalAcquisitionsExVAT);
     }
 
-    [Fact]
+    [Fact(Skip = "")]
     public void TestSubmission() {
       var obRequest = new ObligationsRequest() {
         Vrn = Users.Organisation.User.Vrn,

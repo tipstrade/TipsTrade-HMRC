@@ -29,6 +29,9 @@ namespace TipsTrade.HMRC {
     /// <summary>The short-lived access token.</summary>
     public string AccessToken { get; set; }
 
+    /// <summary>Gets or sets the information used to generate the anti fraud headers.</summary>
+    public AntiFraud.AntiFraud AntiFraud { get; set; }
+
     /// <summary>Gets the base Url used for all requests, based on the current environment.</summary>
     public string BaseUrl => IsSandbox ? SandboxUrl : ProductionUrl;
 

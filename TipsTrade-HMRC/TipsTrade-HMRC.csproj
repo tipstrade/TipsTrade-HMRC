@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.1.5</Version>
+    <Version>0.0.1.6</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -12,7 +12,10 @@
     <Product>TipsTrade-HMRC</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
-    <PackageReleaseNotes>0.0.1.5
+    <PackageReleaseNotes>0.0.1.6
+* Add fraud prevention headers
+
+0.0.1.5
 * Add symbols
 * Fix possible NullReferenceException when submitting VAT return
 
@@ -43,4 +46,7 @@
     <PackageReference Include="RestSharp" Version="106.5.4" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'=='net452'">
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
 </Project>

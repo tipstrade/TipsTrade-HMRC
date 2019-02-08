@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.Vat.Model;
 
 namespace TipsTrade.HMRC.Api.Vat {
   /// <summary>The API that exposes VAT functions.</summary>
-  public class VatApi : IApi, IClient {
+  public class VatApi : IApi, IClient, IRequiresAntiFraud {
     private const string FuelScaleChargesResource = "Resources.FuelScaleCharges.json";
 
     #region Properties

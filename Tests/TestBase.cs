@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
 using Xunit.Abstractions;
@@ -45,7 +48,26 @@ namespace TipsTrade.HMRC.Tests {
       LoadUsersFromJsonFile();
     }
 
-    protected Client GetClient() => new Client(ClientId, ClientSecret, ServerToken, IsSandbox);
+    protected Client GetClient() {
+      var client = new Client(ClientId, ClientSecret, ServerToken, IsSandbox) {
+        AntiFraud = new AntiFraud.AntiFraud() {
+          ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
+          DeviceID = Configuration["AntiFraudDeviceID"],
+          Screens = new Screen[] {
+          new Screen() {ColourDepth = 32, ScalingFactor=1, Size = new Size(1920,1080) }
+        },
+          TimeZone = TimeZoneInfo.Local,
+          VendorVersion = new Dictionary<string, string>() { { "TipsTrade.HMRC.Tests", "0.0.0.1" } },
+          WindowSize = new Size(1024, 768)
+        }
+      };
+
+      client.AntiFraud.PopulateLocalIPs();
+      client.AntiFraud.PopulateMACAddresses();
+      client.AntiFraud.PopulateUserAgent();
+
+      return client;
+    }
 
     private void LoadUsersFromJsonFile() {
       Users = LoadFromJsonFile<HmrcUsers>("hmrc-users.json");

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 using TipsTrade.HMRC.Api.Model;
@@ -66,6 +67,13 @@ namespace TipsTrade.HMRC.Api {
         restRequest.AddHeader("Authorization", $"Bearer {client.ServerToken}");
       } else if (request.Authorization == Authorization.User) {
         restRequest.AddHeader("Authorization", $"Bearer {client.AccessToken}");
+      }
+
+      if (api is IRequiresAntiFraud) {
+        if (client.AntiFraud == null) throw new InvalidOperationException($"The {api.Name} requires Anti Fraud headers.");
+        foreach (var item in client.AntiFraud.GetAntiFraudHeaders()) {
+          restRequest.AddHeader(item.Key, item.Value);
+        }
       }
 
       request.PopulateRequest(restRequest);
