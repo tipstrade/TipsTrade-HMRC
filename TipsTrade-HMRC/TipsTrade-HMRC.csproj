@@ -11,7 +11,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Product>TipsTrade-HMRC</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReleaseNotes>0.0.1.7
 * Add IsInvalidCredentials property to the ApiException
 
