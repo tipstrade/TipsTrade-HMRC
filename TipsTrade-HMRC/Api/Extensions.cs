@@ -64,9 +64,17 @@ namespace TipsTrade.HMRC.Api {
       }
 
       if (request.Authorization == Authorization.Application) {
+        if (string.IsNullOrEmpty(client.ServerToken))
+          throw new InvalidOperationException($"The {nameof(client.ServerToken)} cannot be empty");
+
         restRequest.AddHeader("Authorization", $"Bearer {client.ServerToken}");
+
       } else if (request.Authorization == Authorization.User) {
+        if (string.IsNullOrEmpty(client.AccessToken))
+          throw new InvalidOperationException($"The {nameof(client.AccessToken)} cannot be empty");
+
         restRequest.AddHeader("Authorization", $"Bearer {client.AccessToken}");
+
       }
 
       if (api is IRequiresAntiFraud) {
