@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Web;
 using TipsTrade.HMRC.Api;
 using Xunit;
@@ -24,6 +25,23 @@ namespace TipsTrade.HMRC.Tests {
 
       Output.WriteLine("Authorization Endpoint:");
       Output.WriteLine(url);
+    }
+
+    [Fact]
+    public void TestInvalidCredentials() {
+      var client = GetClient();
+      ApiException ex;
+
+      var request = new Api.Vat.Model.ObligationsRequest() {
+        Vrn = "000000000"
+      };
+
+      Assert.Throws<InvalidOperationException>(() => client.Vat.GetObligations(request));
+
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      ex = Assert.Throws<ApiException>(() => client.Vat.GetObligations(request));
+      Assert.True(ex.IsInvalidCredentials);
+      Assert.Equal(HttpStatusCode.Unauthorized, ex.Status);
     }
 
     [Fact]
