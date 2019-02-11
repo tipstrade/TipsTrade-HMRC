@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.1.6</Version>
+    <Version>0.0.1.7</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -12,7 +12,10 @@
     <Product>TipsTrade-HMRC</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
-    <PackageReleaseNotes>0.0.1.6
+    <PackageReleaseNotes>0.0.1.7
+* Add IsInvalidCredentials property to the ApiException
+
+0.0.1.6
 * Add fraud prevention headers
 
 0.0.1.5

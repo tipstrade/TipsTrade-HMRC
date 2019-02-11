@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
     <RootNamespace>TipsTrade.HMRC.FuelScaleCharge</RootNamespace>
+    <Version>0.0.1.7</Version>
   </PropertyGroup>
 
   <ItemGroup>
