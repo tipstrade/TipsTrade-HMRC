@@ -13,12 +13,17 @@ namespace TipsTrade.HMRC.Api.Vat {
   /// See: <see cref="!:https://www.gov.uk/fuel-scale-charge"></see>
   /// </summary>
   public class FuelScaleChargeClient {
+    #region Fields
     private const string BaseUri = "https://www.gov.uk";
 
     private const string InitialUri = "fuel-scale-charge/y";
+    #endregion
 
+    #region Properties
     private RestClient Client { get; } = new RestClient(BaseUri);
+    #endregion
 
+    #region Methods
     private IEnumerable<Band<int>> GetBands(string dates, string month) {
       var request = new RestRequest($"{InitialUri}/{dates}/{month}");
       var response = Client.Execute(request);
@@ -146,6 +151,7 @@ namespace TipsTrade.HMRC.Api.Vat {
         Vat = decimal.Parse(matches[1].Value)
       };
     }
+    #endregion
 
     #region Inner classes
     private class Band<T> {
