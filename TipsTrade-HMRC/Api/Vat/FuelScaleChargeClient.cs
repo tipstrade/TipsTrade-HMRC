@@ -64,12 +64,27 @@ namespace TipsTrade.HMRC.Api.Vat {
       return list;
     }
 
-    /// <summary>Gets the Fuel Scale Charge.</summary>
+    /// <summary>
+    /// Gets the Fuel Scale Charge.
+    /// Deprectated, used the <see cref="GetFuelScaleChargeFromCO2(DateTime, VatPeriod, int)"/> method instead.
+    /// </summary>
     /// <param name="date">The accounting period for which the scale charge should be retrieved.</param>
     /// <param name="periodLength">The length of the VAT period in months (1, 3, 12).</param>
     /// <param name="co2">The CO2 emmissions (g/km) of the vehicle.</param>
+    [Obsolete]
     public FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, byte periodLength, int co2) {
-      string months = GetMonth(periodLength);
+      if (!Enum.IsDefined(typeof(VatPeriod), periodLength))
+        throw new ArgumentException($"{periodLength} is not valid.", nameof(periodLength));
+
+      return GetFuelScaleChargeFromCO2(date, (VatPeriod)periodLength, co2);
+    }
+
+    /// <summary>Gets the Fuel Scale Charge.</summary>
+    /// <param name="date">The accounting period for which the scale charge should be retrieved.</param>
+    /// <param name="period">The length of the VAT period.</param>
+    /// <param name="co2">The CO2 emmissions (g/km) of the vehicle.</param>
+    public FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, VatPeriod period, int co2) {
+      string months = GetMonth(period);
 
       var dates = GetDates().Where(d => (date >= d.From) && (date <= d.To))?.FirstOrDefault();
       if (dates == null) {
@@ -109,15 +124,15 @@ namespace TipsTrade.HMRC.Api.Vat {
       });
     }
 
-    private string GetMonth(byte periodLength) {
+    private string GetMonth(VatPeriod periodLength) {
       switch (periodLength) {
-        case 1:
+        case  VatPeriod.Month:
           return "1-month-monthly";
 
-        case 3:
+        case  VatPeriod.Quarter :
           return "3-months-quarterly";
 
-        case 12:
+        case VatPeriod.Annual:
           return "12-months-annual";
 
         default:
