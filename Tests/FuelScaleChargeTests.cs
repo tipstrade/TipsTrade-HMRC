@@ -5,8 +5,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 namespace TipsTrade.HMRC.Tests {
-  public class TestFuelScaleCharge : TestBase {
-    public TestFuelScaleCharge(ITestOutputHelper output) : base(output) {
+  public class FuelScaleChargeTests : TestBase {
+    public FuelScaleChargeTests(ITestOutputHelper output) : base(output) {
     }
 
     [Fact]
