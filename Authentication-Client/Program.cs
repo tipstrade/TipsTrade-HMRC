@@ -77,6 +77,12 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
     private static void Authenticate(Client client) {
       var userType = GetUserType(client);
       var user = CreateUser(client, userType);
+
+      Console.ForegroundColor = ConsoleColor.Green;
+      Console.WriteLine(JsonConvert.SerializeObject(user, Formatting.Indented));
+      Console.ResetColor();
+      Console.Write("");
+
       var tokens = GetAuthCode(client, user);
 
       Console.WriteLine();
