@@ -249,7 +249,9 @@ namespace TipsTrade.HMRC.AntiFraud {
 
         }
 
-        headers.Add(afHeader.HeaderName, headerValue);
+        if (headerValue != "") {
+          headers.Add(afHeader.HeaderName, headerValue);
+        }
       }
 
       return headers;
