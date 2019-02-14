@@ -199,6 +199,8 @@ namespace TipsTrade.HMRC.AntiFraud {
           isEmpty = true;
         } else if (value is IEnumerable list) {
           isEmpty = !list.Any();
+        } else if ("".Equals(value)) {
+          isEmpty = true;
         } else {
           isEmpty = false;
         }
