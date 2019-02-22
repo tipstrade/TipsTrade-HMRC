@@ -47,4 +47,54 @@ For running test, you will need to provide the credentials. These are the same a
 }
 ```
 
+## OATH
+To handle authentication, you need to create a URI to which the HMRC user is taken, so they can authenticate. Once the user has succesfully authenticated, they're redirected to a URI which is then handled by the client. If successfully handled, the client will return TokenResponse objects which contains the access and refresh tokens. The method below is similar to the GetAuthCode method in the Authentication-Client project, and outputs the TokenResponse.
+
+```C#
+private static TokenResponse GetAuthCode(Client client) {
+  var state = $"{Guid.NewGuid()}";
+  var scopes = Scopes.GetScopes();
+  var redirectUrl = Configuration["RedirectUrl"];
+  var url = client.GetAuthorizatoinEndpoint(state, redirectUrl, scopes);
+
+  Console.WriteLine();
+  Console.WriteLine("Navigate to the link below, and login:");
+  Console.WriteLine($"\t{url}");
+
+  Console.WriteLine();
+  Console.WriteLine($"Paste in the '{redirectUrl}' address that you were redirected to:");
+  var redirectedTo = Console.ReadLine();
+
+  Console.WriteLine();
+  Console.Write("Validating...");
+  var resp = client.HandleEndpointResult(redirectedTo, state);
+  Console.WriteLine(" done");
+
+  Console.WriteLine();
+  Console.ForegroundColor = ConsoleColor.Green;
+  Console.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+  Console.ResetColor();
+  Console.Write("");
+
+  return resp;
+}
+```
+
+Refreshing the access token is done by simply passing the stored refresh token to the Client.RefreshAccessToken method:
+
+```C#
+private static void RefreshToken(Client client) {
+  Console.WriteLine();
+  Console.Write("Enter the refresh token: ");
+  var refreshToken = Console.ReadLine();
+  var tokens = client.RefreshAccessToken(refreshToken);
+
+  Console.WriteLine();
+  Console.ForegroundColor = ConsoleColor.Green;
+  Console.WriteLine(JsonConvert.SerializeObject(tokens, Formatting.Indented));
+  Console.ResetColor();
+  Console.Write("");
+}
+```
+
 [1]: https://developer.service.hmrc.gov.uk/developer/login
