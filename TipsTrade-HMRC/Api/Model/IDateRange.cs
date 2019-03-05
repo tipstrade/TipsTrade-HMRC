@@ -3,10 +3,10 @@
 namespace TipsTrade.HMRC.Api.Model {
   /// <summary>Represents a model that provides a date range.</summary>
   public interface IDateRange {
-    /// <summary>Date from which to return obligations.</summary>
-    DateTime From { get; set; }
+    /// <summary>Date from which the range starts.</summary>
+    DateTime DateFrom { get; set; }
 
-    /// <summary>Date to which to return obligations.</summary>
-    DateTime To { get; set; }
+    /// <summary>Date to which the range ends.</summary>
+    DateTime DateTo { get; set; }
   }
 }

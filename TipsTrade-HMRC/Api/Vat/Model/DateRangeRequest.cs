@@ -7,14 +7,14 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
   public abstract class DateRangeRequest : IDateRange, IVatRequest {
     /// <summary>Date from which to return values.</summary>
     [JsonProperty("from")]
-    public DateTime From { get; set; }
+    public DateTime DateFrom { get; set; }
 
     /// <summary>The Gov-Test-Scenario, only in the sandbox environment.</summary>
     public string GovTestScenario { get; set; }
 
     /// <summary>Date to which to return values.</summary>
     [JsonProperty("to")]
-    public DateTime To { get; set; }
+    public DateTime DateTo { get; set; }
 
     /// <summary>The VAT registration number.</summary>
     [JsonProperty("vrn")]

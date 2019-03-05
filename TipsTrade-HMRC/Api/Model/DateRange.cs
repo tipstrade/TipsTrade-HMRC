@@ -4,12 +4,12 @@ using System;
 namespace TipsTrade.HMRC.Api.Model {
   /// <summary>Represents a model that provides a date range.</summary>
   public class DateRange : IDateRange {
-    /// <summary>Date from which to return obligations.</summary>
+    /// <summary>Date from which the range starts.</summary>
     [JsonProperty("from")]
-    public DateTime From { get; set; }
+    public DateTime DateFrom { get; set; }
 
-    /// <summary>Date to which to return obligations.</summary>
+    /// <summary>Date to which the range ends.</summary>
     [JsonProperty("to")]
-    public DateTime To { get; set; }
+    public DateTime DateTo { get; set; }
   }
 }

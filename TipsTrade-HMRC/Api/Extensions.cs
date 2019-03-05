@@ -30,11 +30,11 @@ namespace TipsTrade.HMRC.Api {
 
     /// <summary>Add the date range parameters to the specified request.</summary>
     internal static IRestRequest AddDateRangeParameters(this IRestRequest request, IDateRange range, ParameterType type = ParameterType.QueryString) {
-      if (range.From != default(DateTime)) {
-        request.AddParameter("from", $"{range.From:yyyy-MM-dd}", type);
+      if (range.DateFrom != default(DateTime)) {
+        request.AddParameter("from", $"{range.DateFrom:yyyy-MM-dd}", type);
       }
-      if (range.To != default(DateTime)) {
-        request.AddParameter("to", $"{range.To:yyyy-MM-dd}", type);
+      if (range.DateTo != default(DateTime)) {
+        request.AddParameter("to", $"{range.DateTo:yyyy-MM-dd}", type);
       }
 
       return request;
