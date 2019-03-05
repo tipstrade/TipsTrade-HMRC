@@ -4,7 +4,7 @@ using TipsTrade.HMRC.Json.Converters;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
   /// <summary>Represents a result containing a VAT obligation.</summary>
-  public class ObligationsResult {
+  public class ObligationsResult :IComparable<ObligationsResult> {
     /// <summary>The due date for this obligation period.</summary>
     public DateTime Due { get; set; }
 
@@ -23,5 +23,10 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     /// <summary>Which obligation statuses to return.</summary>
     [JsonConverter(typeof(CharEnumConverter))]
     public ObligationStatus Status { get; set; }
+
+    /// <summary>Compares the current object to the specified <see cref="ObligationsResult"/>, using the <see cref="Start"/> property.</summary>
+    public int CompareTo(ObligationsResult other) {
+      return other == null ? 1 : Start.CompareTo(other.Start);
+    }
   }
 }
