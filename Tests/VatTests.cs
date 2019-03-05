@@ -35,8 +35,8 @@ namespace TipsTrade.HMRC.Tests {
         year--;
       }
 
-      value.From = new DateTime(year, 1, 1);
-      value.To = value.From.AddYears(1).AddDays(-1);
+      value.DateFrom = new DateTime(year, 1, 1);
+      value.DateTo = value.DateFrom.AddYears(1).AddDays(-1);
     }
 
     [Fact]
@@ -83,8 +83,8 @@ namespace TipsTrade.HMRC.Tests {
     public void TestLiabilities() {
       var request = new LiabilitiesRequest() {
         GovTestScenario = LiabilitiesRequest.ScenarioMultipleLiabilities,
-        From = new DateTime(2017, 2, 27),
-        To = new DateTime(2017, 12, 31),
+        DateFrom = new DateTime(2017, 2, 27),
+        DateTo = new DateTime(2017, 12, 31),
         Vrn = Users.Organisation.User.Vrn,
       };
 
@@ -97,8 +97,8 @@ namespace TipsTrade.HMRC.Tests {
 
       foreach (var item in resp.Value) {
         Assert.NotNull(item.TaxPeriod);
-        Assert.NotDefault(item.TaxPeriod.From);
-        Assert.NotDefault(item.TaxPeriod.To);
+        Assert.NotDefault(item.TaxPeriod.DateFrom);
+        Assert.NotDefault(item.TaxPeriod.DateTo);
         Assert.NotNull(item.Type);
         Assert.NotDefault(item.OriginalAmount);
         if (item.Due != null) {
@@ -166,8 +166,8 @@ namespace TipsTrade.HMRC.Tests {
     public void TestPayments() {
       var request = new PaymentsRequest() {
         GovTestScenario = PaymentsRequest.ScenarioMultiplePayment,
-        From = new DateTime(2017, 2, 27),
-        To = new DateTime(2017, 12, 31),
+        DateFrom = new DateTime(2017, 2, 27),
+        DateTo = new DateTime(2017, 12, 31),
         Vrn = Users.Organisation.User.Vrn,
       };
 
