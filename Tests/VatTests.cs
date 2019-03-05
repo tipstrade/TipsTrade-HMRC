@@ -234,8 +234,19 @@ namespace TipsTrade.HMRC.Tests {
 
       var request = new SubmitRequest() {
         Return = CreateVatReturn(periodKey),
-        Vrn = Users.Organisation.User.Vrn
+        Vrn = Users.Organisation.User.Vrn,
+        GovTestScenario = SubmitRequest.ScenarioDuplicateSubmission
       };
+
+      var ex = Assert.Throws<Api.ApiException>(() => client.Vat.SubmitReturn(request));
+      Assert.Equal("Business validation error", ex.Message);
+      Assert.Equal("BUSINESS_ERROR", ex.ApiError.Code);
+      Assert.Equal("Business validation error", ex.ApiError.Message);
+      Assert.Single(ex.ApiError.Errors);
+      Assert.Equal("DUPLICATE_SUBMISSION", ex.ApiError.Errors.First().Code);
+      Assert.Equal("The VAT return was already submitted for the given period.", ex.ApiError.Errors.First().Message);
+
+      request.GovTestScenario = null;
 
       var resp = client.Vat.SubmitReturn(request);
 
