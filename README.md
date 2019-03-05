@@ -191,8 +191,8 @@ VAT returns are indexed by a "Period Key", so it's necessary to retrieve the obl
 var obRequest = new ObligationsRequest() {
   Vrn = vrn,
   Status = ObligationStatus.Fulfilled, // Use null to request all obligations
-  From = DateTime.Today.AddYears(-1),
-  To = DateTime.Today
+  DateFrom = DateTime.Today.AddYears(-1),
+  DateTo = DateTime.Today
 };
 
 var obligations = client.Vat.GetObligations(obRequest);
