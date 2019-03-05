@@ -59,7 +59,7 @@ namespace TipsTrade.HMRC.Api {
         restRequest.AddHeader("Content-Type", request.ContentType);
       }
 
-      if (request is IGovTestScenario) {
+      if (client.IsSandbox && (request is IGovTestScenario)) {
         restRequest.AddGovTestScenario(request as IGovTestScenario);
       }
 
