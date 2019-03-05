@@ -170,7 +170,7 @@ namespace TipsTrade.HMRC.Api {
 
       if (code >= 400 && code <= 599) {
         var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(response.Content);
-        throw new ApiException(errorResponse.Message, response.ErrorException) {
+        throw new ApiException(errorResponse?.Message ?? response.StatusDescription, response.ErrorException) {
           Status = response.StatusCode,
           ApiError = errorResponse
         };
