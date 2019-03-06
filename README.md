@@ -8,9 +8,9 @@ The following APIs are currently supported:
 ### Breaking changes
 Whilst I make an effort not to introduce breaking changes (I will attempt to decorate deprecated items with the `ObsoleteAttribute` when possible), due to the fact that the many of the HMRC APIs are still in Beta (and due to errors I've made), they will occur. I will attempt to document them in this section.
 
-#### 0.0.1.9
+#### v.0.0.1.9
 * IDateRange properties renamed from `From` and `To` to `DateFrom` and `DateTo` respectively.
-* An `AntiFraudException` is now thrown instead of an `InvalidOperationException` when the AntiFraud headers fail validation. The exception contains an Errors property that contains all the errors encountered, and not just the first.
+* An `AntiFraudException` is now thrown instead of an `InvalidOperationException` when the AntiFraud headers fail validation. The exception contains an `Errors` property that contains all the errors encountered, and not just the first.
 
 ## HMRC Developer Account
 A HMRC developer account is required - [Login Here][1]. To make requests you need to create an application which provides the following credentials:
