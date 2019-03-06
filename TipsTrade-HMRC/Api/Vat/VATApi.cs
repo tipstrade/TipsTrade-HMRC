@@ -34,7 +34,7 @@ namespace TipsTrade.HMRC.Api.Vat {
     #region Methods
     /// <summary>
     /// Gets the fuel scale charge from the live HMRC website.
-    /// Deprectated, used the <see cref="GetFuelScaleChargeFromCO2Live(DateTime, VatPeriod, int)"/> method instead.
+    /// Deprecated, used the <see cref="GetFuelScaleChargeFromCO2Live(DateTime, VatPeriod, int)"/> method instead.
     /// </summary>
     /// <param name="date">The accounting period for which the scale charge should be retrieved.</param>
     /// <param name="periodLength">The length of the VAT period in months (1, 3, 12).</param>
@@ -56,7 +56,7 @@ namespace TipsTrade.HMRC.Api.Vat {
 
     /// <summary>
     /// Gets the fuel scale charge.
-    /// Deprectated, used the <see cref="GetFuelScaleChargeFromCO2(DateTime, VatPeriod, int)"/> method instead.
+    /// Deprecated, used the <see cref="GetFuelScaleChargeFromCO2(DateTime, VatPeriod, int)"/> method instead.
     /// </summary>
     /// <param name="date">The accounting period for which the scale charge should be retrieved.</param>
     /// <param name="periodLength">The length of the VAT period in months (1, 3, 12).</param>
