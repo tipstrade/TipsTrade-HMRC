@@ -14,5 +14,16 @@
     public string GetHeaderValue() {
       return $"width={Size.Width}&height={Size.Height}&scaling-factor={ScalingFactor}&colour-depth={ColourDepth}";
     }
+
+#if NET452
+    /// <summary>Implicitly casts a <see cref="System.Windows.Forms.Screen"/> object to a <see cref="Screen"/>.</summary>
+    public static implicit operator Screen(System.Windows.Forms.Screen screen) {
+      return new Screen() {
+        ColourDepth = screen.BitsPerPixel,
+        ScalingFactor = 1,
+        Size = screen.Bounds.Size
+      };
+    }
+#endif
   }
 }

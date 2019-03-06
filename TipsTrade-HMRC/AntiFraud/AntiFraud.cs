@@ -277,14 +277,7 @@ namespace TipsTrade.HMRC.AntiFraud {
 #if NET452
     /// <summary>Populates the <see cref="Screens"/> property with all the screens in the system.</summary>
     public void PopulateScreens() {
-      Screens = System.Windows.Forms.Screen.AllScreens
-        .Select(s => {
-          return new Screen() {
-            ColourDepth = s.BitsPerPixel,
-            ScalingFactor = 1,
-            Size = new Size(s.Bounds.Size)
-          };
-        });
+      Screens = System.Windows.Forms.Screen.AllScreens.Select(x => (Screen)x);
     }
 #endif
 
