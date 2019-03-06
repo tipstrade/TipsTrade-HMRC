@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.1.8</Version>
+    <Version>0.0.1.9</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -14,7 +14,10 @@
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>0.0.1.8
+    <PackageReleaseNotes>0.0.1.9
+* Contains breaking changes - see https://github.com/tipstrade/TipsTrade-HMRC#breaking-changes
+
+0.0.1.8
 * Strongly type the VAT period values for the FuelScaleCharge methods, and obsolete the old methods that use byte
 
 0.0.1.7
