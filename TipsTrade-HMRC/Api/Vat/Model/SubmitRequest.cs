@@ -13,6 +13,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     /// <summary>The remote endpoint has indicated that the Agent Reference Number is invalid.</summary>
     [GovTestScenario]
+    [Obsolete]
     public const string ScenarioInvalidArn = "INVALID_ARN";
 
     /// <summary>Submission has not passed validation. Invalid parameter PERIODKEY.</summary>
@@ -26,6 +27,10 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     /// <summary>Submission has not passed validation. Invalid parameter VRN.</summary>
     [GovTestScenario]
     public const string ScenarioInvalidVrn = "INVALID_VRN";
+
+    /// <summary>The remote endpoint has indicated that the submission is for a tax period that has not ended.</summary>
+    [GovTestScenario]
+    public const string ScenarioTaxPeriodNotEnded = "TAX_PERIOD_NOT_ENDED";
 
     /// <summary>The VAT registration number.</summary>
     [JsonProperty("vrn")]
