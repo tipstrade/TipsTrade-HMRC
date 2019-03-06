@@ -1,13 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TipsTrade.HMRC.AntiFraud;
 using Xunit;
 
 namespace TipsTrade.HMRC.Tests {
   public class AntiFraudTests {
     [Fact]
+    public void TestAntiFraudHeaderValidation() {
+      var af = new AntiFraud.AntiFraud() {
+        ConnectionMethod = ConnectionMethod.DESKTOP_APP_DIRECT,
+      };
+
+      const int expectedErrors = 4;
+
+      var ex = Assert.Throws<AntiFraudException>(() => af.GetAntiFraudHeaders());
+      Assert.Equal(expectedErrors, ex.Errors.Count());
+
+      Assert.False(af.Validate(out string[] errors));
+      Assert.Equal(expectedErrors, errors.Count());
+    }
+
+    [Fact]
     public void TestGetAntiFraudHeaders() {
-      var af = new TipsTrade.HMRC.AntiFraud.AntiFraud() {
+      var af = new AntiFraud.AntiFraud() {
         ConnectionMethod = ConnectionMethod.DESKTOP_APP_DIRECT,
         DeviceID = $"{Guid.NewGuid()}",
         Screens = new Screen[] {
@@ -26,5 +42,10 @@ namespace TipsTrade.HMRC.Tests {
 
     }
 
+    [Fact]
+    public void TestGetPropertiesForMethod() {
+      var props = AntiFraud.AntiFraud.GetPropertiesForMethod(ConnectionMethod.DESKTOP_APP_DIRECT);
+      Assert.Equal(12, props.Count());
+    }
   }
 }

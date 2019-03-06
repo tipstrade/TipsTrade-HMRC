@@ -146,13 +146,21 @@ The APIs can be accessed their respective properties in the `Client` class
 
 ### Exception handling
 All Api methods can throw a `ApiException`. The `ApiException.Message` property will contain the core error message returned by the API. To gain more specific information, use the `ApiException.ApiError` property, which in turn contains an optional list of `ErrorResponse` objects in the `ApiException.ApiError.Errors` property.
+
+An `InvalidOperationException` may also be thrown if the state of the `Client` isn't valid to submit the request to HMRC.
+
+In addition, certain APIs require the `AntiFraud` headers to be set. Invoking a method without the required headers will throw an `AntiFraudException`. See [Anti fraud headers](#anti-fraud-headers).
 ```C#
 try {
   submitResponse = client.Vat.SubmitReturn(submitRequest);
   // ...
+} catch (InvalidOperationException ex) {
+  var message = ex.Message;
 } catch (ApiException ex) {
   var message = ex.Message;
   var detailedMessage = string.Join("\r\n", ex.ApiError.Errors?.Select(x => x.Message));
+} catch (AntiFraudException ex) {
+  var detailedMessage = string.Join("\r\n", ex.Errors);
 }
 ``` 
 
@@ -241,6 +249,51 @@ Awaiting documentation:
 * `Client.Vat.GetLiabilities`
 * `Client.Vat.GetPayments`
 
+## Anti fraud headers
+Certain APIs require [Fraud prevention][4] headers to be included in any requests. In expectation of HMRC's decision to make these headers mandatory, this library will require the `AntiFraud` property to be populated, and should conform to version 2.2 of the documentation.
+
+Any APIs that implements the `IRequiresAntiFraud` interface will expect the `Client.AntiFraud` property to be populated. Invoking an API method without the required headers will throw an `AntiFraudException`, which contains a list of errors in the `AntiFraudException.Errors` property. **This is a change from v.0.0.1.8, where an `InvalidOperationException` was previously thrown.**
+
+The `AntiFraud` class contains a number of helper methods:
+```C#
+// Returns a list of all the properties that are required for a certain ConnectionMethod
+var props = AntiFraud.AntiFraud.GetPropertiesForMethod(ConnectionMethod.DESKTOP_APP_DIRECT);
+
+// Validate the AntiFraud headers object
+var isValid = client.AntiFraud.Validate();
+
+// Validate the AntiFraud headers object, passing out a list of the actual errors
+var isValid = client.AntiFraud.Validate(out string[] errors);
+
+// Populates with all the local IP addresses on the local system
+client.AntiFraud.PopulateLocalIPs();
+
+// Populates with all the MAC addresses on the local system
+client.AntiFraud.PopulateMACAddresses();
+
+// Populates with the local operating system name and version
+client.AntiFraud.PopulateUserAgent();
+
+// Populates with all the screen infor on the local system (.Net Framework Only)
+client.AntiFraud.PopulateScreens();
+```
+
+Example usage:
+```C#
+client.AntiFraud = new AntiFraud.AntiFraud() {
+  ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
+  DeviceID = Configuration["AntiFraudDeviceID"],
+  Screens = new Screen[] {
+    new Screen() {ColourDepth = 32, ScalingFactor=1, Size = new Size(1920,1080) }
+  },
+  TimeZone = TimeZoneInfo.Local,
+  VendorVersion = new Dictionary<string, string>() { { "TipsTrade.HMRC.Tests", "0.0.0.1" } },
+  WindowSize = new Size(1024, 768)
+}
+
+```
+
 [1]: https://developer.service.hmrc.gov.uk/developer/login
 [2]: https://developer.service.hmrc.gov.uk/developer/applications
 [3]: https://developer.service.hmrc.gov.uk/api-documentation/docs/testing/data-cleardown
+[4]: https://developer.service.hmrc.gov.uk/api-documentation/docs/fraud-prevention

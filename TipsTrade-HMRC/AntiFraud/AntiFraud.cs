@@ -181,7 +181,13 @@ namespace TipsTrade.HMRC.AntiFraud {
     public Dictionary<string, string> GetAntiFraudHeaders() {
       var errors = new List<string>();
       var headers = GetAntiFraudHeaders(errors);
-      if (errors.Any()) throw new InvalidOperationException(errors.First());
+
+      if (errors.Any()) {
+        throw new AntiFraudException($"{errors.Count()} validation errors were found.") {
+          Errors = errors
+        };
+      }
+
       return headers;
     }
 
@@ -282,7 +288,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     }
 #endif
 
-    /// <summary>Populates the <see cref="UserAgent"/> property with the operating system info.</summary>
+    /// <summary>Populates the <see cref="UserAgent"/> property with the local operating system info.</summary>
     public void PopulateUserAgent() {
       var os = System.Environment.OSVersion;
       UserAgent = new UserAgent() {
@@ -293,15 +299,27 @@ namespace TipsTrade.HMRC.AntiFraud {
 
     /// <summary>Returns a flag indicating whether the anti fraud headers are valid.</summary>
     public bool Validate() {
-      var errors = new List<string>();
-      return Validate(errors);
+      return Validate(out string[] errors);
+    }
+
+    /// <summary>
+    /// Returns a flag indicating whether the anti fraud headers are valid.
+    /// Deprecated: Use the <see cref="Validate(out string[])"/> method instead.
+    /// </summary>
+    /// <param name="errors">The list of errors to populate.</param>
+    [Obsolete]
+    public bool Validate(List<string> errors) {
+      GetAntiFraudHeaders(errors);
+      return !errors.Any();
     }
 
     /// <summary>Returns a flag indicating whether the anti fraud headers are valid.</summary>
     /// <param name="errors">The list of errors to populate.</param>
-    public bool Validate(List<string> errors) {
-      GetAntiFraudHeaders(errors);
-      return !errors.Any();
+    public bool Validate(out string[] errors) {
+      var list = new List<string>();
+      GetAntiFraudHeaders(list);
+      errors = list.ToArray();
+      return !list.Any();
     }
     #endregion
   }
