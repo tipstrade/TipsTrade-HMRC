@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using TipsTrade.HMRC.Api.Model;
 
@@ -32,6 +33,11 @@ namespace TipsTrade.HMRC.Api {
 
     /// <summary>Initializes a new instance of the TipsTrade.HMRC.Api.ApiException class with a specified error message.</summary>
     public ApiException(string message, Exception innerException) : base(message, innerException) {
+    }
+
+    /// <summary>Gets the first error.</summary>
+    public ErrorResponse GetFirstError() {
+      return ApiError?.Errors?.FirstOrDefault() ?? ApiError;
     }
   }
 }
