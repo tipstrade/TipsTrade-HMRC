@@ -11,6 +11,112 @@ namespace TipsTrade.HMRC.Api.Vat {
   public class VatApi : IApi, IClient, IRequiresAntiFraud {
     private const string FuelScaleChargesResource = "Resources.FuelScaleCharges.json";
 
+    #region Error constants
+    ///<summary>
+    ///The client and/or agent is not authorised.
+    ///</summary>
+    public const string ERROR_CLIENT_OR_AGENT_NOT_AUTHORISED = "CLIENT_OR_AGENT_NOT_AUTHORISED";
+
+    ///<summary>
+    ///Invalid date from
+    ///</summary>
+    public const string ERROR_DATE_FROM_INVALID = "DATE_FROM_INVALID";
+
+    ///<summary>
+    ///Invalid date range, must be 1 year or less
+    ///</summary>
+    public const string ERROR_DATE_RANGE_INVALID = "DATE_RANGE_INVALID";
+
+    ///<summary>
+    ///The date of the requested return cannot be more than four years from the current date
+    ///</summary>
+    public const string ERROR_DATE_RANGE_TOO_LARGE = "DATE_RANGE_TOO_LARGE";
+
+    ///<summary>
+    ///Invalid date to
+    ///</summary>
+    public const string ERROR_DATE_TO_INVALID = "DATE_TO_INVALID";
+
+    ///<summary>
+    ///User has already submitted a VAT return for the given period
+    ///</summary>
+    public const string ERROR_DUPLICATE_SUBMISSION = "DUPLICATE_SUBMISSION";
+
+    ///<summary>
+    ///Invalid date from
+    ///</summary>
+    public const string ERROR_INVALID_DATE_FROM = "INVALID_DATE_FROM";
+
+    ///<summary>
+    ///Invalid date range
+    ///</summary>
+    public const string ERROR_INVALID_DATE_RANGE = "INVALID_DATE_RANGE";
+
+    ///<summary>
+    ///Invalid date to
+    ///</summary>
+    public const string ERROR_INVALID_DATE_TO = "INVALID_DATE_TO";
+
+    ///<summary>
+    ///amounts should be a non-negative number less than 9999999999999.99 with up to 2 decimal places
+    ///The value must be between -9999999999999 and 9999999999999
+    ///amount should be a monetary value (to 2 decimal places), between 0 and 99999999999.99
+    ///</summary>
+    public const string ERROR_INVALID_MONETARY_AMOUNT = "INVALID_MONETARY_AMOUNT";
+
+    ///<summary>
+    ///please provide a numeric field
+    ///</summary>
+    public const string ERROR_INVALID_NUMERIC_VALUE = "INVALID_NUMERIC_VALUE";
+
+    ///<summary>
+    ///Invalid request
+    ///</summary>
+    public const string ERROR_INVALID_REQUEST = "INVALID_REQUEST";
+
+    ///<summary>
+    ///Invalid status
+    ///</summary>
+    public const string ERROR_INVALID_STATUS = "INVALID_STATUS";
+
+    ///<summary>
+    ///User has not declared VAT return as final
+    ///</summary>
+    public const string ERROR_NOT_FINALISED = "NOT_FINALISED";
+
+    ///<summary>
+    ///The remote endpoint has indicated that no associated data is found
+    ///</summary>
+    public const string ERROR_NOT_FOUND = "NOT_FOUND";
+
+    ///<summary>
+    ///Invalid period key
+    ///</summary>
+    public const string ERROR_PERIOD_KEY_INVALID = "PERIOD_KEY_INVALID";
+
+    ///<summary>
+    ///Return submitted too early
+    ///</summary>
+    public const string ERROR_TAX_PERIOD_NOT_ENDED = "TAX_PERIOD_NOT_ENDED";
+
+    ///<summary>
+    ///netVatDue should be the difference between the largest and the smallest values among totalVatDue and vatReclaimedCurrPeriod
+    ///</summary>
+    public const string ERROR_VAT_NET_VALUE = "VAT_NET_VALUE";
+
+    ///<summary>
+    ///totalVatDue should be equal to the sum of vatDueSales and vatDueAcquisitions
+    ///</summary>
+    public const string ERROR_VAT_TOTAL_VALUE = "VAT_TOTAL_VALUE";
+
+    ///<summary>
+    ///Invalid VRN
+    ///The provided VRN is invalid
+    ///</summary>
+    public const string ERROR_VRN_INVALID = "VRN_INVALID";
+
+    #endregion
+
     #region Properties
     /// <summary>The client used to make requests.</summary>
     Client IClient.Client { get; set; }
