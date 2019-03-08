@@ -8,7 +8,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
   /// <summary>The parameters used to submit a VAT return.</summary>
   public class SubmitRequest : IApiRequest, IVatRequest {
     /// <summary>The remote endpoint has indicated that VAT has already been submitted for that period.</summary>
-    [GovTestScenario]
+    [GovTestScenario(errorCode: "DUPLICATE_SUBMISSION")]
     public const string ScenarioDuplicateSubmission = "DUPLICATE_SUBMISSION";
 
     /// <summary>The remote endpoint has indicated that the Agent Reference Number is invalid.</summary>
@@ -17,19 +17,19 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public const string ScenarioInvalidArn = "INVALID_ARN";
 
     /// <summary>Submission has not passed validation. Invalid parameter PERIODKEY.</summary>
-    [GovTestScenario]
+    [GovTestScenario(errorCode: "PERIOD_KEY_INVALID")]
     public const string ScenarioInvalidPeriodKey = "INVALID_PERIODKEY";
 
     /// <summary>Submission has not passed validation. Invalid parameter Payload.</summary>
-    [GovTestScenario]
+    [GovTestScenario(errorCode: "INVALID_REQUEST")]
     public const string ScenarioInvalidPayload = "INVALID_PAYLOAD";
 
     /// <summary>Submission has not passed validation. Invalid parameter VRN.</summary>
-    [GovTestScenario]
+    [GovTestScenario(errorCode: "VRN_INVALID")]
     public const string ScenarioInvalidVrn = "INVALID_VRN";
 
     /// <summary>The remote endpoint has indicated that the submission is for a tax period that has not ended.</summary>
-    [GovTestScenario]
+    [GovTestScenario(errorCode: "TAX_PERIOD_NOT_ENDED")]
     public const string ScenarioTaxPeriodNotEnded = "TAX_PERIOD_NOT_ENDED";
 
     /// <summary>The VAT registration number.</summary>

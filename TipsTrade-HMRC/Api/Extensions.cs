@@ -9,6 +9,7 @@ using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 using TipsTrade.HMRC.Api.Model;
+using TipsTrade.HMRC.Api.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api {
   /// <summary>A collection of methods extending the functionality of TipsTrade.HMRC.Api.IApi objects.</summary>
@@ -142,6 +143,19 @@ namespace TipsTrade.HMRC.Api {
       }
 
       return ((IClient)api).Client;
+    }
+
+    /// <summary>Returns a collection of errors for the current <see cref="IGovTestScenario"/>.</summary>
+    public static IEnumerable<string> GetGovTestScenarioErrors(this IGovTestScenario request) {
+      var scenarios = request.GetType()
+       .GetFields(BindingFlags.Public | BindingFlags.Static)
+       .Where(x => {
+         if (x.GetCustomAttribute<GovTestScenarioAttribute>() == null) return false;
+
+         return (string)x.GetValue(null) == request.GovTestScenario;
+       });
+
+      return scenarios.FirstOrDefault()?.GetCustomAttribute<GovTestScenarioAttribute>()?.ErrorCodes;
     }
 
     /// <summary>Gets the rest client for the specified API.</summary>
