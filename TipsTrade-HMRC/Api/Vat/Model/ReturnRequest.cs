@@ -8,7 +8,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
   /// <summary>The parameters used to retrieve a VAT return.</summary>
   public class ReturnRequest : IApiRequest, IVatRequest {
     /// <summary>The date of the requested return cannot be further than four years from the current date.</summary>
-    [GovTestScenario(errorCode: "DATE_RANGE_TOO_LARGE")]
+    [GovTestScenario(errorCode: VatApi.ERROR_DATE_RANGE_TOO_LARGE)]
     public const string ScenarioDateRangeTooLarge = "DATE_RANGE_TOO_LARGE";
 
     /// <summary>The ID code for the period that this obligation belongs to.

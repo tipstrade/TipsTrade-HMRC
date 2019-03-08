@@ -42,7 +42,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public const string ScenarioMonthlylyMet3 = "MONTHLY_THREE_MET";
 
     /// <summary>Simulates the scenario where no data is found.</summary>
-    [GovTestScenario(errorCode: "NOT_FOUND")]
+    [GovTestScenario(errorCode: VatApi.ERROR_NOT_FOUND)]
     public const string ScenarioNotFound = "NOT_FOUND";
 
     /// <summary>Which obligation statuses to return (O=Open, F=Fulfilled).</summary>
