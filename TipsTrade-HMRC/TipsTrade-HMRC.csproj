@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.1.9</Version>
+    <Version>0.0.2.1</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -14,7 +14,10 @@
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>0.0.1.9
+    <PackageReleaseNotes>0.0.2.1
+* Bump RestSharp version to 106.6.4
+
+0.0.1.9
 * Contains breaking changes - see https://github.com/tipstrade/TipsTrade-HMRC#breaking-changes
 
 0.0.1.8
@@ -54,7 +57,7 @@
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.8.10" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="RestSharp" Version="106.5.4" />
+    <PackageReference Include="RestSharp" Version="106.6.4" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net452'">
