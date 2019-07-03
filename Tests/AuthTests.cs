@@ -82,11 +82,19 @@ namespace TipsTrade.HMRC.Tests {
     public void TestRefreshToken() {
       var client = GetClient();
 
+      var start = DateTime.UtcNow;
+      var expiresSlew = 10; // Allowed slew for the expires
+
       var tokens = client.RefreshAccessToken(Users.Organisation.Tokens.RefreshToken);
       Assert.NotNull(tokens.AccessToken);
       Assert.NotNull(tokens.RefreshToken);
       Assert.NotEqual(0, tokens.ExpiresIn);
       Assert.NotDefault(tokens.ExpiresTimestamp);
+
+      var expiresSeconds = tokens.ExpiresTimestamp.Subtract(start).TotalSeconds;
+      var expiresDelta = Math.Abs(expiresSeconds - tokens.ExpiresIn);
+      Assert.True(expiresDelta <= expiresSlew);
+
       Assert.NotNull(tokens.Scope);
       Assert.NotNull(tokens.TokenType);
 
