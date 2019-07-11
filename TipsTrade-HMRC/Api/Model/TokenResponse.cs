@@ -4,6 +4,9 @@ using System;
 namespace TipsTrade.HMRC.Api.Model {
   /// <summary>Represents a response containing security tokens.</summary>
   public class TokenResponse {
+    /// <summary>Gets the default number of minutes leeway that is used for determining if the <see cref="AccessToken"/> has expired.</summary>
+    public const int DefaultSlewMinutes = 10;
+
     private double expiresIn;
 
     /// <summary>The access token.</summary>
@@ -40,5 +43,14 @@ namespace TipsTrade.HMRC.Api.Model {
     /// <summary>The type of token returned.</summary>
     [JsonProperty("token_type")]
     public string TokenType { get; set; }
+
+    /// <summary>Returns a flag indicating whether the <see cref="AccessToken"/> has expired.</summary>
+    /// <param name="slewMinutes">
+    /// The number of minutes leeway to use when comparing the <see cref="ExpiresTimestamp"/>.
+    /// A higher positive number will be more conservative.
+    /// </param>
+    public bool HasAccessTokenExpired(int slewMinutes = DefaultSlewMinutes) {
+      return ExpiresTimestamp <= DateTime.UtcNow.AddMinutes(slewMinutes);
+    }
   }
 }
