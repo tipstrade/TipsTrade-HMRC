@@ -201,7 +201,18 @@ namespace TipsTrade.HMRC {
       request.AddParameter("grant_type", "refresh_token");
       request.AddParameter("refresh_token", refreshToken);
 
-      var tokens = restClient.Execute(request).DeserializeContent<TokenResponse>();
+      var response = restClient.Execute(request);
+
+      // The OAuth2 flow returns different JSON in the event of an error. Check for that first
+      var oauthError = ErrorResponse.FromOAuth2Error(response.Content);
+      if (oauthError != null) {
+        throw new ApiException(oauthError.Message) {
+          ApiError = oauthError,
+          Status = response.StatusCode
+        };
+      }
+
+      var tokens = response.DeserializeContent<TokenResponse>();
       AccessToken = tokens.AccessToken;
       RefreshToken = tokens.RefreshToken;
 
