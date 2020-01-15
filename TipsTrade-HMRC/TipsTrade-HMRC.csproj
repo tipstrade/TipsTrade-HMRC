@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.2.3</Version>
+    <Version>0.0.2.4</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -14,7 +14,10 @@
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>0.0.2.3
+    <PackageReleaseNotes>0.0.2.4
+* Fix: Handle updated VAT Fuel Scale Charge page layout
+
+0.0.2.3
 * Fix: ApiException thrown by Client.RefreshAccessToken will now include the OAuth2 error message
 
 0.0.2.2
