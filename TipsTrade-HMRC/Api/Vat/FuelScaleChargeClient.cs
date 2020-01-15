@@ -148,7 +148,7 @@ namespace TipsTrade.HMRC.Api.Vat {
       var doc = new HtmlDocument();
       doc.LoadHtml(response.Content);
 
-      var result = doc.DocumentNode.SelectSingleNode("//div[@class='result-info']/p");
+      var result = doc.DocumentNode.SelectSingleNode("//div[@class='result-info']/div/p");
       if (result == null) {
         throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found.");
       }
