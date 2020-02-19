@@ -3,18 +3,21 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.2.4</Version>
+    <Version>0.0.2.5</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
-    <Copyright>TipsTrade Ltd. 2018-2019</Copyright>
+    <Copyright>TipsTrade Ltd. 2018-2020</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Product>TipsTrade-HMRC</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>0.0.2.4
+    <PackageReleaseNotes>0.0.2.5
+* Fix: Handle updated VAT Fuel Scale Charge page layout
+
+0.0.2.4
 * Fix: Handle updated VAT Fuel Scale Charge page layout
 
 0.0.2.3

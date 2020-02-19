@@ -5,7 +5,7 @@
 
     <IsPackable>false</IsPackable>
     <RootNamespace>TipsTrade.HMRC.Tests</RootNamespace>
-    <Version>0.0.2.4</Version>
+    <Version>0.0.2.5</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Product>TipsTrade-HMRC-Tests</Product>
