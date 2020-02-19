@@ -83,6 +83,16 @@ namespace TipsTrade.HMRC.Tests {
       Assert.Equal(new DateTime(2020, 4, 30), resp.To);
       Assert.Equal(0.2m, resp.VatRate);
       Assert.Equal(int.MaxValue, resp.CO2Band);
+
+      // Maxium CO2 annually
+      resp = VatApi.GetFuelScaleChargeFromCO2Live(new DateTime(2020, 1, 1), VatPeriod.Annual, 400);
+      Assert.Equal(345.17m, resp.Vat);
+      Assert.Equal(1725.83m, resp.Nett);
+      Assert.Equal(2071.00m, resp.ScaleCharge);
+      Assert.Equal(new DateTime(2019, 5, 1), resp.From);
+      Assert.Equal(new DateTime(2020, 4, 30), resp.To);
+      Assert.Equal(0.2m, resp.VatRate);
+      Assert.Equal(int.MaxValue, resp.CO2Band);
     }
   }
 }

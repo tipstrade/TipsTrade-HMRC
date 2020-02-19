@@ -145,16 +145,9 @@ namespace TipsTrade.HMRC.Api.Vat {
       var request = new RestRequest($"{InitialUri}/{dates.Value}/{month}/{band.Value}");
       var response = Client.Execute(request);
 
-      var doc = new HtmlDocument();
-      doc.LoadHtml(response.Content);
+      var match = Regex.Match(response.Content, "This is made up of the basic charge of £(?<Nett>[,0-9]+\\.[0-9]{2}), plus £(?<VAT>[,0-9]+\\.[0-9]{2}) VAT.");
 
-      var result = doc.DocumentNode.SelectSingleNode("//div[@class='result-info']/div/p");
-      if (result == null) {
-        throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found.");
-      }
-
-      var matches = Regex.Matches(result.InnerText, "([0-9]+(\\.[0-9]+)?)");
-      if (matches.Count == 0) {
+      if (!match.Success) {
         throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found.");
       }
 
@@ -162,8 +155,8 @@ namespace TipsTrade.HMRC.Api.Vat {
         CO2Band = band.To,
         From = dates.From,
         To = dates.To,
-        Nett = decimal.Parse(matches[0].Value),
-        Vat = decimal.Parse(matches[1].Value)
+        Nett = decimal.Parse(match.Groups["Nett"].Value),
+        Vat = decimal.Parse(match.Groups["VAT"].Value)
       };
     }
     #endregion
