@@ -18,10 +18,7 @@ internal static   class NetworkInformation {
         .Where(i => i.NetworkInterfaceType != NetworkInterfaceType.Loopback)
         .SelectMany(i => {
           return i.GetIPProperties().UnicastAddresses
-          .Where(a => {
-            return !a.Address.IsIPv6LinkLocal
-            && (a.Address.AddressFamily == AddressFamily.InterNetwork || a.Address.AddressFamily == AddressFamily.InterNetworkV6);
-          })
+          .Where(a => a.Address.AddressFamily == AddressFamily.InterNetwork || a.Address.AddressFamily == AddressFamily.InterNetworkV6)
           .Select(a => a.Address);
         });
     }
