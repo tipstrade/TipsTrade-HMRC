@@ -54,9 +54,13 @@ namespace TipsTrade.HMRC.Tests {
           ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
           DeviceID = Configuration["AntiFraudDeviceID"],
           Screens = new Screen[] {
-          new Screen() {ColourDepth = 32, ScalingFactor=1, Size = new Size(1920,1080) }
-        },
+          new Screen() {
+            ColourDepth = 32, ScalingFactor=1, Size = new Size(1920,1080) }
+          },
           TimeZone = TimeZoneInfo.Local,
+          UserIDs = new Dictionary<string, string>() {
+            { "os", System.Environment.UserName }
+          },
           VendorVersion = new Dictionary<string, string>() { { "TipsTrade.HMRC.Tests", "0.0.0.1" } },
           WindowSize = new Size(1024, 768)
         }
@@ -65,6 +69,22 @@ namespace TipsTrade.HMRC.Tests {
       client.AntiFraud.PopulateLocalIPs();
       client.AntiFraud.PopulateMACAddresses();
       client.AntiFraud.PopulateUserAgent();
+
+      // Even though the documentation states that that these are optional, the API returns an error
+      client.AntiFraud.UserAgent.DeviceManufacturer = "Dell";
+      client.AntiFraud.UserAgent.DeviceModel = "XPS";
+
+      client.AntiFraud.MultiFactor = new[] {
+        new MultiFactor() {
+          Method = MFAMethod.AUTH_CODE,
+          TimeStamp = DateTime.Now,
+          UniqueReference = $"{Guid.NewGuid()}"
+        }
+      };
+
+      client.AntiFraud.VendorLicenceIDs = new Dictionary<string, string>() {
+        { "Example", "https://example.com" }
+      };
 
       return client;
     }

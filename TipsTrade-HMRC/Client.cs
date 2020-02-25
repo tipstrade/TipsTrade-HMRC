@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser;
+using TipsTrade.HMRC.Api.TestFraudPrevention;
 using TipsTrade.HMRC.Api.HelloWorld;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Vat;
@@ -63,6 +64,9 @@ namespace TipsTrade.HMRC {
 
     /// <summary>The Hello World API.</summary>
     public HelloWorldApi HelloWorld => GetApi<HelloWorldApi>();
+
+    /// <summary>The Hello World API.</summary>
+    public TestFraudPreventionApi TestFraudPrevention => GetApi<TestFraudPreventionApi>();
 
     /// <summary>The VAT API.</summary>
     public VatApi Vat => GetApi<VatApi>();
