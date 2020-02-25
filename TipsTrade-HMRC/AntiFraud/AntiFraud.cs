@@ -230,17 +230,20 @@ namespace TipsTrade.HMRC.AntiFraud {
 
         } else if (value is IEnumerable list) {
           var sb = new StringBuilder();
+
           foreach (var o in list) {
             if (sb.Length != 0) sb.Append(",");
+
             if (o == null) {
               errors.Add($"{item.Name} contains a null value.");
-
+              continue;
             } else if (o is IAntiFraudValue val) {
               sb.Append(val.GetHeaderValue());
             } else {
-              sb.Append($"{o}");
+              sb.Append(HttpUtility.UrlEncode($"{o}"));
             }
           }
+
           headerValue = sb.ToString();
 
         } else if (value is IAntiFraudValue val) {
@@ -251,12 +254,12 @@ namespace TipsTrade.HMRC.AntiFraud {
           headerValue = $"UTC{symbol}{tz.BaseUtcOffset:hh\\:mm}";
 
         } else {
-          headerValue = $"{value}";
+          headerValue = HttpUtility.UrlEncode($"{value}");
 
         }
 
         if (headerValue != "") {
-          headers.Add(afHeader.HeaderName, headerValue);
+          headers.Add(HttpUtility.UrlEncode(afHeader.HeaderName), headerValue);
         }
       }
 
@@ -265,7 +268,10 @@ namespace TipsTrade.HMRC.AntiFraud {
 
     /// <summary>Populates the <see cref="LocalIPs"/> property with all the local IP addresses.</summary>
     public void PopulateLocalIPs() {
-      LocalIPs = NetworkInterface.GetAllNetworkInterfaces().GetAllAddresses();
+      LocalIPs = NetworkInterface.GetAllNetworkInterfaces()
+        .GetAllAddresses()
+        .Where(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork || x.IsIPv6LinkLocal)
+        ;
     }
 
     /// <summary>Populates the <see cref="MACAddresses"/> property with all the local MAC addresses.</summary>
