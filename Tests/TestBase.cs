@@ -61,7 +61,10 @@ namespace TipsTrade.HMRC.Tests {
           UserIDs = new Dictionary<string, string>() {
             { "os", System.Environment.UserName }
           },
-          VendorVersion = new Dictionary<string, string>() { { "TipsTrade.HMRC.Tests", "0.0.0.1" } },
+          VendorVersion = new Dictionary<string, string>() {
+            { "TipsTrade.HMRC.Tests", "0.0.0.1" },
+            { "Another Vendor", $"{new Version(0, 0, 1, 2)}" }
+          },
           WindowSize = new Size(1024, 768)
         }
       };

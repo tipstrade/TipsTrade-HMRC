@@ -224,7 +224,7 @@ namespace TipsTrade.HMRC.AntiFraud {
           var sb = new StringBuilder();
           foreach (var key in dict.Keys) {
             if (sb.Length != 0) sb.Append("&");
-            sb.AppendFormat("{0}={1}", key, HttpUtility.UrlEncode($"{dict[key]}"));
+            sb.AppendFormat("{0}={1}", HttpUtility.UrlEncode($"{key}"), HttpUtility.UrlEncode($"{dict[key]}"));
           }
           headerValue = sb.ToString();
 
@@ -259,7 +259,7 @@ namespace TipsTrade.HMRC.AntiFraud {
         }
 
         if (headerValue != "") {
-          headers.Add(HttpUtility.UrlEncode(afHeader.HeaderName), headerValue);
+          headers.Add(afHeader.HeaderName, headerValue);
         }
       }
 
