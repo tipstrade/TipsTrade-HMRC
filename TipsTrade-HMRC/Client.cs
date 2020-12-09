@@ -183,7 +183,10 @@ namespace TipsTrade.HMRC {
       request.AddParameter("redirect_uri", $"{u.Scheme}://{u.Authority}{u.AbsolutePath}");
       request.AddParameter("code", code);
 
-      var tokens = restClient.Execute(request).DeserializeContent<TokenResponse>();
+      var response = restClient.Execute(request);
+      response.ThrowOnError();
+
+      var tokens = response.DeserializeContent<TokenResponse>();
       AccessToken = tokens.AccessToken;
       RefreshToken = tokens.RefreshToken;
 
@@ -206,6 +209,7 @@ namespace TipsTrade.HMRC {
       request.AddParameter("refresh_token", refreshToken);
 
       var response = restClient.Execute(request);
+      response.ThrowOnError();
 
       // The OAuth2 flow returns different JSON in the event of an error. Check for that first
       var oauthError = ErrorResponse.FromOAuth2Error(response.Content);
