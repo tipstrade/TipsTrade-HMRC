@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.2.7</Version>
+    <Version>0.0.2.8</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -14,7 +14,10 @@
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>0.0.2.7
+    <PackageReleaseNotes>0.0.2.8
+* Bugfix: Handle errors correctly for RefreshAccessToken and HandleEndpointResult
+
+0.0.2.7
 * Feature: Add Test Fraud Prevention API
 * Fix: Include IPv6 link local addresses in PopulateLocalIPs()
 * Fix: Don't includ non IPv6 link local addresses in PopulateLocalIPs()
