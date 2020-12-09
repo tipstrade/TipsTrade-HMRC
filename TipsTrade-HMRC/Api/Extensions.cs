@@ -102,7 +102,7 @@ namespace TipsTrade.HMRC.Api {
     /// <summary>Executes the specified request for the API.</summary>
     internal static T ExecuteRequest<T>(this IApi api, IRestRequest request) {
       var client = api.GetRestClient();
-      var response =  client.Execute(request);
+      var response = client.Execute(request);
       response.ThrowOnError();
 
       var data = response.DeserializeContent<T>();
@@ -137,7 +137,7 @@ namespace TipsTrade.HMRC.Api {
 
     /// <summary>Gets the HMRC client for the specified API.</summary>
     internal static Client GetClient(this IApi api) {
-      if (! (api is IClient)) {
+      if (!(api is IClient)) {
         throw new InvalidOperationException($"{nameof(api)} does not implement {typeof(IClient)}");
       }
 
@@ -166,11 +166,17 @@ namespace TipsTrade.HMRC.Api {
     /// <summary>Throws an ApiException if an error is encountered.</summary>
     /// <param name="response"></param>
     internal static void ThrowOnError(this IRestResponse response) {
+      // Throw the inner exception so that an ApiException doesn't mask network errors
+      if (response.ErrorException != null) {
+        throw response.ErrorException;
+      }
+
       int code = (int)response.StatusCode;
 
       if (code >= 400 && code <= 599) {
         var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(response.Content);
-        throw new ApiException(errorResponse?.Message ?? response.StatusDescription, response.ErrorException) {
+
+        throw new ApiException(errorResponse?.Message ?? response.StatusDescription) {
           Status = response.StatusCode,
           ApiError = errorResponse
         };
