@@ -61,6 +61,7 @@ namespace TipsTrade.HMRC.Tests {
           UserIDs = new Dictionary<string, string>() {
             { "os", System.Environment.UserName }
           },
+          VendorProductName = "TipsTrade.HMRC.Tests",
           VendorVersion = new Dictionary<string, string>() {
             { "TipsTrade.HMRC.Tests", "0.0.0.1" },
             { "Another Vendor", $"{new Version(0, 0, 1, 2)}" }

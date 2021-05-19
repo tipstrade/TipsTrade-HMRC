@@ -45,6 +45,11 @@ namespace TipsTrade.HMRC.AntiFraud {
     [ConnectionMethod(true)]
     public IEnumerable<IPAddress> LocalIPs { get; set; }
 
+    /// <summary>Gets or sets the timestamp to show when Gov-Client-Local-IPs is collected.</summary>
+    [AntiFraudHeader("Gov-Client-Local-IPs-Timestamp", true)]
+    [ConnectionMethod(true)]
+    public DateTime LocalIPsTimestamp { get; set; } = DateTime.UtcNow;
+
     /// <summary>Gets or sets a list of the MAC addreses available on the originating device.</summary>
     [AntiFraudHeader("Gov-Client-MAC-Addresses", true)]
     [ConnectionMethod(ConnectionMethod.MOBILE_APP_DIRECT)]
@@ -136,6 +141,13 @@ namespace TipsTrade.HMRC.AntiFraud {
     [AntiFraudHeader("Gov-Vendor-License-IDs", true)]
     [ConnectionMethod(true)]
     public Dictionary<string, string> VendorLicenceIDs { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the product marketed to end users.
+    /// </summary>
+    [AntiFraudHeader("Gov-Vendor-Product-Name", true)]
+    [ConnectionMethod(true)]
+    public string VendorProductName { get; set; }
 
     /// <summary>Gets or sets the public IP address (IPv4 or IPv6) from which the originating device makes the request.</summary>
     [AntiFraudHeader("Gov-Vendor-Public-IP")]
@@ -253,14 +265,16 @@ namespace TipsTrade.HMRC.AntiFraud {
           var symbol = tz.BaseUtcOffset.TotalHours > 0 ? "+" : "-";
           headerValue = $"UTC{symbol}{tz.BaseUtcOffset:hh\\:mm}";
 
+        } else if (value is DateTime date) {
+          // Can't use "O", as HMRC wants milliseconds, but not too many...
+          headerValue = $"{date.ToUniversalTime():yyyy-MM-dd'T'hh:mm:ss.fff'Z'}";
+
         } else {
           headerValue = HttpUtility.UrlEncode($"{value}");
 
         }
 
-        if (headerValue != "") {
-          headers.Add(afHeader.HeaderName, headerValue);
-        }
+        headers.Add(afHeader.HeaderName, headerValue);
       }
 
       return headers;
@@ -272,6 +286,7 @@ namespace TipsTrade.HMRC.AntiFraud {
         .GetAllAddresses()
         .Where(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork || x.IsIPv6LinkLocal)
         ;
+      LocalIPsTimestamp = DateTime.UtcNow;
     }
 
     /// <summary>Populates the <see cref="MACAddresses"/> property with all the local MAC addresses.</summary>
