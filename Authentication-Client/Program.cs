@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
@@ -115,6 +117,15 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       var redirectUrl = Configuration["RedirectUrl"];
       var url = client.GetAuthorizatoinEndpoint(state, redirectUrl, scopes);
 
+      try {
+        OpenUrl(url);
+      } catch (Exception e) {
+        Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"Couldn't launch the Login URI. {e.Message}");
+        Console.ResetColor();
+      }
+
       Console.WriteLine();
       Console.WriteLine("Navigate to the link below, and login using the following credentials:");
       Console.WriteLine($"\t{url}");
@@ -155,6 +166,26 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
     }
 
     private static Client GetClient() => new Client(ClientId, ClientSecret, ServerToken, IsSandbox);
+
+    private static void OpenUrl(string url) {
+      // Dotnet has an issue executing URIs to launch in the default system browser.
+      // See: https://github.com/dotnet/runtime/issues/17938
+      try {
+        Process.Start(url);
+      } catch {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+          url = url.Replace("&", "^&");
+
+          Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+        } else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+          Process.Start("xdg-open", url);
+        } else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
+          Process.Start("open", url);
+        } else {
+          throw;
+        }
+      }
+    }
 
     private static void RefreshToken(Client client) {
       Console.WriteLine();
