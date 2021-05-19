@@ -1,4 +1,6 @@
-﻿using System.Web;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Web;
 
 namespace TipsTrade.HMRC.AntiFraud {
   /// <summary>Represents an object that contains multi-factor authentication information.</summary>
@@ -17,12 +19,14 @@ namespace TipsTrade.HMRC.AntiFraud {
 
     /// <summary>Retuns a string that contains the anti fraud header value.</summary>
     public string GetHeaderValue() {
-      return string.Format("{0}/{1} ({2}/{3})",
-        HttpUtility.UrlEncode(OSFamily ?? ""),
-        HttpUtility.UrlEncode(OSVersion ?? ""),
-        HttpUtility.UrlEncode(DeviceManufacturer ?? ""),
-        HttpUtility.UrlEncode(DeviceModel ?? "")
-        );
+      var dict = new Dictionary<string, string> {
+        {"os-family", OSFamily },
+        {"os-version", OSVersion },
+        {"device-manufacturer", DeviceManufacturer },
+        {"device-model", DeviceModel }
+      };
+
+      return dict.GetHeaderValue();
     }
   }
 }
