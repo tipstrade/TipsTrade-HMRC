@@ -45,7 +45,7 @@ namespace TipsTrade.HMRC.Tests {
     [Fact]
     public void TestGetPropertiesForMethod() {
       var props = AntiFraud.AntiFraud.GetPropertiesForMethod(ConnectionMethod.DESKTOP_APP_DIRECT);
-      Assert.Equal(12, props.Count());
+      Assert.Equal(14, props.Count());
     }
   }
 }

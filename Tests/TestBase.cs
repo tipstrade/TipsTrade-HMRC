@@ -73,10 +73,13 @@ namespace TipsTrade.HMRC.Tests {
       client.AntiFraud.PopulateLocalIPs();
       client.AntiFraud.PopulateMACAddresses();
       client.AntiFraud.PopulateUserAgent();
+      client.AntiFraud.VendorForwarded = new Forwarded[] {
+        new Forwarded { By = System.Net.IPAddress.Parse("8.8.8.8"), For = System.Net.IPAddress.Parse("fe80::21a6:9255:4c0b:78e4%14")}
+      };
 
       // Even though the documentation states that that these are optional, the API returns an error
       client.AntiFraud.UserAgent.DeviceManufacturer = "Dell";
-      client.AntiFraud.UserAgent.DeviceModel = "XPS";
+      client.AntiFraud.UserAgent.DeviceModel = "XPS Gaming PC";
 
       client.AntiFraud.MultiFactor = new[] {
         new MultiFactor() {

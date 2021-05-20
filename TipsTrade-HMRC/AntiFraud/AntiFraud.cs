@@ -230,7 +230,7 @@ namespace TipsTrade.HMRC.AntiFraud {
 
         string headerValue;
         if (value is string str) {
-          headerValue = str; // string are enumerable so catch them here
+          headerValue = HttpUtility.UrlEncode(str); // string are enumerable so catch them here
 
         } else if (value is IDictionary dict) {
           var sb = new StringBuilder();

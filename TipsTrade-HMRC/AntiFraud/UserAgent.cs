@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.AntiFraud {
 
     /// <summary>Gets or sets the device model.</summary>
     public string DeviceModel { get; set; }
-    
+
     /// <summary>Gets or sets the operating system family.</summary>
     public string OSFamily { get; set; }
 
@@ -20,10 +20,10 @@ namespace TipsTrade.HMRC.AntiFraud {
     /// <summary>Retuns a string that contains the anti fraud header value.</summary>
     public string GetHeaderValue() {
       var dict = new Dictionary<string, string> {
-        {"os-family", OSFamily },
-        {"os-version", OSVersion },
-        {"device-manufacturer", DeviceManufacturer },
-        {"device-model", DeviceModel }
+        {"os-family", HttpUtility.UrlEncode(OSFamily) },
+        {"os-version", HttpUtility.UrlEncode(OSVersion) },
+        {"device-manufacturer", HttpUtility.UrlEncode(DeviceManufacturer) },
+        {"device-model", HttpUtility.UrlEncode(DeviceModel) }
       };
 
       return dict.GetHeaderValue();
