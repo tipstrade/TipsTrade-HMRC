@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 
 namespace System.Net.NetworkInformation {
-internal static   class NetworkInformation {
+  internal static class NetworkInformation {
     public static string FormatMAC(this PhysicalAddress mac) {
       return string.Join(":", mac.GetAddressBytes().Select(b => $"{b:x2}"));
     }
@@ -23,11 +21,12 @@ internal static   class NetworkInformation {
         });
     }
 
-    /// <summary>Returns a list of all the MAC addresses for the current collection of interfaces.</summary>
+    /// <summary>Returns a list of all the valid MAC addresses for the current collection of interfaces.</summary>
     public static IEnumerable<PhysicalAddress> GetAllMACAddresses(this IEnumerable<NetworkInterface> interfaces) {
       return interfaces
-        .Where(i => i.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-        .Select(i => i.GetPhysicalAddress());
+        .Select(i => i.GetPhysicalAddress())
+        .Where(p => p.GetAddressBytes().Length != 0)
+        ;
     }
   }
 }

@@ -291,8 +291,12 @@ namespace TipsTrade.HMRC.AntiFraud {
 
     /// <summary>Populates the <see cref="MACAddresses"/> property with all the local MAC addresses.</summary>
     public void PopulateMACAddresses() {
-      var foo = NetworkInterface.GetAllNetworkInterfaces().GetAllMACAddresses();
-      MACAddresses = NetworkInterface.GetAllNetworkInterfaces().GetAllMACAddresses().Select(m => m.FormatMAC());
+      MACAddresses = NetworkInterface
+        .GetAllNetworkInterfaces()
+        .GetAllMACAddresses()
+        .Select(m => m.FormatMAC())
+        .Distinct()
+        ;
     }
 
 #if NET452
