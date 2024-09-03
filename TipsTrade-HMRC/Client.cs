@@ -70,6 +70,9 @@ namespace TipsTrade.HMRC {
 
     /// <summary>The VAT API.</summary>
     public VatApi Vat => GetApi<VatApi>();
+
+    /// <summary>The VAT Number API.</summary>
+    public VatNumberApi VatNumber => GetApi<VatNumberApi>();
     #endregion
 
     #region Constructors
