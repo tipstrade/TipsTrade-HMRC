@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.2.10</Version>
+    <Version>0.0.3.1</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -14,7 +14,12 @@
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>0.0.2.10
+    <PackageReleaseNotes>0.0.3.1
+* Add VAT Number verification
+* Remove obsolete VAT Scale Charge Resource
+* Bugfix: Don't use empty MAC address for fraud prevention headers
+
+0.0.2.10
 * Fix percent encoding
 
 0.0.2.9
