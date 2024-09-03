@@ -145,7 +145,7 @@ namespace TipsTrade.HMRC.Api.Vat {
       var request = new RestRequest($"{InitialUri}/{dates.Value}/{month}/{band.Value}");
       var response = Client.Execute(request);
 
-      var match = Regex.Match(response.Content, "This is made up of the basic charge of £(?<Nett>[,0-9]+\\.[0-9]{2}), plus £(?<VAT>[,0-9]+\\.[0-9]{2}) VAT.");
+      var match = Regex.Match(response.Content, "This is made up of the basic charge of £(?<Nett>[,0-9]+(\\.[0-9]{2})?), plus £(?<VAT>[,0-9]+(\\.[0-9]{2})?) VAT.");
 
       if (!match.Success) {
         throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found.");
