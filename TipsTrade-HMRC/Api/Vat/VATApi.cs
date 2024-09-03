@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System;
 using System.Linq;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.Vat.Model;
@@ -9,8 +6,6 @@ using TipsTrade.HMRC.Api.Vat.Model;
 namespace TipsTrade.HMRC.Api.Vat {
   /// <summary>The API that exposes VAT functions.</summary>
   public class VatApi : IApi, IClient, IRequiresAntiFraud {
-    private const string FuelScaleChargesResource = "Resources.FuelScaleCharges.json";
-
     #region Properties
     /// <summary>The client used to make requests.</summary>
     Client IClient.Client { get; set; }
@@ -52,68 +47,6 @@ namespace TipsTrade.HMRC.Api.Vat {
     public static FuelScaleChargeResult GetFuelScaleChargeFromCO2Live(DateTime date, VatPeriod period, int co2) {
       var client = new FuelScaleChargeClient();
       return client.GetFuelScaleChargeFromCO2(date, period, co2);
-    }
-
-    /// <summary>
-    /// Gets the fuel scale charge.
-    /// Deprecated, used the <see cref="GetFuelScaleChargeFromCO2(DateTime, VatPeriod, int)"/> method instead.
-    /// </summary>
-    /// <param name="date">The accounting period for which the scale charge should be retrieved.</param>
-    /// <param name="periodLength">The length of the VAT period in months (1, 3, 12).</param>
-    /// <param name="co2">The CO2 emmissions (g/km) of the vehicle.</param>
-    [Obsolete]
-    public static FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, byte periodLength, int co2) {
-      if (!Enum.IsDefined(typeof(VatPeriod), periodLength))
-        throw new ArgumentException($"{periodLength} is not valid.", nameof(periodLength));
-
-      return GetFuelScaleChargeFromCO2(date, (VatPeriod)periodLength, co2);
-    }
-
-    /// <summary>Gets the fuel scale charge.</summary>
-    /// <param name="date">The accounting period for which the scale charge should be retrieved.</param>
-    /// <param name="period">The length of the VAT period.</param>
-    /// <param name="co2">The CO2 emmissions (g/km) of the vehicle.</param>
-    public static FuelScaleChargeResult GetFuelScaleChargeFromCO2(DateTime date, VatPeriod period, int co2) {
-      var assembly = typeof(FuelScaleChargeResult).Assembly;
-      var name = assembly.GetManifestResourceNames().Where(n => n.Contains(FuelScaleChargesResource)).First();
-
-      FuelScaleChargeGroup[] values;
-      using (var stream = assembly.GetManifestResourceStream(name)) {
-        using (var reader = new StreamReader(stream)) {
-          values = JsonConvert.DeserializeObject<FuelScaleChargeGroup[]>(reader.ReadToEnd());
-        }
-      }
-
-      var group = values.Where(g => (g.From <= date) && (g.To >= date)).FirstOrDefault();
-      if (group == null) {
-        throw new InvalidOperationException($"No {nameof(FuelScaleChargeResult)} data could be found for {date}.");
-      }
-
-      IEnumerable<FuelScaleChargeResult> list;
-      switch (period) {
-        case VatPeriod.Month:
-          list = group.Monthly;
-          break;
-
-        case VatPeriod.Quarter:
-          list = group.Quarterly;
-          break;
-
-        case VatPeriod.Annual:
-          list = group.Annually;
-          break;
-
-        default:
-          throw new Exception("Already checked for.");
-
-      }
-
-      var result = list.Where(x => co2 <= x.CO2Band).First();
-
-      result.From = group.From;
-      result.To = group.To;
-
-      return result;
     }
 
     /// <summary>Retrieve VAT liabilities.</summary>
