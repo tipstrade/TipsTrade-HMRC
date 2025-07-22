@@ -21,12 +21,12 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
 
     string IApiRequest.ContentType => "application/json";
 
-    Method IApiRequest.Method => Method.POST;
+    Method IApiRequest.Method => Method.Post;
 
     string IApiRequest.Location => "agents";
 
-    void IApiRequest.PopulateRequest(IRestRequest request) {
-      request.AddJsonBodyNewtonsoft(this);
+    void IApiRequest.PopulateRequest(RestRequest request) {
+      request.AddJsonBody(this);
     }
   }
 }

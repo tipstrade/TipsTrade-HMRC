@@ -19,12 +19,12 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     string IApiRequest.ContentType => "application/json";
 
-    Method IApiRequest.Method => Method.GET;
+    Method IApiRequest.Method => Method.Get;
 
     string IApiRequest.Location => $"{Vrn}/liabilities";
 
-    void IApiRequest.PopulateRequest(IRestRequest request) {
-      request.AddJsonBodyNewtonsoft(this);
+    void IApiRequest.PopulateRequest(RestRequest request) {
+      request.AddJsonBody(this);
     }
   }
 }

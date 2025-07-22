@@ -16,20 +16,20 @@ namespace TipsTrade.HMRC.Api {
     /// <summary>The default content type to be expected.</summary>
     private const string DefaultContentType = "json";
 
-    /// <summary>Json content type.</summary>
-    private const string JsonContentType = "application/json";
+    ///// <summary>Json content type.</summary>
+    //private const string JsonContentType = "application/json";
 
-    /// <summary>Shorthand method for serializing the body using Newtonsoft.Json.</summary>
-    internal static IRestRequest AddJsonBodyNewtonsoft(this IRestRequest request, object value) {
-      request.IsJsonContent();
-      request.RequestFormat = DataFormat.Json;
-      request.AddParameter(request.JsonSerializer?.ContentType ?? JsonContentType, JsonConvert.SerializeObject(value), ParameterType.RequestBody);
+    ///// <summary>Shorthand method for serializing the body using Newtonsoft.Json.</summary>
+    //internal static RestRequest AddJsonBody(this RestRequest request, object value) {
+    //  request.IsJsonContent();
+    //  request.RequestFormat = DataFormat.Json;
+    //  request.AddParameter(request.JsonSerializer?.ContentType ?? JsonContentType, JsonConvert.SerializeObject(value), ParameterType.RequestBody);
 
-      return request;
-    }
+    //  return request;
+    //}
 
     /// <summary>Add the date range parameters to the specified request.</summary>
-    internal static IRestRequest AddDateRangeParameters(this IRestRequest request, IDateRange range, ParameterType type = ParameterType.QueryString) {
+    internal static RestRequest AddDateRangeParameters(this RestRequest request, IDateRange range, ParameterType type = ParameterType.QueryString) {
       if (range.DateFrom != default(DateTime)) {
         request.AddParameter("from", $"{range.DateFrom:yyyy-MM-dd}", type);
       }
@@ -41,7 +41,7 @@ namespace TipsTrade.HMRC.Api {
     }
 
     /// <summary>Add the Gov-Test-Scenario header to the specified request.</summary>
-    internal static IRestRequest AddGovTestScenario(this IRestRequest request, IGovTestScenario scenario) {
+    internal static RestRequest AddGovTestScenario(this RestRequest request, IGovTestScenario scenario) {
       if (!string.IsNullOrEmpty(scenario.GovTestScenario)) {
         request.AddHeader("Gov-Test-Scenario", scenario.GovTestScenario);
       }
@@ -49,7 +49,7 @@ namespace TipsTrade.HMRC.Api {
       return request;
     }
 
-    internal static IRestRequest CreateRequest(this IApi api, IApiRequest request) {
+    internal static RestRequest CreateRequest(this IApi api, IApiRequest request) {
       var client = api.GetClient();
 
       var restRequest = new RestRequest($"{api.Location}/{request.Location}", request.Method);
@@ -94,13 +94,13 @@ namespace TipsTrade.HMRC.Api {
     }
 
     /// <summary>Deserializes the content.</summary>
-    internal static T DeserializeContent<T>(this IRestResponse response) {
+    internal static T DeserializeContent<T>(this RestResponse response) {
       response.ThrowOnError();
       return JsonConvert.DeserializeObject<T>(response.Content);
     }
 
     /// <summary>Executes the specified request for the API.</summary>
-    internal static T ExecuteRequest<T>(this IApi api, IRestRequest request) {
+    internal static T ExecuteRequest<T>(this IApi api, RestRequest request) {
       var client = api.GetRestClient();
       var response = client.Execute(request);
       response.ThrowOnError();
@@ -157,15 +157,15 @@ namespace TipsTrade.HMRC.Api {
         .Select(f => (string)f.GetValue(null));
     }
 
-    /// <summary>Sets the Content-Type of the request to application/json</summary>
-    internal static IRestRequest IsJsonContent(this IRestRequest request) {
-      request.AddHeader("Content-Type", JsonContentType);
-      return request;
-    }
+    ///// <summary>Sets the Content-Type of the request to application/json</summary>
+    //internal static RestRequest IsJsonContent(this RestRequest request) {
+    //  request.AddHeader("Content-Type", JsonContentType);
+    //  return request;
+    //}
 
     /// <summary>Throws an ApiException if an error is encountered.</summary>
     /// <param name="response"></param>
-    internal static void ThrowOnError(this IRestResponse response) {
+    internal static void ThrowOnError(this RestResponse response) {
       // Throw the inner exception so that an ApiException doesn't mask network errors
       if (response.ErrorException != null) {
         throw response.ErrorException;

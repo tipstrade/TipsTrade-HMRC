@@ -18,11 +18,11 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     string IApiRequest.ContentType => null;
 
-    Method IApiRequest.Method => Method.GET;
+    Method IApiRequest.Method => Method.Get;
 
     string IApiRequest.Location => GetLocation();
 
-    void IApiRequest.PopulateRequest(IRestRequest request) {
+    void IApiRequest.PopulateRequest(RestRequest request) {
     }
 
     public string Vrn { get; set; }

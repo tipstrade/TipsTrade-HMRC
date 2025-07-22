@@ -13,6 +13,6 @@ namespace TipsTrade.HMRC.Api.Model {
 
     string Location { get; }
 
-    void PopulateRequest(IRestRequest request);
+    void PopulateRequest(RestRequest request);
   }
 }

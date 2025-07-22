@@ -48,16 +48,16 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     string IApiRequest.ContentType => "application/json";
 
-    Method IApiRequest.Method => Method.POST;
+    Method IApiRequest.Method => Method.Post;
 
     string IApiRequest.Location => $"{Vrn}/returns";
 
-    void IApiRequest.PopulateRequest(IRestRequest request) {
+    void IApiRequest.PopulateRequest(RestRequest request) {
       if (Return.Finalised == null) {
         throw new InvalidOperationException($"{nameof(Return.Finalised)} cannot be null.");
       }
 
-      request.AddJsonBodyNewtonsoft(Return);
+      request.AddJsonBody(Return);
     }
   }
 }

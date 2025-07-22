@@ -179,7 +179,7 @@ namespace TipsTrade.HMRC {
 
       var restClient = new RestClient(BaseUrl);
 
-      var request = new RestRequest("oauth/token", Method.POST);
+      var request = new RestRequest("oauth/token", Method.Post);
       request.AddParameter("client_secret", ClientSecret);
       request.AddParameter("client_id", ClientID);
       request.AddParameter("grant_type", "authorization_code");
@@ -205,7 +205,7 @@ namespace TipsTrade.HMRC {
 
       var restClient = new RestClient(BaseUrl);
 
-      var request = new RestRequest("oauth/token", Method.POST);
+      var request = new RestRequest("oauth/token", Method.Post);
       request.AddParameter("client_secret", ClientSecret);
       request.AddParameter("client_id", ClientID);
       request.AddParameter("grant_type", "refresh_token");

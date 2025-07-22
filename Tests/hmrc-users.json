@@ -8,7 +8,37 @@
     "Tokens": null
   },
   "Organisation": {
-    "User": null,
-    "Tokens": null
+    "User": {
+      "organisationDetails": {
+        "name": "Company ZUGXAX",
+        "address": {
+          "line1": "35 Irving Street",
+          "line2": "Bath",
+          "postcode": "TS13 1PA"
+        }
+      },
+      "saUtr": "2014517279",
+      "nino": "GT387741A",
+      "empRef": "979/CTVABTPMLJ",
+      "ctUtr": "3577225780",
+      "vrn": "493841708",
+      "mtdItId": "XLIT00162973714",
+      "lisaManagerReferenceNumber": "Z133048",
+      "secureElectronicTransferReferenceNumber": "111122224013",
+      "pensionSchemeAdministratorIdentifier": "A3587367",
+      "eoriNumber": "GB731167467474",
+      "userId": "983505281157",
+      "password": "tmJNG8Hb2dvz",
+      "userFullName": "Jagger Williams",
+      "emailAddress": "jagger.williams@example.com"
+    },
+    "Tokens": {
+      "access_token": "a695f98b2585b2341c18f7d9911f845a",
+      "x_expires_timestamp": "2023-11-15T18:48:43.0814068Z",
+      "expires_in": 14400.0,
+      "refresh_token": "77a54a70ba4e39425a2327548895ab5d",
+      "scope": "hello read:vat write:vat",
+      "token_type": "bearer"
+    }
   }
 }

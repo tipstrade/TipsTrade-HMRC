@@ -2,6 +2,7 @@
 using System;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
+  /// <summary>Represents a response containing a Verified VAT number.</summary>
   public class VerifiedVatNumberCheckResponse : VatNumberCheckResponse {
     /// <summary>The requester of the check.</summary>
     [JsonProperty("requester")]
