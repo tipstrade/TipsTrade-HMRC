@@ -1,6 +1,7 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using RestSharp;
+using System;
+using System.Text.Json.Serialization;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Model.Attributes;
 
@@ -33,7 +34,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public const string ScenarioTaxPeriodNotEnded = "TAX_PERIOD_NOT_ENDED";
 
     /// <summary>The VAT registration number.</summary>
-    [JsonProperty("vrn")]
+    [JsonProperty("vrn"), JsonPropertyName("vrn")]
     public string Vrn { get; set; }
 
     /// <summary>The Gov-Test-Scenario, only in the sandbox environment.</summary>

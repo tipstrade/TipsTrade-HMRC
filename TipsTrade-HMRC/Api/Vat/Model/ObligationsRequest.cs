@@ -46,7 +46,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public const string ScenarioNotFound = "NOT_FOUND";
 
     /// <summary>Which obligation statuses to return (O=Open, F=Fulfilled).</summary>
-    public ObligationStatus? Status { get; set; }
+    public string Status { get; set; }
 
     string IApiRequest.AcceptType => "json";
 
@@ -59,7 +59,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     string IApiRequest.Location => $"{Vrn}/obligations";
 
     void IApiRequest.PopulateRequest(RestRequest request) {
-      if (Status != null) {
+      if (!string.IsNullOrEmpty(Status)) {
         request.AddParameter("status", $"{Status}"[0]);
       }
     }

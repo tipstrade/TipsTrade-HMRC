@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 using TipsTrade.HMRC.Api.Model;
 
@@ -24,7 +25,7 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
     public const string SelfAssessment = "self-assessment";
 
     /// <summary>The list of services that the user should be enrolled for.</summary>
-    [JsonProperty("serviceNames")]
+    [JsonProperty("serviceNames"), JsonPropertyName("serviceNames")]
     public List<string> ServiceNames { get; set; } = new List<string>();
 
     string IApiRequest.AcceptType => "json";

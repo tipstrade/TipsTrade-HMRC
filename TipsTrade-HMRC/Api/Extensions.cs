@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RestSharp;
+﻿using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
@@ -15,18 +14,6 @@ namespace TipsTrade.HMRC.Api {
   public static class Extensions {
     /// <summary>The default content type to be expected.</summary>
     private const string DefaultContentType = "json";
-
-    ///// <summary>Json content type.</summary>
-    //private const string JsonContentType = "application/json";
-
-    ///// <summary>Shorthand method for serializing the body using Newtonsoft.Json.</summary>
-    //internal static RestRequest AddJsonBody(this RestRequest request, object value) {
-    //  request.IsJsonContent();
-    //  request.RequestFormat = DataFormat.Json;
-    //  request.AddParameter(request.JsonSerializer?.ContentType ?? JsonContentType, JsonConvert.SerializeObject(value), ParameterType.RequestBody);
-
-    //  return request;
-    //}
 
     /// <summary>Add the date range parameters to the specified request.</summary>
     internal static RestRequest AddDateRangeParameters(this RestRequest request, IDateRange range, ParameterType type = ParameterType.QueryString) {
@@ -93,19 +80,13 @@ namespace TipsTrade.HMRC.Api {
       return restRequest;
     }
 
-    /// <summary>Deserializes the content.</summary>
-    internal static T DeserializeContent<T>(this RestResponse response) {
-      response.ThrowOnError();
-      return JsonConvert.DeserializeObject<T>(response.Content);
-    }
-
     /// <summary>Executes the specified request for the API.</summary>
     internal static T ExecuteRequest<T>(this IApi api, RestRequest request) {
       var client = api.GetRestClient();
-      var response = client.Execute(request);
+      var response = client.Execute<T>(request);
       response.ThrowOnError();
 
-      var data = response.DeserializeContent<T>();
+      var data = response.Data;
 
       if (typeof(ICorrelationId).IsAssignableFrom(typeof(T))) {
         var id = response.Headers.Where(h => "X-CorrelationId".Equals(h.Name, StringComparison.CurrentCultureIgnoreCase)).First().Value;
@@ -157,31 +138,24 @@ namespace TipsTrade.HMRC.Api {
         .Select(f => (string)f.GetValue(null));
     }
 
-    ///// <summary>Sets the Content-Type of the request to application/json</summary>
-    //internal static RestRequest IsJsonContent(this RestRequest request) {
-    //  request.AddHeader("Content-Type", JsonContentType);
-    //  return request;
-    //}
-
     /// <summary>Throws an ApiException if an error is encountered.</summary>
     /// <param name="response"></param>
     internal static void ThrowOnError(this RestResponse response) {
-      // Throw the inner exception so that an ApiException doesn't mask network errors
-      if (response.ErrorException != null) {
-        throw response.ErrorException;
+      if (response.IsSuccessful) {
+        return;
       }
 
       int code = (int)response.StatusCode;
+      ErrorResponse error = null;
 
-      if (code >= 400 && code <= 599) {
-        var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(response.Content);
+      try {
+        error = JsonSerializer.Deserialize<ErrorResponse>(response.Content);
+      } catch { }
 
-        throw new ApiException(errorResponse?.Message ?? response.StatusDescription) {
-          Status = response.StatusCode,
-          ApiError = errorResponse
-        };
-      }
-
+      throw new ApiException(error?.Message ?? response.StatusDescription, response.ErrorException) {
+        Status = response.StatusCode,
+        ApiError = error
+      };
     }
   }
 }

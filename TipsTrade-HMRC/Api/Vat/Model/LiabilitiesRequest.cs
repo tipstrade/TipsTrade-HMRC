@@ -24,7 +24,6 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     string IApiRequest.Location => $"{Vrn}/liabilities";
 
     void IApiRequest.PopulateRequest(RestRequest request) {
-      request.AddJsonBody(this);
     }
   }
 }

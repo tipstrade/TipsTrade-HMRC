@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Net;
 using System.Web;
 using TipsTrade.HMRC.Api;
 using Xunit;

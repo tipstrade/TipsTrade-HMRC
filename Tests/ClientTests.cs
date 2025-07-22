@@ -22,10 +22,10 @@ namespace TipsTrade.HMRC.Tests {
       var client = GetClient();
 
       client.IsSandbox = true;
-      Assert.Equal(client.BaseUrl, Client.SandboxUrl);
+      Assert.Equal(Client.SandboxUrl, client.BaseUrl);
 
       client.IsSandbox = false;
-      Assert.Equal(client.BaseUrl, Client.ProductionUrl);
+      Assert.Equal(Client.ProductionUrl, client.BaseUrl);
     }
   }
 }

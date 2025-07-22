@@ -1,10 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using TipsTrade.HMRC.Json.Converters;
+﻿using System;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
   /// <summary>Represents a result containing a VAT obligation.</summary>
-  public class ObligationsResult :IComparable<ObligationsResult> {
+  public class ObligationsResult : IComparable<ObligationsResult> {
     /// <summary>The due date for this obligation period.</summary>
     public DateTime Due { get; set; }
 
@@ -21,8 +19,13 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public DateTime Start { get; set; }
 
     /// <summary>Which obligation statuses to return.</summary>
-    [JsonConverter(typeof(CharEnumConverter))]
-    public ObligationStatus Status { get; set; }
+    public string Status { get; set; }
+
+    /// <summary>Indicates whether the obligation has been fulfilled.</summary>
+    public bool IsFulfilled => Status == "F";
+
+    /// <summary>Indicates whether the obligation is open.</summary>
+    public bool IsOpen => Status == "O";
 
     /// <summary>Compares the current object to the specified <see cref="ObligationsResult"/>, using the <see cref="Start"/> property.</summary>
     public int CompareTo(ObligationsResult other) {

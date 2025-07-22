@@ -27,28 +27,6 @@ namespace TipsTrade.HMRC.Api.Vat {
     #endregion
 
     #region Methods
-    /// <summary>
-    /// Gets the fuel scale charge from the live HMRC website.
-    /// Deprecated, used the <see cref="GetFuelScaleChargeFromCO2Live(DateTime, VatPeriod, int)"/> method instead.
-    /// </summary>
-    /// <param name="date">The accounting period for which the scale charge should be retrieved.</param>
-    /// <param name="periodLength">The length of the VAT period in months (1, 3, 12).</param>
-    /// <param name="co2">The CO2 emmissions (g/km) of the vehicle.</param>
-    [Obsolete]
-    public static FuelScaleChargeResult GetFuelScaleChargeFromCO2Live(DateTime date, byte periodLength, int co2) {
-      var client = new FuelScaleChargeClient();
-      return client.GetFuelScaleChargeFromCO2(date, periodLength, co2);
-    }
-
-    /// <summary>Gets the fuel scale charge from the live HMRC website.</summary>
-    /// <param name="date">The accounting period for which the scale charge should be retrieved.</param>
-    /// <param name="period">The length of the VAT period.</param>
-    /// <param name="co2">The CO2 emmissions (g/km) of the vehicle.</param>
-    public static FuelScaleChargeResult GetFuelScaleChargeFromCO2Live(DateTime date, VatPeriod period, int co2) {
-      var client = new FuelScaleChargeClient();
-      return client.GetFuelScaleChargeFromCO2(date, period, co2);
-    }
-
     /// <summary>Retrieve VAT liabilities.</summary>
     /// <param name="request">The date range request.</param>
     public LiabilitiesResponse GetLiabilities(LiabilitiesRequest request) {

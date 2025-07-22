@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
+using System.Text.Json.Serialization;
 using System.Web;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Model.Attributes;
@@ -18,7 +19,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public string PeriodKey { get; set; }
 
     /// <summary>The VAT registration number.</summary>
-    [JsonProperty("vrn")]
+    [JsonProperty("vrn"), JsonPropertyName("vrn")]
     public string Vrn { get; set; }
 
     /// <summary>The Gov-Test-Scenario, only in the sandbox environment.</summary>

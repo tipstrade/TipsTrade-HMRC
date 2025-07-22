@@ -50,7 +50,7 @@ namespace TipsTrade.HMRC.Tests {
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       var obligations = client.Vat.GetObligations(obRequest);
-      var periodKey = obligations.Value.Where(o => o.Status == ObligationStatus.Open).LastOrDefault().PeriodKey;
+      var periodKey = obligations.Value.Where(o => o.IsOpen).LastOrDefault().PeriodKey;
 
       var returnRequest = new ReturnRequest() {
         Vrn = Users.Organisation.User.Vrn,
@@ -128,7 +128,7 @@ namespace TipsTrade.HMRC.Tests {
       resp = client.Vat.GetObligations(obligations);
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
-      Assert.Equal(2, resp.Value.Where(x => x.Status == ObligationStatus.Fulfilled).Count());
+      Assert.Equal(2, resp.Value.Where(x => x.IsFulfilled).Count());
       foreach (var item in resp.Value) {
         Assert.NotDefault(item.Start);
         Assert.NotDefault(item.End);
@@ -140,24 +140,26 @@ namespace TipsTrade.HMRC.Tests {
       Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
 
       // Fulfulled
-      obligations.Status = ObligationStatus.Fulfilled;
+      obligations.Status = "F";
       obligations.GovTestScenario = null;
       resp = client.Vat.GetObligations(obligations);
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
       foreach (var item in resp.Value) {
-        Assert.Equal(ObligationStatus.Fulfilled, item.Status);
+        Assert.Equal("F", item.Status);
+        Assert.True(item.IsFulfilled);
         Assert.NotNull(item.Received);
       }
 
       // Open
-      obligations.Status = ObligationStatus.Open;
+      obligations.Status = "O";
       obligations.GovTestScenario = null;
       resp = client.Vat.GetObligations(obligations);
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
       foreach (var item in resp.Value) {
-        Assert.Equal(ObligationStatus.Open, item.Status);
+        Assert.Equal("O", item.Status);
+        Assert.True(item.IsOpen);
         Assert.Null(item.Received);
       }
     }
@@ -230,7 +232,7 @@ namespace TipsTrade.HMRC.Tests {
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       var obligations = client.Vat.GetObligations(obRequest);
-      var periodKey = obligations.Value.Where(o => o.Status == ObligationStatus.Open).LastOrDefault().PeriodKey;
+      var periodKey = obligations.Value.Where(o => o.IsOpen).LastOrDefault().PeriodKey;
 
       var request = new SubmitRequest() {
         Return = CreateVatReturn(periodKey),
