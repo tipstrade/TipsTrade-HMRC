@@ -1,5 +1,4 @@
-﻿using RestSharp;
-using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
+﻿using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
 
 namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
   /// <summary>The API that exposes Business Details (MTD) function.</summary>

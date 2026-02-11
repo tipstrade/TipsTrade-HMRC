@@ -37,7 +37,7 @@ namespace TipsTrade.HMRC.Tests {
       });
 
       Assert.NotNull(resp);
-      Assert.Equal(BusinessDetailsSummaryResult.TypeSelfEmployment, resp.TypeOfBusiness);
+      Assert.Equal(TypeOfBusiness.SelfEmployment, resp.TypeOfBusiness);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ namespace TipsTrade.HMRC.Tests {
 
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
-      Assert.NotNull(resp.Value.First(x => x.TypeOfBusiness == BusinessDetailsSummaryResult.TypeSelfEmployment));
+      Assert.NotNull(resp.Value.First(x => x.TypeOfBusiness == TypeOfBusiness.SelfEmployment));
     }
   }
 }

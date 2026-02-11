@@ -5,6 +5,7 @@ using TipsTrade.HMRC.Api.Model.Attributes;
 namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
   /// <summary>The parameters used to retrieve business details.</summary>
   public class GetBusinessDetailsRequest : IApiRequest, IGovTestScenario {
+    #region Gov-Test-Scenario constants
     /// <summary>Simulate a successful response with a self-employment business.</summary>
     [GovTestScenario]
     public const string ScenarioDefault = "DEFAULT";
@@ -33,6 +34,19 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     [GovTestScenario]
     public const string ScenarioStateful = "STATEFUL";
 
+    #endregion
+
+    #region Properties
+    /// <summary>A unique identifier for the business income source.</summary>
+    /// <remarks>It must conform to the following regex: ^X[A-Z0-9]{1}IS[0-9]{11}$</remarks>
+    public string BusinessId { get; set; }
+
+    /// <summary>National Insurance number, in the format AA999999A.</summary>
+    public string NiNumber { get; set; }
+    #endregion
+
+
+    #region Impementations
     string IApiRequest.AcceptType => "json";
 
     Authorization IApiRequest.Authorization => Authorization.User;
@@ -43,17 +57,11 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
 
     string IApiRequest.Location => $"{NiNumber}/{BusinessId}";
 
-    /// <summary>A unique identifier for the business income source.</summary>
-    /// <remarks>It must conform to the following regex: ^X[A-Z0-9]{1}IS[0-9]{11}$</remarks>
-    public string BusinessId { get; set; }
-
-    /// <summary>National Insurance number, in the format AA999999A.</summary>
-    public string NiNumber { get; set; }
-
     /// <inheritdoc/>
     public string GovTestScenario { get; set; }
 
     void IApiRequest.PopulateRequest(RestRequest request) {
     }
+    #endregion
   }
 }
