@@ -65,7 +65,7 @@ namespace TipsTrade.HMRC.Api {
           throw new InvalidOperationException($"The {nameof(client.AccessToken)} cannot be empty");
 
         restRequest.AddHeader("Authorization", $"Bearer {client.AccessToken}");
-      
+
       }
 
       if (api is IRequiresAntiFraud) {
@@ -84,20 +84,37 @@ namespace TipsTrade.HMRC.Api {
     internal static T ExecuteRequest<T>(this IApi api, RestRequest request) {
       var client = api.GetRestClient();
       var response = client.Execute<T>(request);
+
       response.ThrowOnError();
 
-      var data = response.Data;
+      // Some endpoints return 204 No Content with an empty body, in which case we should return an empty instance of T instead of trying to deserialize the empty body.
+      var data = response.StatusCode == System.Net.HttpStatusCode.NoContent ?
+        Activator.CreateInstance<T>()
+        : response.Data;
+      var type = typeof(T);
 
-      if (typeof(ICorrelationId).IsAssignableFrom(typeof(T))) {
-        var id = response.Headers.Where(h => "X-CorrelationId".Equals(h.Name, StringComparison.CurrentCultureIgnoreCase)).First().Value;
-        ((ICorrelationId)data).CorrelationId = Guid.Parse($"{id}");
+      if (data is ICorrelationId correlation) {
+        var id = response.Headers.Where(h => "X-CorrelationId".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).First().Value;
+
+        correlation.CorrelationId = Guid.Parse(id);
       }
 
-      if (typeof(IReceipt).IsAssignableFrom(typeof(T))) {
-        var id = response.Headers.Where(h => "Receipt-ID".Equals(h.Name, StringComparison.CurrentCultureIgnoreCase)).First().Value;
-        var timestamp = response.Headers.Where(h => "Receipt-Timestamp".Equals(h.Name, StringComparison.CurrentCultureIgnoreCase)).First().Value;
+      if (data is IDeprecationDate deprecation) {
+        deprecation.DeprecationDate = response.Headers.Where(h => "Deprecation".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Value;
+      }
 
-        var receipt = data as IReceipt;
+      if (data is ISunsetDate sunset) {
+        sunset.SunsetDate = response.Headers.Where(h => "Sunset".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Value;
+      }
+
+      if (data is IDocumentationLink documentation) {
+        documentation.DocumentationLink = response.Headers.Where(h => "Link".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Value;
+      }
+
+      if (data is IReceipt receipt) {
+        var id = response.Headers.Where(h => "Receipt-ID".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).First().Value;
+        var timestamp = response.Headers.Where(h => "Receipt-Timestamp".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).First().Value;
+
         receipt.ReceiptID = Guid.Parse($"{id}");
         receipt.ReceiptTimestamp = DateTime.Parse($"{timestamp}");
       }

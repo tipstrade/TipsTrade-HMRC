@@ -10,34 +10,50 @@
   "Organisation": {
     "User": {
       "organisationDetails": {
-        "name": "Company 23WTZ6",
+        "name": "Company FYXLXO",
         "address": {
-          "line1": "3 Carnaby Street",
-          "line2": "Fleet",
-          "postcode": "TS19 1PA"
+          "line1": "2 Baker Street",
+          "line2": "Rugby",
+          "postcode": "TS9 1PA"
         }
       },
-      "saUtr": "3819878513",
-      "nino": "TY577471B",
-      "empRef": "608/ZK1LNQFWI1",
-      "ctUtr": "9449177163",
-      "vrn": "940805725",
-      "mtdItId": "XGIT00227750686",
-      "lisaManagerReferenceNumber": "Z2801",
-      "secureElectronicTransferReferenceNumber": "333156333416",
-      "pensionSchemeAdministratorIdentifier": "A0023111",
-      "eoriNumber": "GB326564521732",
-      "userId": "151623443209",
-      "password": "15YfUolw2j3s",
-      "userFullName": "Ainsley Jerry",
-      "emailAddress": "ainsley.jerry@example.com"
+      "individualDetails": {
+        "dateOfBirth": "1983-09-18T00:00:00",
+        "firstName": "Mercer",
+        "lastName": "Yeates",
+        "address": {
+          "line1": "10 Jamaica Road",
+          "line2": "Eastleigh",
+          "postcode": "TS6 1PA"
+        }
+      },
+      "saUtr": "3068203944",
+      "nino": "AL733658D",
+      "empRef": "961/M0SQBD9IDV",
+      "crn": "5846603174",
+      "ctUtr": "6856071682",
+      "vatRegistrationDate": "2019-02-11T00:00:00",
+      "vrn": "251614973",
+      "mtdItId": "XYIT00661061847",
+      "lisaManagerReferenceNumber": "Z681994",
+      "secureElectronicTransferReferenceNumber": "111111111198",
+      "pensionSchemeAdministratorIdentifier": "A5407335",
+      "pillar2Id": null,
+      "eoriNumber": "GB756926731415",
+      "exciseNumber": null,
+      "taxPayerType": "Individual",
+      "zReference": null,
+      "userId": "017991666040",
+      "password": "LrBI53hxBGTx",
+      "userFullName": "Mercer Yeates",
+      "emailAddress": "mercer.yeates@example.com"
     },
     "Tokens": {
-      "access_token": "8b3dc941207cc7f2667cbd1d5b0e536d",
-      "x_expires_timestamp": "2025-07-22T18:32:43.7407528Z",
+      "access_token": "72a2972fbf52663067c4f100ba8426c7",
+      "x_expires_timestamp": "2026-02-11T17:36:01.0827976Z",
       "expires_in": 14400.0,
-      "refresh_token": "2dedbe48b4071bdb4e815696b9ef9125",
-      "scope": "hello read:vat write:vat",
+      "refresh_token": "266155a37acabc74ba72b6e6c1cd29d9",
+      "scope": "write:vat write:self-assessment read:vat read:self-assessment hello",
       "token_type": "bearer"
     }
   }

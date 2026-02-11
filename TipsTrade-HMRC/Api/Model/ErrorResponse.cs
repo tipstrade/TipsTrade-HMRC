@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace TipsTrade.HMRC.Api.Model {
@@ -19,6 +20,10 @@ namespace TipsTrade.HMRC.Api.Model {
     /// <summary>The path that caused the error to occur.</summary>
     [JsonProperty("path"), JsonPropertyName("path")]
     public string Path { get; set; }
+
+    /// <summary>The paths that caused the error to occur.</summary>
+    [JsonProperty("paths"), JsonPropertyName("paths")]
+    public IEnumerable<string> Paths { get; set; }  
 
     /// <summary>Returns a string that represents the current object.</summary>
     public override string ToString() {

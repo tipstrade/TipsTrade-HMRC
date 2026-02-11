@@ -11,6 +11,7 @@ using TipsTrade.HMRC.Api.TestFraudPrevention;
 using TipsTrade.HMRC.Api.HelloWorld;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Vat;
+using TipsTrade.HMRC.Api.BusinessDetailsMtd;
 
 namespace TipsTrade.HMRC {
   /// <summary>The Api client used to interact with the HMRC API.</summary>
@@ -59,6 +60,9 @@ namespace TipsTrade.HMRC {
     #endregion
 
     #region APIs
+    /// <summary>The Business Details (MTD) API.</summary>
+    public BusinessDetailsMtdApi BusinessDetailsMtd => GetApi<BusinessDetailsMtdApi>();
+
     /// <summary>The Hello World API.</summary>
     public CreateTestUserApi CreateTestUser => GetApi<CreateTestUserApi>();
 
