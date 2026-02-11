@@ -8,6 +8,6 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   public class AgentResult : UserResultBase {
     /// <summary>Account number for Agent Service.</summary>
     [JsonProperty("agentServicesAccountNumber"), JsonPropertyName("agentServicesAccountNumber")]
-    public string agentServicesAccountNumber { get; set; }
+    public string AgentServicesAccountNumber { get; set; }
   }
 }

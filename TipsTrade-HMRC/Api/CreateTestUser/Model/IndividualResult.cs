@@ -27,6 +27,14 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
     [JsonProperty("mtdItId"), JsonPropertyName("mtdItId")]
     public string MtdIncomeTaxId { get; set; }
 
+    /// <summary>Date of registration for VAT.</summary>
+    [JsonProperty("vatRegistrationDate"), JsonPropertyName("vatRegistrationDate")]
+    public DateTime VatRegistrationDate { get; set; }
+
+    /// <summary>VAT Reference Number</summary>
+    [JsonProperty("vrn"), JsonPropertyName("vrn")]
+    public string Vrn { get; set; }
+
     /// <summary>Represents an individual.</summary>
     public class Individual {
       /// <summary>Individual's first name.</summary>
