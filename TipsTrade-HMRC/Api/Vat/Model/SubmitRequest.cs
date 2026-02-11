@@ -37,7 +37,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     [JsonProperty("vrn"), JsonPropertyName("vrn")]
     public string Vrn { get; set; }
 
-    /// <summary>The Gov-Test-Scenario, only in the sandbox environment.</summary>
+    /// <inheritdoc/>
     public string GovTestScenario { get; set; }
 
     /// <summary>The VAT return to be submitted.</summary>

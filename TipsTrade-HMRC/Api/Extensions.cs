@@ -46,12 +46,12 @@ namespace TipsTrade.HMRC.Api {
         restRequest.AddHeader("Content-Type", request.ContentType);
       }
 
-      if (client.IsSandbox && (request is IGovTestScenario)) {
-        restRequest.AddGovTestScenario(request as IGovTestScenario);
+      if (client.IsSandbox && request is IGovTestScenario govTest) {
+        restRequest.AddGovTestScenario(govTest);
       }
 
-      if (request is IDateRange) {
-        restRequest.AddDateRangeParameters(request as IDateRange);
+      if (request is IDateRange dateRange) {
+        restRequest.AddDateRangeParameters(dateRange);
       }
 
       if (request.Authorization == Authorization.Application) {
@@ -65,7 +65,7 @@ namespace TipsTrade.HMRC.Api {
           throw new InvalidOperationException($"The {nameof(client.AccessToken)} cannot be empty");
 
         restRequest.AddHeader("Authorization", $"Bearer {client.AccessToken}");
-
+      
       }
 
       if (api is IRequiresAntiFraud) {
