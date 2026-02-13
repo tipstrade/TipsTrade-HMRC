@@ -49,10 +49,10 @@
       "emailAddress": "mercer.yeates@example.com"
     },
     "Tokens": {
-      "access_token": "68a720655be2787fbb62a6b309434b07",
-      "x_expires_timestamp": "2026-02-12T20:59:35.8680463Z",
+      "access_token": "39aca9c23109eebee6ea1e2d49401305",
+      "x_expires_timestamp": "2026-02-13T17:15:48.6650151Z",
       "expires_in": 14400.0,
-      "refresh_token": "5e283d7bd6b6cad171b6fef0b1a5d9c7",
+      "refresh_token": "a5a70e8616e4fea3071a1aa987da51fa",
       "scope": "write:vat write:self-assessment read:vat read:self-assessment hello",
       "token_type": "bearer"
     }
