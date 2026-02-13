@@ -9,7 +9,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestApplication() {
+    public void Application() {
       var client = GetClient();
       Assert.Equal("Hello Application", client.HelloWorld.SayHelloApplication());
 
@@ -18,13 +18,13 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestHello() {
+    public void Hello() {
       var client = GetClient();
       Assert.Equal("Hello World", client.HelloWorld.SayHelloWorld());
     }
 
     [Fact]
-    public void TestUser() {
+    public void User() {
       var client = GetClient();
 
       client.AccessToken = Users.Organisation.Tokens.AccessToken;

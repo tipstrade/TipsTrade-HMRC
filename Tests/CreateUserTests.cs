@@ -42,7 +42,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestCreateTestUserFactoryAgent() {
+    public void CreateTestUserFactoryAgent() {
       TestCreateTestUserFactory<CreateAgentRequest>(@"{
   ""serviceNames"": [
     ""agent-services""
@@ -51,7 +51,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestCreateTestUserFactoryIndividual() {
+    public void CreateTestUserFactoryIndividual() {
       TestCreateTestUserFactory<CreateIndividualRequest>(@"{
   ""serviceNames"": [
     ""national-insurance"",
@@ -63,7 +63,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestCreateTestUserFactoryOrganisation() {
+    public void CreateTestUserFactoryOrganisation() {
       TestCreateTestUserFactory<CreateOrganisationRequest>(@"{
   ""serviceNames"": [
     ""corporation-tax"",
@@ -82,7 +82,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    void TestCreateTestUserFactoryPredicate() {
+    void CreateTestUserFactoryPredicate() {
       CreateOrganisationRequest request;
 
       request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUser(s => s == null);
@@ -93,17 +93,17 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact(Skip = "Skipped so we don't keep creating new users.")]
-    public void TestCreateAgent() {
+    public void CreateAgent() {
       TestCreateUser<CreateAgentRequest, AgentResult>();
     }
 
     [Fact(Skip = "Skipped so we don't keep creating new users.")]
-    public void TestCreateIndividual() {
+    public void CreateIndividual() {
       TestCreateUser<CreateIndividualRequest, IndividualResult>();
     }
 
     [Fact(Skip = "Skipped so we don't keep creating new users.")]
-    public void TestCreateOganisation() {
+    public void CreateOganisation() {
       TestCreateUser<CreateOrganisationRequest, OrganisationResult>();
     }
   }

@@ -11,7 +11,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestEndpointUrl() {
+    public void EndpointUrl() {
       var client = GetClient();
 
       var scopes = new string[] { "hello", "read:vat", "write:vat" };
@@ -27,7 +27,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestInvalidCredentials() {
+    public void InvalidCredentials() {
       var client = GetClient();
       ApiException ex;
 
@@ -48,7 +48,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestHandleRedirectUrlError() {
+    public void HandleRedirectUrlError() {
       var uri = $"{RedirectUrl}?error=access_denied&error_description=user+denied+the+authorization&state=4f00d15e-de25-4796-999f-266ea4429889&error_code=USER_DENIED_AUTHORIZATION";
 
       var client = GetClient();
@@ -59,7 +59,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact(Skip = "Skipped so the code is one-use only.")]
     //[Fact]
-    public void TestHandleRedirectUrlSuccess() {
+    public void HandleRedirectUrlSuccess() {
       var uri = $"{RedirectUrl}?code=640f35efde314a91b32d696710759a5d&state=4f00d15e-de25-4796-999f-266ea4429889";
 
       var client = GetClient();
@@ -78,7 +78,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact(Skip = "Skipped so we don't accidentally expire our RefreshToken.")]
     //[Fact]
-    public void TestRefreshToken() {
+    public void RefreshToken() {
       var client = GetClient();
 
       var start = DateTime.UtcNow;

@@ -9,21 +9,21 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestEmptyValidNumber() {
+    public void EmptyValidNumber() {
       var client = GetClient();
 
       Assert.Throws<ArgumentException>(() => client.VatNumber.CheckVrn(""));
     }
 
     [Fact]
-    public void TestInvalidNumber() {
+    public void InvalidNumber() {
       var client = GetClient();
 
       Assert.Throws<ApiException>(() => client.VatNumber.CheckVrn("000000000"));
     }
 
     [Fact]
-    public void TestValidNumber() {
+    public void ValidNumber() {
       var client = GetClient();
 
       var resp = client.VatNumber.CheckVrn("553557881");
@@ -38,7 +38,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestValidNumberVerified() {
+    public void ValidNumberVerified() {
       var client = GetClient();
 
       var resp = client.VatNumber.CheckVrn("553557881", "146295999727");

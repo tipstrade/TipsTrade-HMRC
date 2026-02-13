@@ -7,7 +7,7 @@ using Xunit;
 namespace TipsTrade.HMRC.Tests {
   public class AntiFraudTests {
     [Fact]
-    public void TestAntiFraudHeaderValidation() {
+    public void AntiFraudHeaderValidation() {
       var af = new AntiFraud.AntiFraud() {
         ConnectionMethod = ConnectionMethod.DESKTOP_APP_DIRECT,
       };
@@ -22,7 +22,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestGetAntiFraudHeaders() {
+    public void GetAntiFraudHeaders() {
       var af = new AntiFraud.AntiFraud() {
         ConnectionMethod = ConnectionMethod.DESKTOP_APP_DIRECT,
         DeviceID = $"{Guid.NewGuid()}",
@@ -43,7 +43,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestGetPropertiesForMethod() {
+    public void GetPropertiesForMethod() {
       var props = AntiFraud.AntiFraud.GetPropertiesForMethod(ConnectionMethod.DESKTOP_APP_DIRECT);
       Assert.Equal(14, props.Count());
     }

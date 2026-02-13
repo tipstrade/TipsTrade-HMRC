@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestGetFinalObligations() {
+    public void GetFinalObligations() {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
@@ -24,7 +24,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestGetObligations() {
+    public void GetObligations() {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 

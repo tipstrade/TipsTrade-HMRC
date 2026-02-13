@@ -8,19 +8,19 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestAllScopes() {
+    public void AllScopes() {
       var scopes = Scopes.GetScopes();
       Assert.NotEmpty(scopes);
     }
 
     [Fact]
-    public void TestHelloWorld() {
+    public void HelloWorld() {
       var scopes = Scopes.GetScopes<Api.HelloWorld.HelloWorldApi>();
       Assert.Single(scopes);
     }
 
     [Fact]
-    public void TestVat() {
+    public void Vat() {
       var scopes = Scopes.GetScopes<Api.Vat.VatApi>();
       Assert.Equal(2, scopes.Count());
       Assert.Contains(scopes, s => Scopes.VATRead.Equals(s));

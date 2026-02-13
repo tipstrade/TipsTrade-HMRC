@@ -40,7 +40,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestGetReturn() {
+    public void GetReturn() {
       var obRequest = new ObligationsRequest() {
         Vrn = Users.Organisation.User.Vrn,
       };
@@ -80,7 +80,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestLiabilities() {
+    public void Liabilities() {
       var request = new LiabilitiesRequest() {
         GovTestScenario = LiabilitiesRequest.ScenarioMultipleLiabilities,
         DateFrom = new DateTime(2017, 2, 27),
@@ -111,7 +111,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestObligations() {
+    public void Obligations() {
       var obligations = new ObligationsRequest() {
         GovTestScenario = ObligationsRequest.ScenarioMonthlylyMet2,
         Vrn = Users.Organisation.User.Vrn,
@@ -165,7 +165,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestPayments() {
+    public void Payments() {
       var request = new PaymentsRequest() {
         GovTestScenario = PaymentsRequest.ScenarioMultiplePayment,
         DateFrom = new DateTime(2017, 2, 27),
@@ -192,7 +192,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestReturnSerialization() {
+    public void ReturnSerialization() {
       // Taken from the docs
       var json = @"{
   ""periodKey"": ""#001"",
@@ -222,7 +222,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact(Skip = "")]
-    public void TestSubmission() {
+    public void Submission() {
       var obRequest = new ObligationsRequest() {
         Vrn = Users.Organisation.User.Vrn,
       };

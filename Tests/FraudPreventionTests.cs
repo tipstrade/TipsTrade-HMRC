@@ -11,7 +11,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestFraudPrevention() {
+    public void FraudPrevention() {
       var client = GetClient();
       var response = client.TestFraudPrevention.Validate();
 

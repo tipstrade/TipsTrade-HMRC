@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestAmendQuarterlyPeriodType() {
+    public void AmendQuarterlyPeriodType() {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
@@ -26,7 +26,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestGetBusinessDetails() {
+    public void GetBusinessDetails() {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
@@ -41,7 +41,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestGetBusinessDetailsThrows() {
+    public void GetBusinessDetailsThrows() {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
@@ -53,7 +53,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    public void TestListBusinessDetails() {
+    public void ListBusinessDetails() {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
