@@ -13,4 +13,13 @@
     /// <summary>Represents the type for unspecified property business income source.</summary>
     public const string PropertyUnspecified = "property-unspecified";
   }
+
+  /// <summary>Represents the possible quarter types.</summary>
+  public static class  QuarterType  {
+    /// <summary>Represents the standard quarterly period type.</summary>
+    public const string Standard = "standard";
+
+    /// <summary>Represents the calendar quarterly period type.</summary>
+    public const string Calendar = "calendar";
+  }
 }

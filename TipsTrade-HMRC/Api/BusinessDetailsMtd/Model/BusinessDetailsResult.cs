@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using TipsTrade.HMRC.Api.Model.Converters;
 
 namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
   /// <summary>Represents a result containing business details.</summary>
@@ -14,11 +15,15 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     /// <summary>The first accounting period start date.</summary>
     /// <remarks>Accounting period start and end dates should not be displayed to users of your software.</remarks>
     [JsonProperty("firstAccountingPeriodStartDate"), JsonPropertyName("firstAccountingPeriodStartDate")]
+    [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftDateOnlyConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(StjDateOnlyConverter))]
     public DateTime? FirstAccountingPeriodStartDate { get; set; }
 
     /// <summary>The first accounting period end date.</summary>
     /// <remarks>Accounting period start and end dates should not be displayed to users of your software.</remarks>
     [JsonProperty("firstAccountingPeriodEndDate"), JsonPropertyName("firstAccountingPeriodEndDate")]
+    [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftDateOnlyConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(StjDateOnlyConverter))]
     public DateTime? FirstAccountingPeriodEndDate { get; set; }
 
     /// <summary>Income source latency details.</summary>
@@ -36,10 +41,14 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
 
     /// <summary>Business start date, must be in the past.</summary>
     [JsonProperty("commencementDate"), JsonPropertyName("commencementDate")]
+    [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftDateOnlyConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(StjDateOnlyConverter))]
     public DateTime? CommencementDate { get; set; }
 
     /// <summary>Business cessation date.</summary>
     [JsonProperty("cessationDate"), JsonPropertyName("cessationDate")]
+    [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftDateOnlyConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(StjDateOnlyConverter))]
     public DateTime? CessationDate { get; set; }
 
     /// <summary>First line of the business address.</summary>
@@ -72,10 +81,14 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     public class AccountingPeriod {
       /// <summary>Date your books or accounts are made up to - the end of your accounting period.</summary>
       [JsonProperty("end"), JsonPropertyName("end")]
+      [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftDateOnlyConverter))]
+      [System.Text.Json.Serialization.JsonConverter(typeof(StjDateOnlyConverter))]
       public DateTime End { get; set; }
 
       /// <summary>Date your books or accounts start - the beginning of your accounting period.</summary>
       [JsonProperty("start"), JsonPropertyName("start")]
+      [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftDateOnlyConverter))]
+      [System.Text.Json.Serialization.JsonConverter(typeof(StjDateOnlyConverter))]
       public DateTime Start { get; set; }
     }
 
@@ -89,6 +102,8 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
 
       /// <summary>The end date of the latency period.</summary>
       [JsonProperty("latencyEndDate"), JsonPropertyName("latencyEndDate")]
+      [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftDateOnlyConverter))]
+      [System.Text.Json.Serialization.JsonConverter(typeof(StjDateOnlyConverter))]
       public DateTime LatencyEndDate { get; set; }
 
       /// <summary>First tax year for the income source.</summary>
@@ -112,12 +127,6 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
 
     /// <summary>Represents Quarterly reporting period type.</summary>
     public class QuarterlyType {
-      /// <summary>Represents the standard quarterly period type.</summary>
-      public const string TypeStandard = "standard";
-
-      /// <summary>Represents the calendar quarterly period type.</summary>
-      public const string TypeCalendar = "calendar";
-
       /// <summary>The quarterly period type that is being chosen for the business ID.</summary>
       /// <remarks>Possible values: "standard", "calendar".</remarks>
       [JsonProperty("quarterlyPeriodType"), JsonPropertyName("quarterlyPeriodType")]
