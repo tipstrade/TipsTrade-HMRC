@@ -10,8 +10,6 @@ namespace System.Net.NetworkInformation {
 
     /// <summary>Returns a list of all the unicast InterNetwork ip addresses for the current collection of interfaces.</summary>
     public static IEnumerable<IPAddress> GetAllAddresses(this IEnumerable<NetworkInterface> interfaces) {
-      var foo = interfaces.Select(i => i.GetIPProperties());
-
       return interfaces
         .Where(i => i.NetworkInterfaceType != NetworkInterfaceType.Loopback)
         .SelectMany(i => {

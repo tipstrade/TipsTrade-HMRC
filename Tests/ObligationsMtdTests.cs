@@ -1,4 +1,6 @@
-﻿using TipsTrade.HMRC.Api.ObligationsMtd.Model;
+﻿using System;
+using TipsTrade.HMRC.Api.ObligationsMtd.Model;
+using TipsTrade.HMRC.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,11 +28,16 @@ namespace TipsTrade.HMRC.Tests {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
+      var fromDate = DateTime.Today.GetTaxYearStart();
+      var toDate = DateTime.Today.GetTaxYearEnd();
+
       var resp = client.ObligationsMtd.GetIncomeAndExpenditureObligations(new GetObligationsRequest {
+        FromDate = fromDate,
+        ToDate = toDate,
         NiNumber = Users.Organisation.User.NiNumber,
-        BusinessId = "XBIS12345678903", // Self-employment business
+        BusinessId = "XBIS12345678901", // Self-employment business
         TypeOfBusiness = TypeOfBusiness.SelfEmployment,
-        GovTestScenario = GetObligationsRequest.ScenarioOpen
+        GovTestScenario = GetObligationsRequest.ScenarioDynamic
       });
 
       Assert.NotNull(resp);

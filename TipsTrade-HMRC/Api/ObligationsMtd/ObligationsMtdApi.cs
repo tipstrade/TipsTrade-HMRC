@@ -8,7 +8,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd {
     Client IClient.Client { get; set; }
 
     /// <inheritdoc>
-    public string Description => "Retrieve obligations for a user's business income sources..";
+    public string Description => "Retrieve obligations for a user's business income sources.";
 
     /// <inheritdoc>
     public bool IsStable => true;

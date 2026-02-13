@@ -21,5 +21,10 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     /// <summary>The date this obligation period was fulfilled.</summary>
     [JsonProperty("receivedDate"), JsonPropertyName("receivedDate")]
     public DateTime? ReceivedDate { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString() {
+      return $"{PeriodStartDate:yyyy-MM-dd} to {PeriodEndDate:yyyy-MM-dd} ({Status})";
+    }
   }
 }
