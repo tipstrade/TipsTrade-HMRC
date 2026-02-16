@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,20 @@ namespace TipsTrade.HMRC {
     /// <summary>Provides access to the Hello World functions.</summary>
     [ScopeApi(typeof(Api.HelloWorld.HelloWorldApi))]
     public const string Hello = "hello";
+
+    /// <summary>Provides read-access to the Self-Assessment functions.</summary>
+    [ScopeApi(typeof(Api.BusinessDetailsMtd.BusinessDetailsMtdApi))]
+    [ScopeApi(typeof(Api.ObligationsMtd.ObligationsMtdApi))]
+    [ScopeApi(typeof(Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdApi))]
+    [ScopeApi(typeof(Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdApi))]
+    public const string SelfAssessmentRead = "read:self-assessment";
+
+    /// <summary>Provides write-access to the Self-Assessment functions.</summary>
+    [ScopeApi(typeof(Api.BusinessDetailsMtd.BusinessDetailsMtdApi))]
+    [ScopeApi(typeof(Api.ObligationsMtd.ObligationsMtdApi))]
+    [ScopeApi(typeof(Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdApi))]
+    [ScopeApi(typeof(Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdApi))]
+    public const string SelfAssessmentWrite = "write:self-assessment";
 
     /// <summary>Provides read-access to the VAT functions.</summary>
     [ScopeApi(typeof(Api.Vat.VatApi))]
@@ -34,19 +49,28 @@ namespace TipsTrade.HMRC {
     public static IEnumerable<string> GetScopes(Func<Type, bool> typeFilter = null, Func<string, bool> valueFilter = null, Func<string, bool> nameFilter = null) {
       var fields = typeof(Scopes)
         .GetFields(BindingFlags.Public | BindingFlags.Static)
-        .Where(f=> f.FieldType == typeof(string))
-        ;
+        .Select(f => new {
+          Field = f,
+          Attributes = f.GetCustomAttributes<ScopeApiAttribute>()
+        })
+        .Where(f => f.Attributes.Any())
+       ;
 
-      if ((typeFilter != null) || (nameFilter != null)) {
-        fields = fields.Where(f => {
-          return (typeFilter?.Invoke(f.GetCustomAttribute<ScopeApiAttribute>()?.Type) ?? true) && (nameFilter?.Invoke(f.Name) ?? true);
-        });
-      }
+      var scopes = new HashSet<string>(); 
 
-      var scopes = fields.Select(f => (string)f.GetValue(null));
+      foreach (var field in fields) {
+        foreach (var scopeAttr in field.Attributes) {
+          var value = (string)field.Field.GetValue(null);
 
-      if (valueFilter != null) {
-        scopes = scopes.Where(valueFilter);
+          var isMatch = (typeFilter?.Invoke(scopeAttr.Type) ?? true)
+            && (valueFilter?.Invoke(value) ?? true)
+            && (nameFilter?.Invoke(field.Field.Name) ?? true)
+            ;
+
+          if (isMatch) {
+            scopes.Add(value);
+          }
+        }
       }
 
       return scopes;

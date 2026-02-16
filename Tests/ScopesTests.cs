@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace TipsTrade.HMRC.Tests {
   public class ScopesTests : TestBase {
@@ -17,6 +18,26 @@ namespace TipsTrade.HMRC.Tests {
     public void HelloWorld() {
       var scopes = Scopes.GetScopes<Api.HelloWorld.HelloWorldApi>();
       Assert.Single(scopes);
+    }
+
+    [Fact]
+    public void SelfAssessment() {
+      var expected = new[] {
+        Scopes.SelfAssessmentRead,
+        Scopes.SelfAssessmentWrite
+      };
+
+      var businessDetailsMtd  = Scopes.GetScopes<Api.BusinessDetailsMtd.BusinessDetailsMtdApi>();
+      Assert.Equal(2, businessDetailsMtd.Count());
+
+      var obligationsMtd = Scopes.GetScopes<Api.ObligationsMtd.ObligationsMtdApi>();
+      Assert.Equal(2, obligationsMtd.Count());
+
+      var selfAssessmentTestSupportMtd = Scopes.GetScopes<Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdApi>();
+      Assert.Equal(2, selfAssessmentTestSupportMtd.Count());
+     
+      var selfEmploymentBusinessMtd = Scopes.GetScopes<Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdApi>();
+      Assert.Equal(2, selfEmploymentBusinessMtd.Count());
     }
 
     [Fact]

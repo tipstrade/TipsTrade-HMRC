@@ -2,7 +2,7 @@
 
 namespace TipsTrade.HMRC.Attributes {
   /// <summary>Represents an attribute that indicates that the API type that the scope applies to.</summary>
-  [AttributeUsage(AttributeTargets.Field)]
+  [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
   public class ScopeApiAttribute : Attribute {
     /// <summary>The type that the scope applies to.</summary>
     public Type Type { get; }

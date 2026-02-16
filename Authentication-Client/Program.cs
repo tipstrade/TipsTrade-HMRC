@@ -113,7 +113,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
     private static TokenResponse GetAuthCode(Client client, UserResultBase user) {
       var state = $"{Guid.NewGuid()}";
-      var scopes = Scopes.GetScopes().Union(["read:self-assessment", "write:self-assessment"]);
+      var scopes = Scopes.GetScopes();
       var redirectUrl = Configuration["RedirectUrl"];
       var url = client.GetAuthorizatoinEndpoint(state, redirectUrl, scopes);
 
