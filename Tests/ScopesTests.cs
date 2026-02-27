@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace TipsTrade.HMRC.Tests {
   public class ScopesTests : TestBase {

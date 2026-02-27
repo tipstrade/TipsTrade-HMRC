@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using TipsTrade.HMRC.Api.Model;
-using TipsTrade.HMRC.Api.Vat;
 using TipsTrade.HMRC.Api.Vat.Model;
 using Xunit;
 using Xunit.Abstractions;

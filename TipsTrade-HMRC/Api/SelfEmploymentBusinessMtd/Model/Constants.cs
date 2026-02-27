@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 
 namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
   public static class Constants {

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using TipsTrade.HMRC.Api.ObligationsMtd.Model;
 using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model;
 using TipsTrade.HMRC.Extensions;
 using Xunit;
 using Xunit.Abstractions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TipsTrade.HMRC.Tests {
   public class SelfEmploymentBusinessMtdTests : TestBase {

@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using TipsTrade.HMRC.AntiFraud;
 using Xunit;
 using Xunit.Abstractions;
 

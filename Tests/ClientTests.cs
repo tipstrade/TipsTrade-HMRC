@@ -1,5 +1,3 @@
-using System;
-using TipsTrade.HMRC;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.Vat.Model;
 

@@ -1,10 +1,5 @@
-﻿using RestSharp;
-using System;
-using System.Linq;
-using System.Reflection;
-using TipsTrade.HMRC.Api.Attributes;
+﻿using System.Linq;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
-using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser {
   /// <summary>The API that exposes Create Test User functions.</summary>

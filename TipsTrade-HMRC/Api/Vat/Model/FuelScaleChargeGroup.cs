@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
   /// <summary>Represents a result containing Fuel Scale Charge information.</summary>
