@@ -128,8 +128,8 @@ namespace TipsTrade.HMRC {
     /// <param name="redirectUrl">	The URI that we use to send users back to your application after successful (or unsuccessful) authorisation.</param>
     /// <param name="scopes">	A list of scopes you would like to have permission to access on behalf of your user.</param>
     /// <returns></returns>
-    public string GetAuthorizatoinEndpoint(string state, string redirectUrl, IEnumerable<string> scopes) {
-      return GetAuthorizatoinEndpoint(state, redirectUrl, scopes?.ToArray());
+    public string GetAuthorizatoinEndpoint(string state, Uri redirectUrl, IEnumerable<string> scopes) {
+      return GetAuthorizatoinEndpoint(state, $"{redirectUrl}", scopes?.ToArray());
     }
 
     /// <summary>Gets the Uri for the Authorization endpoint.</summary>

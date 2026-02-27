@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
@@ -32,7 +33,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
     #endregion
 
     #region Entry point
-    static void Main(string[] args) {
+    static async Task Main(string[] args) {
       if (args.Any(s => Flags.UseProduction.Equals(s))) {
         IsSandbox = false;
         args = args.Except(args.Where(s => Flags.UseProduction.Equals(s))).ToArray();
@@ -54,7 +55,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
             break;
 
           case MainMenu.CreateUser:
-            Authenticate(client);
+            await Authenticate(client);
             break;
 
         }
@@ -76,7 +77,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
     #endregion
 
     #region Methods
-    private static void Authenticate(Client client) {
+    private static async Task Authenticate(Client client) {
       var userType = GetUserType(client);
       var user = CreateUser(client, userType);
 
@@ -85,7 +86,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       Console.ResetColor();
       Console.Write("");
 
-      var tokens = GetAuthCode(client, user);
+      var tokens = await GetAuthCode(client, user);
 
       Console.WriteLine();
       Console.WriteLine("Copy these details into appsettings.tokens.json for testing:");
@@ -111,11 +112,16 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       return resp;
     }
 
-    private static TokenResponse GetAuthCode(Client client, UserResultBase user) {
+    private static async Task<TokenResponse> GetAuthCode(Client client, UserResultBase user) {
       var state = $"{Guid.NewGuid()}";
       var scopes = Scopes.GetScopes();
-      var redirectUrl = Configuration["RedirectUrl"];
+      var redirectUrl = new Uri(Configuration["RedirectUrl"]);
       var url = client.GetAuthorizatoinEndpoint(state, redirectUrl, scopes);
+
+      var server = new System.Net.HttpListener {
+        Prefixes = { $"{redirectUrl.Scheme}://{redirectUrl.Authority}/" }
+      };
+      server.Start();
 
       try {
         OpenUrl(url);
@@ -133,8 +139,16 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       Console.WriteLine($"\tPassword: {user.Password}");
 
       Console.WriteLine();
-      Console.WriteLine($"Paste in the '{redirectUrl}' address that you were redirected to:");
-      var redirectedTo = Console.ReadLine();
+      Console.WriteLine("Waiting for the authorization response...");
+      var context = await server.GetContextAsync();
+      var redirectedTo = $"{context.Request.Url}";
+
+      var buffer = System.Text.Encoding.UTF8.GetBytes("<html><body>You can now return to the application.</body></html>");
+      context.Response.StatusCode = 200;
+      context.Response.ContentLength64 = buffer.Length;
+      await context.Response.OutputStream.WriteAsync(buffer);
+      context.Response.OutputStream.Close();
+      server.Stop();
 
       Console.WriteLine();
       Console.Write("Validating...");
