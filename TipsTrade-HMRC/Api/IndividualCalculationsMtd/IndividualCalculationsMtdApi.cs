@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
     public string Description => "Trigger, list, retrieve and submit a customer’s self-assessment tax calculation.";
 
     /// <inheritdoc>
-    public bool IsStable => false;
+    public bool IsStable => true;
 
     /// <inheritdoc>
     public string Location => "individuals/calculations";
@@ -35,6 +35,13 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
       var restRequest = this.CreateRequest(request);
 
       return this.ExecuteRequest<RetrieveSelfAssessmentCalculationResponse>(restRequest);
+    }
+
+    /// <summary>Submit a final declaration for a tax year by agreeing to the HMRC's tax calculation.</summary>
+    public SubmitFinalAssessmentResponse SubmitFinalAssessment(SubmitFinalAssessmentRequest request) {
+      var restRequest = this.CreateRequest(request);
+
+      return this.ExecuteRequest<SubmitFinalAssessmentResponse>(restRequest);
     }
 
     /// <summary>Triggers a self assessment tax calculation for a given tax year.</summary>

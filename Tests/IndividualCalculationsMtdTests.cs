@@ -32,19 +32,11 @@ namespace TipsTrade.HMRC.Tests {
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       var taxYear = DateTime.Today.GetTaxYear();
-      var calculations = client.IndividualCalculationsMtd.ListSelfAssessmentCalculations(new ListSelfAssessmentCalculationsRequest {
-        NiNumber = Users.Organisation.User.NiNumber,
-        TaxYear = taxYear,
-        CalculationType = CalculationType.InYear,
-        GovTestScenario = ListSelfAssessmentCalculationsRequest.ScenarioDefault,
-      });
-      var processed = calculations.Value.First(x => x.CalculationOutcome == CalculationOutcome.Processed);
-      var withErrors = calculations.Value.First(x => x.CalculationOutcome == CalculationOutcome.Error);
 
       var resp = client.IndividualCalculationsMtd.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = taxYear,
-        CalculationId = processed.CalculationId,
+        CalculationId = $"{Guid.NewGuid()}",
         GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioDynamic,
       });
 
@@ -57,7 +49,7 @@ namespace TipsTrade.HMRC.Tests {
       resp = client.IndividualCalculationsMtd.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = taxYear,
-        CalculationId = withErrors.CalculationId,
+        CalculationId = $"{Guid.NewGuid()}",
         GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioErrorMessagesExist,
       });
 
@@ -66,6 +58,22 @@ namespace TipsTrade.HMRC.Tests {
       Assert.NotNull(resp.Metadata);
       Assert.Null(resp.Calculation); // Null for a processed calculation
       Assert.NotNull(resp.Messages);
+    }
+
+    [Fact]
+    public void SubmitFinalAssessment() {
+      var client = GetClient();
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+
+      var resp = client.IndividualCalculationsMtd.SubmitFinalAssessment(new SubmitFinalAssessmentRequest {
+        NiNumber = Users.Organisation.User.NiNumber,
+        TaxYear = DateTime.Today.GetTaxYear(),
+        CalculationId = $"{Guid.NewGuid()}",
+        CalculationType = CalculationType.FinalDeclaration,
+        GovTestScenario = SubmitFinalAssessmentRequest.ScenarioDefault,
+      });
+
+      Assert.NotNull(resp);
     }
 
     [Fact]
