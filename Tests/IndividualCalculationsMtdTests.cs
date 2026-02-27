@@ -44,7 +44,7 @@ namespace TipsTrade.HMRC.Tests {
       var resp = client.IndividualCalculationsMtd.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = taxYear,
-        CalculationId = processed.Id,
+        CalculationId = processed.CalculationId,
         GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioDynamic,
       });
 
@@ -57,7 +57,7 @@ namespace TipsTrade.HMRC.Tests {
       resp = client.IndividualCalculationsMtd.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = taxYear,
-        CalculationId = withErrors.Id,
+        CalculationId = withErrors.CalculationId,
         GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioErrorMessagesExist,
       });
 

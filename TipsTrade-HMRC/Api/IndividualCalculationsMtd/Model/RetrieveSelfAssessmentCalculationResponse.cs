@@ -28,10 +28,10 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
 
     /// <summary>Object containing messages associated with the retrieved tax calculation.</summary>
     [JsonProperty("messages"), JsonPropertyName("messages")]
-    public object Messages { get; set; }
+    public CalculationMessages Messages { get; set; }
 
     /// <summary>Object containing top-level metadata information about the retrieved tax calculation.</summary>
     [JsonProperty("metadata"), JsonPropertyName("metadata")]
-    public object Metadata { get; set; }
+    public CalculationMetadata Metadata { get; set; }
   }
 }

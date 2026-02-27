@@ -8,11 +8,11 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
   public class CalculationSummary {
     /// <summary>The unique identifier of the calculation.</summary>
     [JsonProperty("calculationId"), JsonPropertyName("calculationId")]
-    public string Id { get; set; }
+    public string CalculationId { get; set; }
 
     /// <summary>The timestamp of when the calculation was performed.</summary>
     [JsonProperty("calculationTimestamp"), JsonPropertyName("calculationTimestamp")]
-    public DateTime Timestamp { get; set; }
+    public DateTime CalculationTimestamp { get; set; }
 
     /// <summary>The type of calculation performed.</summary>
     /// <remarks>Enum: "in-year" "intent-to-finalise" "final-declaration" "intent-to-amend" "confirm-amendment"</remarks>
