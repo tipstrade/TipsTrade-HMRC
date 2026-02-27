@@ -15,6 +15,7 @@ using TipsTrade.HMRC.Api.BusinessDetailsMtd;
 using TipsTrade.HMRC.Api.ObligationsMtd;
 using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd;
 using TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd;
+using TipsTrade.HMRC.Api.IndividualCalculationsMtd;
 
 namespace TipsTrade.HMRC {
   /// <summary>The Api client used to interact with the HMRC API.</summary>
@@ -71,7 +72,10 @@ namespace TipsTrade.HMRC {
 
     /// <summary>The Hello World API.</summary>
     public HelloWorldApi HelloWorld => GetApi<HelloWorldApi>();
-    
+
+    /// <summary>The Individual Calculations (MTD) API.</summary>
+    public IndividualCalculationsMtdApi IndividualCalculationsMtd => GetApi<IndividualCalculationsMtdApi>();
+
     /// <summary>The Obligations (MTD) API.</summary>
     public ObligationsMtdApi ObligationsMtd => GetApi<ObligationsMtdApi>();
 
