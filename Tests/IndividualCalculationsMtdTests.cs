@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model;
 using TipsTrade.HMRC.Extensions;
 using Xunit;
@@ -23,6 +24,48 @@ namespace TipsTrade.HMRC.Tests {
 
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
+    }
+
+    [Fact]
+    public void RetrieveSelfAssessmentCalculation() {
+      var client = GetClient();
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+
+      var taxYear = DateTime.Today.GetTaxYear();
+      var calculations = client.IndividualCalculationsMtd.ListSelfAssessmentCalculations(new ListSelfAssessmentCalculationsRequest {
+        NiNumber = Users.Organisation.User.NiNumber,
+        TaxYear = taxYear,
+        CalculationType = CalculationType.InYear,
+        GovTestScenario = ListSelfAssessmentCalculationsRequest.ScenarioDefault,
+      });
+      var processed = calculations.Value.First(x => x.CalculationOutcome == CalculationOutcome.Processed);
+      var withErrors = calculations.Value.First(x => x.CalculationOutcome == CalculationOutcome.Error);
+
+      var resp = client.IndividualCalculationsMtd.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
+        NiNumber = Users.Organisation.User.NiNumber,
+        TaxYear = taxYear,
+        CalculationId = processed.Id,
+        GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioDynamic,
+      });
+
+      Assert.NotNull(resp);
+      Assert.NotNull(resp.Inputs);
+      Assert.NotNull(resp.Metadata);
+      Assert.NotNull(resp.Calculation); // Valid for a processed calculation
+      Assert.Null(resp.Messages);
+
+      resp = client.IndividualCalculationsMtd.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
+        NiNumber = Users.Organisation.User.NiNumber,
+        TaxYear = taxYear,
+        CalculationId = withErrors.Id,
+        GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioErrorMessagesExist,
+      });
+
+      Assert.NotNull(resp);
+      Assert.NotNull(resp.Inputs);
+      Assert.NotNull(resp.Metadata);
+      Assert.Null(resp.Calculation); // Null for a processed calculation
+      Assert.NotNull(resp.Messages);
     }
 
     [Fact]

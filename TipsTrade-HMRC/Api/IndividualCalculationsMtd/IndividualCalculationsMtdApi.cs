@@ -30,6 +30,13 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
       return this.ExecuteRequest<ListSelfAssessmentCalculationsResponse>(restRequest);
     }
 
+    /// <summary>Retrieve all the tax calculation data for a given National Insurance number and Calculation ID.</summary>
+    public RetrieveSelfAssessmentCalculationResponse RetrieveSelfAssessmentCalculation(RetrieveSelfAssessmentCalculationRequest request) {
+      var restRequest = this.CreateRequest(request);
+
+      return this.ExecuteRequest<RetrieveSelfAssessmentCalculationResponse>(restRequest);
+    }
+
     /// <summary>Triggers a self assessment tax calculation for a given tax year.</summary>
     public TriggerSelfAssessmentCalculationResponse TriggerCalculation(TriggerSelfAssessmentCalculationRequest request) {
       var restRequest = this.CreateRequest(request);
