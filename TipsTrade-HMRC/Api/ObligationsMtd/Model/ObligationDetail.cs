@@ -5,6 +5,10 @@ using System.Text.Json.Serialization;
 namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
   /// <summary>Represents obligation details.</summary>
   public class ObligationDetail {
+    /// <summary>The date this obligation is due.</summary>
+    [JsonProperty("dueDate"), JsonPropertyName("dueDate")]
+    public DateTime DueDate { get; set; }
+
     /// <summary>The start date of this obligation period.</summary>
     [JsonProperty("periodStartDate"), JsonPropertyName("periodStartDate")]
     public DateTime PeriodStartDate { get; set; }
