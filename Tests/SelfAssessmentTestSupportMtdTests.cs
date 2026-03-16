@@ -8,11 +8,28 @@ namespace TipsTrade.HMRC.Tests {
     public SelfAssessmentTestSupportMtdTests(ITestOutputHelper output) : base(output) {
     }
 
+    private static string SeedTestData(Client client, string niNumber) {
+      var response = client.SelfAssessmentTestSupportMtd.CreateBusinessIncomeSource(new CreateTestBusinessRequest {
+        NiNumber = niNumber,
+        BusinessDetails = new BusinessDetailsResult {
+          TypeOfBusiness = TypeOfBusiness.SelfEmployment,
+          TradingName = "My Test Business",
+          BusinessAddressCountryCode = "GB",
+          BusinessAddressLineOne = "15 Main Street",
+          BusinessAddressPostcode = "W1 3AB"
+        }
+      });
+
+      return response.Value;
+    }
+
     #region Main tests
     [Fact]
     public void DeleteStatefulTestData() {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
+
+      SeedTestData(client, Users.Organisation.User.NiNumber);
 
       var resp = client.SelfAssessmentTestSupportMtd.DeleteStatefulTestData(Users.Organisation.User.NiNumber);
       Assert.NotNull(resp);
@@ -25,19 +42,9 @@ namespace TipsTrade.HMRC.Tests {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
-      var response = client.SelfAssessmentTestSupportMtd.CreateBusinessIncomeSource(new CreateTestBusinessRequest {
-        NiNumber = Users.Organisation.User.NiNumber,
-        BusinessDetails = new BusinessDetailsResult {
-          TypeOfBusiness = TypeOfBusiness.SelfEmployment,
-          TradingName = "My Test Business",
-          BusinessAddressCountryCode = "GB",
-          BusinessAddressLineOne = "15 Main Street",
-          BusinessAddressPostcode = "W1 3AB"
-        }
-      });
+      var response = SeedTestData(client, Users.Organisation.User.NiNumber);
 
-      Assert.NotNull(response);
-      Assert.IsType<string>(response.Value);
+      Assert.IsType<string>(response);
     }
     #endregion
   }

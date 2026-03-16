@@ -131,7 +131,7 @@ namespace TipsTrade.HMRC.Tests {
       });
 
       var firstOpenObligation = obligations.Value.First().Obligations
-        .Where(o => o.Status == Api.ObligationsMtd.Model.Status.Open)
+        .Where(o => o.Status == Api.ObligationsMtd.Model.ObligationStatus.Open)
         .OrderBy(o => o.PeriodEndDate)
         .First();
 
