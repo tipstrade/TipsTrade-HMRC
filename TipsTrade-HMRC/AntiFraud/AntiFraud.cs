@@ -334,7 +334,7 @@ namespace TipsTrade.HMRC.AntiFraud {
       GetAntiFraudHeaders(list);
       errors = list.ToArray();
 
-      return list.Count != 0;
+      return list.Count == 0;
     }
     #endregion
   }
