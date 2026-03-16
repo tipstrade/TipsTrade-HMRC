@@ -17,5 +17,10 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     /// <remarks>Possible values are: self-employment, uk-property, foreign-property, property-unspecified.</remarks>
     [JsonProperty("typeOfBusiness"), JsonPropertyName("typeOfBusiness")]
     public string TypeOfBusiness { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString() {
+      return $"BusinessId = {BusinessId}, TradingName = {TradingName ?? "<null>"}, TypeOfBusiness = {TypeOfBusiness}";
+    }
   }
 }
