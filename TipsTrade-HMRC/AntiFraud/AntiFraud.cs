@@ -281,11 +281,17 @@ namespace TipsTrade.HMRC.AntiFraud {
     }
 
     /// <summary>Populates the <see cref="LocalIPs"/> property with all the local IP addresses.</summary>
-    public void PopulateLocalIPs() {
-      LocalIPs = NetworkInterface.GetAllNetworkInterfaces()
+    public void PopulateLocalIPs(Func<IPAddress, bool> predicate = null) {
+      var ips = NetworkInterface.GetAllNetworkInterfaces()
         .GetAllAddresses()
         .Where(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork || x.IsIPv6LinkLocal)
         ;
+
+      if (predicate != null) {
+        ips = ips.Where(predicate);
+      }
+
+      LocalIPs = ips.ToArray();
       LocalIPsTimestamp = DateTime.UtcNow;
     }
 
@@ -296,6 +302,7 @@ namespace TipsTrade.HMRC.AntiFraud {
         .GetAllMACAddresses()
         .Select(m => m.FormatMAC())
         .Distinct()
+        .ToArray()
         ;
     }
 
@@ -317,18 +324,7 @@ namespace TipsTrade.HMRC.AntiFraud {
 
     /// <summary>Returns a flag indicating whether the anti fraud headers are valid.</summary>
     public bool Validate() {
-      return Validate(out string[] errors);
-    }
-
-    /// <summary>
-    /// Returns a flag indicating whether the anti fraud headers are valid.
-    /// Deprecated: Use the <see cref="Validate(out string[])"/> method instead.
-    /// </summary>
-    /// <param name="errors">The list of errors to populate.</param>
-    [Obsolete]
-    public bool Validate(List<string> errors) {
-      GetAntiFraudHeaders(errors);
-      return !errors.Any();
+      return Validate(out string[] _);
     }
 
     /// <summary>Returns a flag indicating whether the anti fraud headers are valid.</summary>
@@ -337,7 +333,8 @@ namespace TipsTrade.HMRC.AntiFraud {
       var list = new List<string>();
       GetAntiFraudHeaders(list);
       errors = list.ToArray();
-      return !list.Any();
+
+      return list.Count != 0;
     }
     #endregion
   }
