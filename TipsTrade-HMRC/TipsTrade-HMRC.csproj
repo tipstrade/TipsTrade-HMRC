@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net8;net481</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.3.1</Version>
+    <Version>0.0.3.2</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -14,7 +14,15 @@
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>0.0.3.1
+    <PackageReleaseNotes>0.0.3.2
+* Add required APIs for MTD In-Year.
+* Business Details (MTD)
+* Obligations (MTD)
+* Self Employment Business (MTD)
+* Self Assessment Test Support (MTD) - partial
+* Individual Calculations (MTD) - partial
+
+0.0.3.1
 * Add VAT Number verification
 * Remove obsolete VAT Scale Charge Resource
 * Bugfix: Don't use empty MAC address for fraud prevention headers
