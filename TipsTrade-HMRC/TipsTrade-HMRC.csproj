@@ -3,18 +3,18 @@
   <PropertyGroup>
     <TargetFrameworks>net8;net481</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.3.2</Version>
+    <Version>0.0.3.3</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
-    <Copyright>TipsTrade Ltd. 2018-2020</Copyright>
+    <Copyright>TipsTrade Ltd. 2018-2026</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Product>TipsTrade-HMRC</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>0.0.3.2
+    <PackageReleaseNotes>0.0.3.3
 * Add required APIs for MTD In-Year.
 * Business Details (MTD)
 * Obligations (MTD)
@@ -83,6 +83,9 @@
 * Initial release</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/tipstrade/TipsTrade-HMRC</PackageProjectUrl>
     <PackageLicenseFile>README.md</PackageLicenseFile>
+    <Title>TipsTrade-HMRC</Title>
+    <RepositoryUrl>https://github.com/tipstrade/TipsTrade-HMRC</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -91,7 +94,7 @@
     <PackageReference Include="System.Text.Json" Version="9.0.14" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='net452'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net481'">
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 

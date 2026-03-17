@@ -15,7 +15,7 @@
       return $"width={Size.Width}&height={Size.Height}&scaling-factor={ScalingFactor}&colour-depth={ColourDepth}";
     }
 
-#if NET452
+#if NET452_OR_GREATER
     /// <summary>Implicitly casts a <see cref="System.Windows.Forms.Screen"/> object to a <see cref="Screen"/>.</summary>
     public static implicit operator Screen(System.Windows.Forms.Screen screen) {
       return new Screen() {
