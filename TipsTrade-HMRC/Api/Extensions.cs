@@ -42,7 +42,9 @@ namespace TipsTrade.HMRC.Api {
       var restRequest = new RestRequest($"{api.Location}/{request.Location}", request.Method);
       restRequest.AddHeader("Accept", api.GetAcceptHeader(request.AcceptType));
 
-      if (!string.IsNullOrEmpty(request.ContentType)) {
+      // Can only have a content type header if there is a body
+      var canHaveContentType = request.Method == Method.Post || request.Method == Method.Put || request.Method == Method.Patch;
+      if (!string.IsNullOrEmpty(request.ContentType) && canHaveContentType) {
         restRequest.AddHeader("Content-Type", request.ContentType);
       }
 

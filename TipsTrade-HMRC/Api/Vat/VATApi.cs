@@ -41,11 +41,6 @@ namespace TipsTrade.HMRC.Api.Vat {
 
       var resp = this.ExecuteRequest<ObligationResponse>(restRequest);
 
-      // HACK: The Api appears to return all obligations, regardless of status, filter them here
-      if (request.Status != null) {
-        resp.Value = resp.Value.Except(resp.Value.Where(x => x.Status != request.Status));
-      }
-
       return resp;
     }
 
