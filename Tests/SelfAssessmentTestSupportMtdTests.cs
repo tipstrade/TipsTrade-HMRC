@@ -1,5 +1,7 @@
-﻿using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
+﻿using System;
+using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
 using TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model;
+using TipsTrade.HMRC.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -38,13 +40,35 @@ namespace TipsTrade.HMRC.Tests {
 
     #region Business Income Source tests
     [Fact]
-    public void CreateTestBusinessResponse() {
+    public void CreateBusinessIncomeSource() {
       var client = GetClient();
       client.AccessToken = Users.Organisation.Tokens.AccessToken;
 
       var response = SeedTestData(client, Users.Organisation.User.NiNumber);
 
       Assert.IsType<string>(response);
+    }
+    #endregion
+
+    #region ITSA Status tests
+    [Fact]
+    public void CreateTestItsaStatus() {
+      var client = GetClient();
+      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+
+      var resp = client.SelfAssessmentTestSupportMtd.CreateTestItsaStatus(new CreateTestItsaStatusRequest {
+        NiNumber = Users.Organisation.User.NiNumber,
+        TaxYear = DateTime.Now.GetTaxYear(),
+        ItsaStatusDetails = [
+          new ItsaStatusDetails {
+            SubmittedOnDate = DateTime.Now.GetTaxYearStart().AddMonths(-1),
+            Status = ItsaStatus.MtdMandated,
+            StatusReason = ItsaStatusReasons.SignUpReturnAvailable
+          }
+        ]
+      });
+
+      Assert.NotNull(resp);
     }
     #endregion
   }

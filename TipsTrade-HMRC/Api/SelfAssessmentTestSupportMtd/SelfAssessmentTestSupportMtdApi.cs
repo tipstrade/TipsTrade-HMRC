@@ -59,6 +59,12 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
     #endregion
 
     #region ITSA status methods
+    /// <summary>Create and amend a test ITSA status for a specified customer for use within the sandbox environment.</summary>
+    public CreateTestItsaStatusResponse CreateTestItsaStatus(CreateTestItsaStatusRequest request) {
+      var restRequest = this.CreateRequest(request);
+
+      return this.ExecuteRequest<CreateTestItsaStatusResponse>(restRequest);
+    }
     #endregion
   }
 }
