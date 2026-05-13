@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net8;net481</TargetFrameworks>
     <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>0.0.4-beta</Version>
+    <Version>0.0.4-beta1</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
     <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
@@ -15,7 +15,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReleaseNotes>
-0.0.4-beta
+0.0.4-beta1
 * Add async support
 * Add fraud feedback API
 * Fix: Missing fraud prevention headers on some API
