@@ -7,7 +7,7 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>The parameters used to create an individual test user.</summary>
-  public class CreateIndividualRequest : IApiRequest, ICreateTestUserRequest {
+  public class CreateIndividualRequest : IApiRequest, ICreateTestUserRequest<IndividualResult> {
     /// <summary>Generates an EORI number and enrols the user for Customs Services.</summary>
     [ServiceName]
     public const string CustomsServices = "customs-services";

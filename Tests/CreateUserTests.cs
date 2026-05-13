@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     private void TestCreateTestUserFactory<T>(string json) where T : class, ICreateTestUserRequest {
-      var request = CreateTestUserFactory<T>.CreateTestUserFull();
+      var request = CreateTestUserFactory.CreateTestUserFull<T>();
       Assert.NotEmpty(request.ServiceNames);
 
       var fromDocs = JsonConvert.DeserializeObject<T>(json);
@@ -24,8 +24,8 @@ namespace TipsTrade.HMRC.Tests {
       }
     }
 
-    private void TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest where TUser : UserResultBase {
-      var request = CreateTestUserFactory<TRequest>.CreateTestUserFull();
+    private void TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest<TUser> where TUser : UserResultBase {
+      var request = CreateTestUserFactory.CreateTestUserFull<TRequest>();
 
       var client = GetClient();
 
@@ -82,13 +82,13 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Fact]
-    void CreateTestUserFactoryPredicate() {
+    public void CreateTestUserFactoryPredicate() {
       CreateOrganisationRequest request;
 
-      request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUser(s => s == null);
+      request = CreateTestUserFactory.CreateTestUser<CreateOrganisationRequest>(s => s == null);
       Assert.Empty(request.ServiceNames);
 
-      request = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUser(s => CreateOrganisationRequest.CorporationTax.Equals(s));
+      request = CreateTestUserFactory.CreateTestUser<CreateOrganisationRequest>(s => CreateOrganisationRequest.CorporationTax.Equals(s));
       Assert.Single(request.ServiceNames);
     }
 

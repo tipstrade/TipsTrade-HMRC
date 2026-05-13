@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
+using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser {
   /// <summary>
@@ -36,87 +38,55 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
 
     #region API Methods
     /// <summary>
-    /// Creates a test user by dispatching to the concrete overload that matches the runtime type of the supplied request.
+    /// Executes a create test user request synchronously and returns the resulting user information.
     /// </summary>
-    /// <param name="request">The create test user request instance; must implement <see cref="ICreateTestUserRequest"/>.</param>
+    /// <typeparam name="TResult">
+    /// The concrete result type expected from the request. Must derive from <see cref="UserResultBase"/>.
+    /// </typeparam>
+    /// <param name="request">
+    /// The create test user request to execute. The request is required to implement <see cref="IApiRequest"/>;
+    /// when this is the case it will be forwarded to <c>ExecuteRequest{TResult}</c>.
+    /// </param>
     /// <returns>
-    /// A <see cref="UserResultBase"/> instance representing the created test user. The concrete runtime type will
-    /// be the appropriate result type for the supplied request (for example <see cref="AgentResult"/>,
-    /// <see cref="IndividualResult"/> or <see cref="OrganisationResult"/>).
+    /// An instance of <typeparamref name="TResult"/> containing the user information returned by the API.
     /// </returns>
-    /// <exception cref="System.InvalidOperationException">
-    /// Thrown when no matching CreateUser overload is found for the runtime type of <paramref name="request"/>.
-    /// This can occur if a new request type is supplied but no corresponding CreateUser overload exists.
+    /// <exception cref="ArgumentException">
+    /// Thrown when the supplied <paramref name="request"/> does not implement <see cref="IApiRequest"/>.
     /// </exception>
-    public UserResultBase CreateUser(ICreateTestUserRequest request) {
-      var method = GetType().GetMethods().Where(t => {
-        return nameof(CreateUser).Equals(t.Name) && t.GetParameters().First().ParameterType == request.GetType();
-      }).First();
+    public TResult CreateUser<TResult>(ICreateTestUserRequest<TResult> request) where TResult : UserResultBase {
+      // IApiRequest is internal, so we can't enforce this constraint at compile time on the ICreateTestUserRequest interface.
+      if (request is IApiRequest apiRequest) {
+        return this.ExecuteRequest<TResult>(apiRequest);
+      }
 
-      return method.Invoke(this, new object[] { request }) as UserResultBase;
+      throw new ArgumentException($"The request must implement IApiRequest to be executed. Request type: {request.GetType().FullName}", nameof(request));
     }
 
     /// <summary>
-    /// Creates a test agent user with the specified services.
+    /// Executes a create test user request asynchronously and returns the resulting user information.
     /// </summary>
-    /// <param name="request">The <see cref="CreateAgentRequest"/> describing the services and options for the agent user to create.</param>
-    /// <returns>An <see cref="AgentResult"/> containing details of the created agent test user.</returns>
-    public AgentResult CreateUser(CreateAgentRequest request) {
-      return this.ExecuteRequest<AgentResult>(request);
-    }
+    /// <typeparam name="TResult">
+    /// The concrete result type expected from the request. Must derive from <see cref="UserResultBase"/>.
+    /// </typeparam>
+    /// <param name="request">
+    /// The create test user request to execute. The request is required to implement <see cref="IApiRequest"/>;
+    /// when this is the case it will be forwarded to <c>ExecuteRequestAsync{TResult}</c>.
+    /// </param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> that can be used to cancel the asynchronous operation.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the asynchronous operation. The task result contains an instance
+    /// of <typeparamref name="TResult"/> with the user information returned by the API.
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the supplied <paramref name="request"/> does not implement <see cref="IApiRequest"/>.
+    /// </exception>
+    public async Task<TResult> CreateUserAsync<TResult>(ICreateTestUserRequest<TResult> request, CancellationToken cancellationToken = default) where TResult : UserResultBase {
+      // IApiRequest is internal, so we can't enforce this constraint at compile time on the ICreateTestUserRequest interface.
+      if (request is IApiRequest apiRequest) {
+        return await this.ExecuteRequestAsync<TResult>(apiRequest, cancellationToken).ConfigureAwait(false);
+      }
 
-    /// <summary>
-    /// Creates a test individual user with the specified services.
-    /// </summary>
-    /// <param name="request">The <see cref="CreateIndividualRequest"/> describing the services and options for the individual user to create.</param>
-    /// <returns>An <see cref="IndividualResult"/> containing details of the created individual test user.</returns>
-    public IndividualResult CreateUser(CreateIndividualRequest request) {
-      return this.ExecuteRequest<IndividualResult>(request);
-    }
-
-    /// <summary>
-    /// Creates a test organisation user with the specified services.
-    /// </summary>
-    /// <param name="request">The <see cref="CreateOrganisationRequest"/> describing the services and options for the organisation user to create.</param>
-    /// <returns>An <see cref="OrganisationResult"/> containing details of the created organisation test user.</returns>
-    public OrganisationResult CreateUser(CreateOrganisationRequest request) {
-      return this.ExecuteRequest<OrganisationResult>(request);
-    }
-
-    /// <summary>
-    /// Creates a test agent user with the specified services asynchronously.
-    /// </summary>
-    /// <param name="request">The <see cref="CreateAgentRequest"/> describing the services and options for the agent user to create.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> that may be used to cancel the asynchronous operation.</param>
-    /// <returns>A task whose result is an <see cref="AgentResult"/> containing details of the created agent test user.</returns>
-    public async Task<AgentResult> CreateUserAsync(CreateAgentRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<AgentResult>(
-        request,
-        cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Creates a test individual user with the specified services asynchronously.
-    /// </summary>
-    /// <param name="request">The <see cref="CreateIndividualRequest"/> describing the services and options for the individual user to create.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> that may be used to cancel the asynchronous operation.</param>
-    /// <returns>A task whose result is an <see cref="IndividualResult"/> containing details of the created individual test user.</returns>
-    public async Task<IndividualResult> CreateUserAsync(CreateIndividualRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<IndividualResult>(
-        request,
-        cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Creates a test organisation user with the specified services asynchronously.
-    /// </summary>
-    /// <param name="request">The <see cref="CreateOrganisationRequest"/> describing the services and options for the organisation user to create.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> that may be used to cancel the asynchronous operation.</param>
-    /// <returns>A task whose result is an <see cref="OrganisationResult"/> containing details of the created organisation test user.</returns>
-    public async Task<OrganisationResult> CreateUserAsync(CreateOrganisationRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<OrganisationResult>(
-        request,
-        cancellationToken).ConfigureAwait(false);
+      throw new ArgumentException($"The request must implement IApiRequest to be executed. Request type: {request.GetType().FullName}", nameof(request));
     }
     #endregion
   }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.Api;
+using TipsTrade.HMRC.Api.CreateTestUser;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
 
@@ -78,8 +79,8 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
     #region Methods
     private static async Task Authenticate(Client client) {
-      var userType = GetUserType(client);
-      var user = CreateUser(client, userType);
+      var request = GetUserRequest(client);
+      var user = CreateUser(client, request);
 
       Console.ForegroundColor = ConsoleColor.Green;
       Console.WriteLine(JsonConvert.SerializeObject(user, Formatting.Indented));
@@ -100,16 +101,26 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       Console.Write("");
     }
 
-    private static UserResultBase CreateUser(Client client, Type userType) {
-      var request = Activator.CreateInstance(userType) as ICreateTestUserRequest;
+    private static UserResultBase CreateUser(Client client, ICreateTestUserRequest request) {
       request.ServiceNames.AddRange(request.GetServiceNames());
+      UserResultBase result;
 
       Console.WriteLine();
-      Console.Write($"Executing CreateUser({userType})...");
-      var resp = client.CreateTestUser.CreateUser(request);
+      Console.Write($"Executing CreateUser({request.GetType()})...");
+
+      // Not ideal, as it requires maintenance when new request types are added, but it allows us to avoid reflection or dynamic typing in this test client.
+      if (request is ICreateTestUserRequest<AgentResult> agentRequest) {
+        result = client.CreateTestUser.CreateUser(agentRequest);
+      } else if (request is ICreateTestUserRequest<IndividualResult> individualRequest) {
+        result = client.CreateTestUser.CreateUser(individualRequest);
+      } else if (request is ICreateTestUserRequest<OrganisationResult> organisationRequest) {
+        result = client.CreateTestUser.CreateUser(organisationRequest);
+      } else {
+        throw new Exception($"Unsupported request type {request.GetType()}.");
+      }
       Console.WriteLine(" done");
 
-      return resp;
+      return result;
     }
 
     private static async Task<TokenResponse> GetAuthCode(Client client, UserResultBase user) {
@@ -158,10 +169,12 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       return resp;
     }
 
-    private static Type GetUserType(Client client) {
-      var types = client.GetType().Assembly.GetTypes().Where(t => {
-        return (t != typeof(ICreateTestUserRequest)) && typeof(ICreateTestUserRequest).IsAssignableFrom(t);
-      }).OrderBy(t => t.Name).ToArray();
+    private static ICreateTestUserRequest GetUserRequest(Client client) {
+      var types = new Type[] {
+        typeof(CreateAgentRequest),
+        typeof(CreateOrganisationRequest),
+        typeof(CreateIndividualRequest)
+      };
 
       for (int i = 0; i < types.Length; i++) {
         Console.WriteLine($"{i + 1}: {types[i].Name}");
@@ -172,7 +185,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       if (int.TryParse(resp, out int id)) {
         id--;
         if ((id >= 0) && (id < types.Length)) {
-          return types[id];
+          return Activator.CreateInstance(types[id]) as ICreateTestUserRequest;
         }
       }
 

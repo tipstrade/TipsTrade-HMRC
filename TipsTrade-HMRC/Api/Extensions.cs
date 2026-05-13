@@ -199,11 +199,21 @@ namespace TipsTrade.HMRC.Api {
     }
 
     /// <summary>
-    /// Gets all the service name constants defined on the current <see cref="ICreateTestUserRequest"/> implementation.
+    /// Retrieves all service name constants declared on the runtime type of the supplied
+    /// <see cref="ICreateTestUserRequest"/> that are decorated with <see cref="ServiceNameAttribute"/>.
     /// </summary>
-    /// <param name="request">The create-test-user request type instance (used to reflect static fields).</param>
-    /// <returns>An <see cref="IEnumerable{String}"/> containing service names discovered via <see cref="ServiceNameAttribute"/>.</returns>
+    /// <param name="request">The create-test-user request whose concrete type is inspected for service name fields.</param>
+    /// <returns>
+    /// An <see cref="IEnumerable{String}"/> containing the string values of all public static fields on the
+    /// request's type that have <see cref="ServiceNameAttribute"/> applied. If no such fields are present
+    /// the returned sequence will be empty.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="request"/> is <c>null</c>.</exception>
     public static IEnumerable<string> GetServiceNames(this ICreateTestUserRequest request) {
+      if (request == null) {
+        throw new ArgumentNullException(nameof(request));
+      }
+
       return request.GetType()
         .GetFields(BindingFlags.Public | BindingFlags.Static)
         .Where(f => f.GetCustomAttribute<ServiceNameAttribute>() != null)
@@ -216,15 +226,6 @@ namespace TipsTrade.HMRC.Api {
     /// <typeparam name="T">The expected response model type.</typeparam>
     /// <param name="response">The <see cref="RestResponse{T}"/> returned from the <see cref="RestClient"/> execution.</param>
     /// <returns>An instance of <typeparamref name="T"/> populated from the HTTP response body and selected headers.</returns>
-    /// <remarks>
-    /// - Calls <see cref="ThrowOnError(RestResponse)"/> to convert HTTP error responses into <see cref="ApiException"/>.
-    /// - If the status code is 204 (No Content), an empty instance of <typeparamref name="T"/> is created using <see cref="Activator.CreateInstance{T}"/>.
-    /// - If the returned <typeparamref name="T"/> implements any of the optional interfaces
-    ///   (<see cref="ICorrelationId"/>, <see cref="IDeprecationDate"/>, <see cref="ISunsetDate"/>, <see cref="IDocumentationLink"/>, <see cref="IReceipt"/>),
-    ///   related headers are read and mapped to their properties.
-    /// - Header lookup uses case-insensitive matching; if a required header is missing and the code
-    ///   attempts to access it using <c>First()</c>, an exception may be thrown.
-    /// </remarks>
     private static T HandleResponse<T>(RestResponse<T> response) {
       response.ThrowOnError();
 

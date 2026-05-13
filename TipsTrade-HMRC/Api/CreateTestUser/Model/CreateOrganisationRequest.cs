@@ -7,7 +7,7 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>The parameters used to create an organisation test user.</summary>
-  public class CreateOrganisationRequest : IApiRequest, ICreateTestUserRequest {
+  public class CreateOrganisationRequest : IApiRequest, ICreateTestUserRequest<OrganisationResult> {
     /// <summary>Generates a Corporation Tax UTR and enrols the user for Corporation Tax.</summary>
     [ServiceName]
     public const string CorporationTax = "corporation-tax";

@@ -7,7 +7,7 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>The parameters used to create an organisation test user.</summary>
-  public class CreateAgentRequest : IApiRequest, ICreateTestUserRequest {
+  public class CreateAgentRequest : IApiRequest, ICreateTestUserRequest<AgentResult> {
     /// <summary>Generates an Account Number for Agent Services and enrols the user for Agent Services.</summary>
     [ServiceName]
     public const string AgentServices = "agent-services";
