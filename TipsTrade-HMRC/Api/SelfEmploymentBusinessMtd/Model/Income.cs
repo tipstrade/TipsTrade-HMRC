@@ -2,6 +2,9 @@
 using System.Text.Json.Serialization;
 
 namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
+  /// <summary>
+  /// Represents the income details for a self-employment business used by the HMRC MTD API.
+  /// </summary>
   public class Income {
     /// <summary>The takings, fees, sales or money earned by the business. Income associated with the running of the business.</summary>
     /// <remarks>The value must be between 0 and 99999999999.99 up to 2 decimal places.</remarks>
