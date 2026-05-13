@@ -16,9 +16,6 @@ namespace TipsTrade.HMRC.Api {
   /// A collection of methods extending the functionality of <see cref="IApi"/> objects.
   /// </summary>
   public static class Extensions {
-    /// <summary>The default content type to be expected.</summary>
-    private const string DefaultContentType = "json";
-
     /// <summary>
     /// Add the date range parameters ("from" and "to") to the specified <see cref="RestRequest"/>.
     /// </summary>
@@ -169,12 +166,12 @@ namespace TipsTrade.HMRC.Api {
     /// Gets the versioned Accept header required by the HMRC API.
     /// </summary>
     /// <param name="api">The API for which the header should be generated.</param>
-    /// <param name="contentType">The optional content type to be accepted (defaults to "json").</param>
+    /// <param name="contentType">The optional content type to be accepted (usually json).</param>
     /// <returns>A string containing a valid HTTP Accept header for the HMRC API versioning scheme.</returns>
     /// <remarks>
     /// See HMRC API versioning guidance: <see href="https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning" />
     /// </remarks>
-    internal static string GetAcceptHeader(this IApi api, string contentType = DefaultContentType) {
+    internal static string GetAcceptHeader(this IApi api, string contentType) {
       return $"application/vnd.hmrc.{api.Version}+{contentType}";
     }
 

@@ -7,7 +7,7 @@ namespace TipsTrade.HMRC.Api.Model {
   internal interface IApiRequest {
     /// <summary>
     /// Gets the expected MIME type for responses returned by the API for this request.
-    /// Typically a value such as "json" used to form "application/vnd.hmrc...
+    /// Typically a value such as "json" used to form "application/vnd.hmrc.{Version}+{AcceptType}" in the Accept header.
     /// </summary>
     string AcceptType { get; }
 
