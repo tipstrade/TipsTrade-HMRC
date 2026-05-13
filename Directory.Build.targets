@@ -1,0 +1,15 @@
+<Project>
+	<Target Name="CopyNuGetPackageToRoot" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release' and '$(IsPackable)' != 'false'">
+		<ItemGroup>
+			<NuPkgFiles Include="$(OutputPath)\$(PackageId).$(Version).nupkg" />
+		</ItemGroup>
+		<Copy SourceFiles="@(NuPkgFiles)" DestinationFolder="$(SolutionDir)" />
+	</Target>
+
+	<Target Name="CleanNuGetPackagesFromRoot" AfterTargets="Clean" Condition="'$(IsPackable)' != 'false'">
+		<ItemGroup>
+			<RootNuPkgFiles Include="$(SolutionDir)\*.nupkg" />
+		</ItemGroup>
+		<Delete Files="@(RootNuPkgFiles)" />
+	</Target>
+</Project>
