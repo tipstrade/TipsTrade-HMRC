@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd {
   /// (previously known as crystallisations) for a customer's Income Tax account.
   /// Implements <see cref="IApi"/> to describe API metadata and <see cref="IClient"/> to expose the underlying client.
   /// </summary>
-  public class ObligationsMtdApi : IApi, IClient {
+  public class ObligationsMtdApi : IApi, IClient, IRequiresAntiFraud {
     #region Properties
     /// <inheritdoc/>
     public Client Client { get; set; }
