@@ -127,7 +127,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       var state = $"{Guid.NewGuid()}";
       var scopes = Scopes.GetScopes();
       var redirectUrl = new Uri(Configuration["RedirectUrl"]);
-      var url = client.GetAuthorizatoinEndpoint(state, redirectUrl, scopes);
+      var url = client.GetAuthorizationEndpoint(state, redirectUrl, scopes);
 
       var server = new System.Net.HttpListener {
         Prefixes = { $"{redirectUrl.Scheme}://{redirectUrl.Authority}/" }
