@@ -18,16 +18,19 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
     #endregion
 
     #region Interface Implementation
+    /// <inheritdoc/>
     string IApiRequest.AcceptType => "json";
 
+    /// <inheritdoc/>
     Authorization IApiRequest.Authorization => Authorization.User;
 
+    /// <inheritdoc/>
     string IApiRequest.ContentType => "application/json";
 
-    /// <inheritdoc>
+    /// <inheritdoc/>
     public abstract Method Method { get; }
 
-    /// <inheritdoc>
+    /// <inheritdoc/>
     public abstract string Location { get; }
 
     /// <inheritdoc/>

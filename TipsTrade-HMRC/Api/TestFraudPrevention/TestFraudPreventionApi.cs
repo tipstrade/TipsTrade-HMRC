@@ -1,34 +1,52 @@
-﻿using TipsTrade.HMRC.AntiFraud;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.TestFraudPrevention.Model;
 
 namespace TipsTrade.HMRC.Api.TestFraudPrevention {
   /// <summary>The API that exposes Hello World function.</summary>
   public class TestFraudPreventionApi : IApi, IClient, IRequiresAntiFraud {
     #region Properties
-    /// <summary>The client used to make requests.</summary>
+    /// <inheritdoc/>
     public Client Client { get; set; }
 
-    /// <summary>The description of the API.</summary>
+    /// <inheritdoc/>
     public string Description => "An API for testing Fraud Prevention headers.";
 
-    /// <summary>A flag indicating whether this version of the API is stable.</summary>
+    /// <inheritdoc/>
     public bool IsStable => false;
 
-    /// <summary>The relative location of the API.</summary>
+    /// <inheritdoc/>
     public string Location => "test/fraud-prevention-headers";
 
-    /// <summary>The name of the API.</summary>
+    /// <inheritdoc/>
     public string Name => "Test Fraud Prevention Headers API";
 
-    /// <summary>The relative location of the API.</summary>
+    /// <inheritdoc/>
     public string Version => "1.0";
     #endregion
 
-    #region Methods
+    #region API Methods
     /// <summary>Validates fraud prevention headers submitted with this HTTP request.</summary>
+    /// <returns>
+    /// A <see cref="ValidateResult"/> containing validation errors and warnings returned by the API.
+    /// </returns>
     public ValidateResult Validate() {
-      var restRequest = this.CreateRequest(new ValidateRequest());
-      return this.ExecuteRequest<ValidateResult>(restRequest);
+      return this.ExecuteRequest<ValidateResult>(new ValidateRequest());
+    }
+
+    /// <summary>Validates fraud prevention headers submitted with this HTTP request asynchronously.</summary>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> that may be used to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result is a <see cref="ValidateResult"/>
+    /// containing validation errors and warnings returned by the API.
+    /// </returns>
+    public async Task<ValidateResult> ValidateAsync(CancellationToken cancellationToken = default) {
+      return await this.ExecuteRequestAsync<ValidateResult>(
+        new ValidateRequest(),
+        cancellationToken).ConfigureAwait(false);
     }
     #endregion
   }

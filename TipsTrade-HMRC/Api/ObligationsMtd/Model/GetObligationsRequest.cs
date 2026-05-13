@@ -83,7 +83,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     #endregion
 
     #region Overrides
-    /// <inheritdoc>
+    /// <inheritdoc/>
     public override string Location => $"{NiNumber}/income-and-expenditure";
 
     /// <inheritdoc/>

@@ -10,15 +10,19 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     #endregion
 
     #region Interface Implementation
+    /// <inheritdoc/>
     string IApiRequest.AcceptType => "json";
 
+    /// <inheritdoc/>
     Authorization IApiRequest.Authorization => Authorization.User;
 
+    /// <inheritdoc/>
     string IApiRequest.ContentType => "application/json";
 
+    /// <inheritdoc/>
     Method IApiRequest.Method => Method.Get;
 
-    /// <inheritdoc>
+    /// <inheritdoc/>
     public abstract string Location { get; }
 
     /// <inheritdoc/>

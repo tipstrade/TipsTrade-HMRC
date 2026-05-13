@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.Vat.Model;
 
@@ -6,26 +7,26 @@ namespace TipsTrade.HMRC.Api.Vat {
   /// <summary>The API that exposes VAT functions.</summary>
   public class VatApi : IApi, IClient, IRequiresAntiFraud {
     #region Properties
-    /// <summary>The client used to make requests.</summary>
-    Client IClient.Client { get; set; }
+    /// <inheritdoc/>
+    public Client Client { get; set; }
 
-    /// <summary>The description of the API.</summary>
+    /// <inheritdoc/>
     public string Description => "An API for providing VAT data.";
 
-    /// <summary>A flag indicating whether this version of the API is stable.</summary>
+    /// <inheritdoc/>
     public bool IsStable => false;
 
-    /// <summary>The relative location of the API.</summary>
+    /// <inheritdoc/>
     public string Location => "organisations/vat";
 
-    /// <summary>The name of the API.</summary>
+    /// <inheritdoc/>
     public string Name => "VAT (MTD) API";
 
-    /// <summary>The version of the API that the client should target.</summary>
+    /// <inheritdoc/>
     public string Version => "1.0";
     #endregion
 
-    #region Methods
+    #region API Methods
     /// <summary>Retrieve VAT liabilities.</summary>
     /// <param name="request">The date range request.</param>
     public LiabilitiesResponse GetLiabilities(LiabilitiesRequest request) {
@@ -66,6 +67,51 @@ namespace TipsTrade.HMRC.Api.Vat {
       var restRequest = this.CreateRequest(request);
 
       return this.ExecuteRequest<SubmitResponse>(restRequest);
+    }
+
+    /// <summary>Retrieve VAT liabilities asynchronously.</summary>
+    public async Task<LiabilitiesResponse> GetLiabilitiesAsync(LiabilitiesRequest request, CancellationToken cancellationToken = default) {
+      var restRequest = this.CreateRequest(request);
+
+      return await this.ExecuteRequestAsync<LiabilitiesResponse>(
+        restRequest,
+        cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Retrieve VAT obligations asynchronously.</summary>
+    public async Task<ObligationResponse> GetObligationsAsync(ObligationsRequest request, CancellationToken cancellationToken = default) {
+      var restRequest = this.CreateRequest(request);
+
+      return await this.ExecuteRequestAsync<ObligationResponse>(
+        restRequest,
+        cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Retrieve VAT payments asynchronously.</summary>
+    public async Task<PaymentsResponse> GetPaymentsAsync(PaymentsRequest request, CancellationToken cancellationToken = default) {
+      var restRequest = this.CreateRequest(request);
+
+      return await this.ExecuteRequestAsync<PaymentsResponse>(
+        restRequest,
+        cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Retrieve a submitted VAT return asynchronously.</summary>
+    public async Task<ReturnResponse> GetReturnAsync(ReturnRequest request, CancellationToken cancellationToken = default) {
+      var restRequest = this.CreateRequest(request);
+
+      return await this.ExecuteRequestAsync<ReturnResponse>(
+        restRequest,
+        cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Submit VAT return for period asynchronously.</summary>
+    public async Task<SubmitResponse> SubmitReturnAsync(SubmitRequest request, CancellationToken cancellationToken = default) {
+      var restRequest = this.CreateRequest(request);
+
+      return await this.ExecuteRequestAsync<SubmitResponse>(
+        restRequest,
+        cancellationToken).ConfigureAwait(false);
     }
     #endregion
   }
