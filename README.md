@@ -1,27 +1,43 @@
 # TipsTrade-HMRC
-A strongly type .Net client for interacting with the HMRC APIs.
-The following APIs are currently supported:
-* Hello World
-* VAT (MTD)
-* Create Test User
+
+A strongly typed .NET client for interacting with the HMRC APIs.
+
+Package version: 0.0.4-beta1 - targets `net8` and `net481`. This release adds async support and the Test Fraud Prevention / fraud feedback APIs.
+
+The following APIs are currently supported (available from the `Client` properties):
+* `BusinessDetailsMtd`
+* `CreateTestUser`
+* `HelloWorld`
+* `IndividualCalculationsMtd`
+* `ObligationsMtd`
+* `SelfAssessmentTestSupportMtd`
+* `SelfEmploymentBusinessMtd`
+* `TestFraudPrevention`
+* `Vat`
+* `VatNumber`
 
 ### Breaking changes
-Whilst I make an effort not to introduce breaking changes (I will attempt to decorate deprecated items with the `ObsoleteAttribute` when possible), due to the fact that the many of the HMRC APIs are still in Beta (and due to errors I've made), they will occur. I will attempt to document them in this section.
+Whilst I make an effort not to introduce breaking changes (I will attempt to decorate deprecated items with the `ObsoleteAttribute` when possible), because several HMRC APIs are still in Beta (and because of mistakes I've made), breaking changes will occur. I will document them here.
 
 #### v.0.0.1.9
-* IDateRange properties renamed from `From` and `To` to `DateFrom` and `DateTo` respectively.
-* An `AntiFraudException` is now thrown instead of an `InvalidOperationException` when the AntiFraud headers fail validation. The exception contains an `Errors` property that contains all the errors encountered, and not just the first.
+* `IDateRange` properties renamed from `From` and `To` to `DateFrom` and `DateTo`.
+* An `AntiFraudException` is now thrown instead of an `InvalidOperationException` when the AntiFraud headers fail validation. `AntiFraudException` contains an `Errors` property with all validation errors.
+
+Release notes for `0.0.4-beta1` include:
+* Add async support (async API method variants available).
+* Add fraud feedback / Test Fraud Prevention API.
+* Fix: missing fraud prevention headers on some API calls.
 
 ## HMRC Developer Account
-A HMRC developer account is required - [Login Here][1]. To make requests you need to create an application which provides the following credentials:
+A HMRC developer account is required - [Login Here][1]. To make requests you need to create an application which provides:
 * Client ID
 * Client secret
 * Server token
 
-You will also need to configure at least one Redirect URI and add API Subsciptions. To run tests and the `Authentication-Client` console app, the Solution requires a Redirect URI of `https://www.example.com/hmrc/callback`
+You must configure at least one Redirect URI and add API subscriptions. To run tests and the `Authentication-Client` console app, the solution requires a Redirect URI of `https://www.example.com/hmrc/callback`.
 
 ## Creating test users
-The Solution comes with a .Net Core Console App (`Authentication-Client`) which can be configured to run in either the Sandbox (default) or Production environment. Before it can be run it needs the user-secrets need to be populated:
+The solution includes a .NET console app (`Authentication-Client`) which can run in either the Sandbox (default) or Production environment. Before running, populate user-secrets:
 ```bash
 dotnet user-secrets set Production:ServerToken <Sandbox Server Token>
 dotnet user-secrets set Production:ClientSecret <Sandbox Client Secret>
@@ -33,10 +49,10 @@ dotnet user-secrets set Sandbox:ClientID <Sandbox Client ID>
 
 dotnet user-secrets -v list
 ```
-By default, the `Authentication-Client` will run in the Sandbox environment. To run in Production add the `/production` argument.
+By default `Authentication-Client` runs in Sandbox. Pass the `/production` argument to run in Production.
 
 ## Test Configuration
-For running test, you will need to provide the credentials. These are the same as the `Authentication-Client`. A `hmrc-users.json` is also required, this is empty by default and needs to be populated with the output of `Authentication-Client` for each user type.
+Tests require the same credentials as `Authentication-Client`. A `hmrc-users.json` is required (empty by default) and must be populated with the output of `Authentication-Client` for each user type:
 ```json
 {
   "Agent": {
@@ -55,9 +71,9 @@ For running test, you will need to provide the credentials. These are the same a
 ```
 
 ## Scopes
-Scopes are used to provide access to specific APIs, and have to be passed to the `Client.GetAuthorizatoinEndpoint` method. These are then presented to the end user so they can confirm what access your application is intending on receiving. Scopes also have to be enabled for specific [Applications][2] in the developer console.
+Scopes grant access to specific HMRC APIs and are passed to `Client.GetAuthorizationEndpoint`. Scopes must also be enabled for your application in the HMRC developer console.
 
-Scopes can be specified by referencing the constants directly:
+You can reference scope constants directly:
 ```C#
 var scopes = new string[] {Scopes.Hello, Scopes.VATRead, Scopes.VATWrite};
 ```
@@ -78,7 +94,7 @@ var scopes = Scopes.GetScopes<Api.Vat.VatApi>(valueFilter: (value) => value.Cont
 ```
 
 ## Creating the Api Client
-The `Client` class requires the credentials before any Api methods can be called.
+The `Client` class requires credentials before calling most API methods.
 ```C#
 // Creates a client with production credentials
 var client = new Client("Client ID", "Client secret", "Server token");
@@ -95,15 +111,17 @@ var client = new Client() {
 };
 ```
 
-## OATH
-To handle authentication, you need to create a URI to which the HMRC user is taken, so they can authenticate. Once the user has succesfully authenticated, they're redirected to a URI which is then handled by the client. If successfully handled, the client will return TokenResponse objects which contains the access and refresh tokens. The method below is similar to the GetAuthCode method in the Authentication-Client project, and outputs the TokenResponse.
+## OAuth
+To authenticate a user, build the authorization URL and navigate the user to it. After the user authenticates, handle the redirect URI to obtain
+`TokenResponse` (access + refresh tokens). The library exposes `GetAuthorizationEndpoint` and `HandleEndpointResult` to help with this flow.
 
+Example (console-style):
 ```C#
 private static TokenResponse GetAuthCode(Client client) {
   var state = $"{Guid.NewGuid()}";
   var scopes = Scopes.GetScopes();
   var redirectUrl = Configuration["RedirectUrl"];
-  var url = client.GetAuthorizatoinEndpoint(state, redirectUrl, scopes);
+  var url = client.GetAuthorizationEndpoint(state, redirectUrl, scopes);
 
   Console.WriteLine();
   Console.WriteLine("Navigate to the link below, and login:");
@@ -145,21 +163,23 @@ private static void RefreshToken(Client client) {
 }
 ```
 
+Async variants of token and API calls are available in this release.
+
 ## Invoking API methods
-The APIs can be accessed their respective properties in the `Client` class
-* CreateTestUser
-* HelloWorld
-* Vat
+APIs are available as properties on the `Client` instance (see list at the top). Both synchronous and asynchronous method variants are provided (where appropriate),
+e.g., `client.Vat.GetObligations(...)` and `client.Vat.GetObligationsAsync(...)`.
 
 ### Exception handling
-All Api methods can throw a `ApiException`. The `ApiException.Message` property will contain the core error message returned by the API. To gain more specific information, use the `ApiException.ApiError` property, which in turn contains an optional list of `ErrorResponse` objects in the `ApiException.ApiError.Errors` property.
+API methods can throw `ApiException`. `ApiException.Message` contains the core message; `ApiException.ApiError` may contain `ErrorResponse` objects in `ApiError.Errors`.
 
-An `InvalidOperationException` may also be thrown if the state of the `Client` isn't valid to submit the request to HMRC.
+`InvalidOperationException` may be thrown if the `Client` state is invalid for the request.
 
-In addition, certain APIs require the `AntiFraud` headers to be set. Invoking a method without the required headers will throw an `AntiFraudException`. See [Anti fraud headers](#anti-fraud-headers).
+APIs that require AntiFraud headers will throw `AntiFraudException` if headers are missing/invalid. `AntiFraudException.Errors` contains all validation messages.
+
+Example:
 ```C#
 try {
-  submitResponse = client.Vat.SubmitReturn(submitRequest);
+  submitResponse = await client.Vat.SubmitReturnAsync(submitRequest);
   // ...
 } catch (InvalidOperationException ex) {
   var message = ex.Message;
@@ -169,22 +189,23 @@ try {
 } catch (AntiFraudException ex) {
   var detailedMessage = string.Join("\r\n", ex.Errors);
 }
-``` 
+```
 
 ### CreateTestUser API
-Test users are required when using the Sandbox for testing and development. They will need to be created regularly as they are [cleared down every two weeks][3]. The simplest method is to use the `TipsTrade.HMRC.Api.CreateTestUser.CreateTestUserFactory<T>` static methods to create a `ICreateTestUserRequest` class:
+In Sandbox you must create test users regularly (Sandbox data is cleared periodically). Use the `CreateTestUserFactory` helpers:
+
 ```C#
 // Create a test organisation user with all the available service types
-var orgRequest = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUserFull();
+var orgRequest = CreateTestUserFactory.CreateTestUserFull<CreateOrganisationRequest>();
  
 // Create a test organisation user with only VAT services
-var orgVatRequest = CreateTestUserFactory<CreateOrganisationRequest>.CreateTestUser(s => s.Contains("vat"));
+var orgVatRequest = CreateTestUserFactory.CreateTestUser<CreateOrganisationRequest>(s => s.Contains("vat"));
 
 var user = client.CreateTestUser.CreateUser(orgRequest);
 ```
 
 ### HelloWorld API
-A simple echo service, to verify that application or user credentials are valid:
+Simple echo endpoints to verify credentials:
 ```C#
 // Returns "Hello World" - no application or user credentials are required
 var resp = client.HelloWorld.SayHelloWorld();
@@ -200,7 +221,7 @@ var resp = client.HelloWorld.SayHelloUser();
 ### VAT (MTD) API
 
 #### Get obligations
-VAT returns are indexed by a "Period Key", so it's necessary to retrieve the obligations. The `ObligationsResult` implements `IComparable`, so they can be sorted (using the `Start` property). **Note: HMRC specify that the Period Key should not be shown to the end user.**
+VAT returns are indexed by a "Period Key". `ObligationsResult` implements `IComparable` so results can be sorted. Note: HMRC specify that the Period Key should not be shown to end users.
 ```C#
 // Get all fulfilled obligations for the past year
 var obRequest = new ObligationsRequest() {
@@ -227,7 +248,7 @@ var vatReturn = client.Vat.GetReturn(returnRequest);
 ```
 
 #### Submit VAT return
-As per the documentation, `Decimal` values cannot have more than two decimal places. It's advisable to use `Math.Round` or similar.
+Decimal values should have no more than two decimal places (use `Math.Round`).
 ```C#
 var vatReturn = new VatReturn() {
   PeriodKey = periodKey, // As retrieved by GetObligations
@@ -252,16 +273,12 @@ var resp = client.Vat.SubmitReturn(request);
 ```
 
 #### Other methods
-Awaiting documentation:
-* `Client.Vat.GetLiabilities`
-* `Client.Vat.GetPayments`
+Other VAT methods: `GetLiabilities`, `GetPayments` - see API docs in code.
 
-## Anti fraud headers
-Certain APIs require [Fraud prevention][4] headers to be included in any requests. In expectation of HMRC's decision to make these headers mandatory, this library will require the `AntiFraud` property to be populated, and should conform to version 2.2 of the documentation.
+## Fraud prevention headers
+Certain APIs require fraud-prevention headers. Any API implementing `IRequiresAntiFraud` expects `Client.AntiFraud` to be populated. Missing or invalid headers throw `AntiFraudException` with `Errors`.
 
-Any APIs that implements the `IRequiresAntiFraud` interface will expect the `Client.AntiFraud` property to be populated. Invoking an API method without the required headers will throw an `AntiFraudException`, which contains a list of errors in the `AntiFraudException.Errors` property. **This is a change from v.0.0.1.8, where an `InvalidOperationException` was previously thrown.**
-
-The `AntiFraud` class contains a number of helper methods:
+The `AntiFraud` helper includes:
 ```C#
 // Returns a list of all the properties that are required for a certain ConnectionMethod
 var props = AntiFraud.AntiFraud.GetPropertiesForMethod(ConnectionMethod.DESKTOP_APP_DIRECT);
@@ -281,7 +298,7 @@ client.AntiFraud.PopulateMACAddresses();
 // Populates with the local operating system name and version
 client.AntiFraud.PopulateUserAgent();
 
-// Populates with all the screen infor on the local system (.Net Framework Only)
+// Populates with all the screen information on the local system (.Net Framework Only)
 client.AntiFraud.PopulateScreens();
 ```
 
@@ -297,7 +314,6 @@ client.AntiFraud = new AntiFraud.AntiFraud() {
   VendorVersion = new Dictionary<string, string>() { { "TipsTrade.HMRC.Tests", "0.0.0.1" } },
   WindowSize = new Size(1024, 768)
 }
-
 ```
 
 [1]: https://developer.service.hmrc.gov.uk/developer/login

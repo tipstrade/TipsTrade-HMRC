@@ -88,7 +88,7 @@
 0.0.1.0
 * Initial release</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/tipstrade/TipsTrade-HMRC</PackageProjectUrl>
-    <PackageLicenseFile>README.md</PackageLicenseFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Title>TipsTrade-HMRC</Title>
     <RepositoryUrl>https://github.com/tipstrade/TipsTrade-HMRC</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -109,7 +109,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\README.md">
+    <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
