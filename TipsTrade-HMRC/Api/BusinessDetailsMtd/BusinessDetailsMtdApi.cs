@@ -1,5 +1,7 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
 
 namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
@@ -7,7 +9,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
   /// The API that exposes Business Details (MTD) functions.
   /// Provides methods to retrieve and amend details for a customer's self-employment or property business income sources.
   /// </summary>
-  public class BusinessDetailsMtdApi : IApi, IClient {
+  public class BusinessDetailsMtdApi : IApi, IClient, IRequiresAntiFraud {
     #region Properties
     /// <inheritdoc/>
     public Client Client { get; set; }

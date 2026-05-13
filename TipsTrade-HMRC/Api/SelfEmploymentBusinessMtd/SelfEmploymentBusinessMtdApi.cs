@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model;
 
 namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
@@ -8,7 +9,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
   /// Use this API to create, amend and retrieve cumulative period summaries for a self-employment business.
   /// This class implements <see cref="IApi"/> to describe the API metadata and <see cref="IClient"/> to expose the underlying client.
   /// </summary>
-  public class SelfEmploymentBusinessMtdApi : IApi, IClient {
+  public class SelfEmploymentBusinessMtdApi : IApi, IClient, IRequiresAntiFraud {
     #region Properties
     /// <inheritdoc/>
     public Client Client { get; set; }

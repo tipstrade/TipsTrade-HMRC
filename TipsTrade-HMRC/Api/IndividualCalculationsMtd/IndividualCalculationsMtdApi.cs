@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model;
 
 namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
@@ -8,7 +9,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
   /// Provides methods to trigger, list, retrieve and submit a customer’s self-assessment tax calculations.
   /// Implements <see cref="IApi"/> and <see cref="IClient"/>.
   /// </summary>
-  public class IndividualCalculationsMtdApi : IApi, IClient {
+  public class IndividualCalculationsMtdApi : IApi, IClient, IRequiresAntiFraud {
     #region Properties
     /// <inheritdoc/>
     public Client Client { get; set; }
