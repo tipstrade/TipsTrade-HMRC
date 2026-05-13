@@ -1,4 +1,6 @@
-﻿using TipsTrade.HMRC.Api.HelloWorld.Model;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using TipsTrade.HMRC.Api.HelloWorld.Model;
 using TipsTrade.HMRC.HelloWorld.Api.Model;
 
 namespace TipsTrade.HMRC.Api.HelloWorld {
@@ -27,20 +29,52 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
     #region Methods
     /// <summary>Says "Hello Application"</summary>
     public string SayHelloApplication() {
-      var restRequest = this.CreateRequest(new HelloRequest("application", Authorization.Application));
-      return this.ExecuteRequest<MessageResponse>(restRequest).Message;
+      return this.ExecuteRequest<MessageResponse>(
+        new HelloRequest("application", Authorization.Application)
+        ).Message;
+    }
+
+    /// <summary>Says "Hello Application"</summary>
+    public async Task<string> SayHelloApplicationAsync(CancellationToken cancellationToken = default) {
+      var response = await this.ExecuteRequestAsync<MessageResponse>(
+        new HelloRequest("application", Authorization.Application),
+        cancellationToken).ConfigureAwait(false);
+
+      return response.Message;
     }
 
     /// <summary>Says "Hello User"</summary>
     public string SayHelloUser() {
-      var restRequest = this.CreateRequest(new HelloRequest("user", Authorization.User));
-      return this.ExecuteRequest<MessageResponse>(restRequest).Message;
+      return this.ExecuteRequest<MessageResponse>(
+        new HelloRequest("user", Authorization.User)
+        ).Message;
+    }
+
+    /// <summary>Says "Hello User"</summary>
+    public async Task<string> SayHelloUserAsync(CancellationToken cancellationToken = default) {
+      var response = await this.ExecuteRequestAsync<MessageResponse>(
+        new HelloRequest("user", Authorization.User),
+        cancellationToken
+        ).ConfigureAwait(false);
+
+      return response.Message;
     }
 
     /// <summary>Says "Hello World"</summary>
     public string SayHelloWorld() {
-      var restRequest = this.CreateRequest(new HelloRequest("world", Authorization.Open));
-      return this.ExecuteRequest<MessageResponse>(restRequest).Message;
+      return this.ExecuteRequest<MessageResponse>(
+        new HelloRequest("world", Authorization.Open)
+        ).Message;
+    }
+
+    /// <summary>Says "Hello World"</summary>
+    public async Task<string> SayHelloWorldAsync(CancellationToken cancellationToken = default) {
+      var response = await this.ExecuteRequestAsync<MessageResponse>(
+        new HelloRequest("world", Authorization.Open),
+        cancellationToken
+      ).ConfigureAwait(false);
+
+      return response.Message;
     }
     #endregion
   }
