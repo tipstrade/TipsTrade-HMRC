@@ -128,8 +128,9 @@ namespace TipsTrade.HMRC {
     /// <param name="redirectUrl">	The URI that we use to send users back to your application after successful (or unsuccessful) authorisation.</param>
     /// <param name="scopes">	A list of scopes you would like to have permission to access on behalf of your user.</param>
     /// <returns></returns>
+    [Obsolete("Use GetAuthorizationEndpoint instead.")]
     public string GetAuthorizatoinEndpoint(string state, Uri redirectUrl, IEnumerable<string> scopes) {
-      return GetAuthorizatoinEndpoint(state, $"{redirectUrl}", scopes?.ToArray());
+      return GetAuthorizationEndpoint(state, $"{redirectUrl}", scopes?.ToArray());
     }
 
     /// <summary>Gets the Uri for the Authorization endpoint.</summary>
@@ -140,7 +141,33 @@ namespace TipsTrade.HMRC {
     /// <param name="redirectUrl">	The URI that we use to send users back to your application after successful (or unsuccessful) authorisation.</param>
     /// <param name="scopes">	A list of scopes you would like to have permission to access on behalf of your user.</param>
     /// <returns></returns>
+    public string GetAuthorizationEndpoint(string state, Uri redirectUrl, IEnumerable<string> scopes) {
+      return GetAuthorizationEndpoint(state, $"{redirectUrl}", scopes?.ToArray());
+    }
+
+    /// <summary>Gets the Uri for the Authorization endpoint.</summary>
+    /// <param name="state">
+    /// An opaque value used to maintain state between the request and callback and to prevent tampering as described in
+    /// the OAuth 2.0 specification (opens in a new tab). This is passed back to your application via the redirect_uri.
+    /// </param>
+    /// <param name="redirectUrl">	The URI that we use to send users back to your application after successful (or unsuccessful) authorisation.</param>
+    /// <param name="scopes">	A list of scopes you would like to have permission to access on behalf of your user.</param>
+    /// <returns></returns>
+    [Obsolete("Use GetAuthorizationEndpoint instead.")]
     public string GetAuthorizatoinEndpoint(string state, string redirectUrl, params string[] scopes) {
+      return GetAuthorizationEndpoint(state, redirectUrl, scopes);
+    }
+
+
+    /// <summary>Gets the Uri for the Authorization endpoint.</summary>
+    /// <param name="state">
+    /// An opaque value used to maintain state between the request and callback and to prevent tampering as described in
+    /// the OAuth 2.0 specification (opens in a new tab). This is passed back to your application via the redirect_uri.
+    /// </param>
+    /// <param name="redirectUrl">	The URI that we use to send users back to your application after successful (or unsuccessful) authorisation.</param>
+    /// <param name="scopes">	A list of scopes you would like to have permission to access on behalf of your user.</param>
+    /// <returns></returns>
+    public string GetAuthorizationEndpoint(string state, string redirectUrl, params string[] scopes) {
       if (string.IsNullOrEmpty(state)) {
         throw new ArgumentException($"{nameof(state)} cannot be empty.", nameof(state));
       }
