@@ -30,9 +30,8 @@ Release notes for `0.0.4-beta1` include:
 
 ## HMRC Developer Account
 A HMRC developer account is required - [Login Here][1]. To make requests you need to create an application which provides:
-* Client ID
-* Client secret
-* Server token
+  * Client ID
+  * Client secret
 
 You must configure at least one Redirect URI and add API subscriptions. To run tests and the `Authentication-Client` console app, the solution requires a Redirect URI of `https://www.example.com/hmrc/callback`.
 
@@ -97,16 +96,16 @@ var scopes = Scopes.GetScopes<Api.Vat.VatApi>(valueFilter: (value) => value.Cont
 The `Client` class requires credentials before calling most API methods.
 ```C#
 // Creates a client with production credentials
-var client = new Client("Client ID", "Client secret", "Server token");
+var client = new Client("Client ID", "Client secret");
 
 // Creates a client with sandbox credentials
-var client = new Client("Client ID", "Client secret", "Server token", true);
+var client = new Client("Client ID", "Client secret", true);
 
 // Or using the properties
 var client = new Client() {
   ClientID = "Client ID",
   ClientSecret = "Client secret",
-  ServerToken = "Server token",
+  // ServerToken is deprecated and will be removed
   IsSandbox = true
 };
 ```

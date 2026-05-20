@@ -18,12 +18,23 @@ namespace TipsTrade.HMRC.Tests {
 
       var encodedRedirect = HttpUtility.UrlEncode(RedirectUrl);
       var expected = $"https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=7Y7IDapnKX7uGrPhN1SIRe63e1Ya&scope=hello+read%3avat+write%3avat&state=4f00d15e-de25-4796-999f-266ea4429889&redirect_uri={encodedRedirect}";
-      var url = client.GetAuthorizatoinEndpoint(State, RedirectUrl, scopes);
+      var url = client.GetAuthorizationEndpoint(State, RedirectUrl, scopes);
 
       Assert.Equal(expected, url);
 
       Output.WriteLine("Authorization Endpoint:");
       Output.WriteLine(url);
+    }
+
+    [Fact]
+    public void GetApplicationTokenThrows() {
+      var client = GetClient();
+      client.ClientSecret = "bad-secret";
+
+      // GetApplicationToken is used internally, so the easiest way is to call HelloWorld which will call it if AccessToken isn't set.
+      var ex = Assert.Throws<ApiException>(() => client.HelloWorld.SayHelloApplication());
+      Assert.NotNull(ex.Message);
+      Assert.Equal(System.Net.HttpStatusCode.Unauthorized, ex.Status);
     }
 
     [Fact]

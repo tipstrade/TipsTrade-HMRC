@@ -32,8 +32,6 @@ namespace TipsTrade.HMRC.Tests {
     protected bool IsSandbox => true;
 
     protected string RedirectUrl => Configuration["RedirectUrl"];
-
-    protected string ServerToken => Configuration.GetSection(Environment)["ServerToken"];
     #endregion
 
     public TestBase(ITestOutputHelper output) {
@@ -49,7 +47,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     protected Client GetClient() {
-      var client = new Client(ClientId, ClientSecret, ServerToken, IsSandbox) {
+      var client = new Client(ClientId, ClientSecret, IsSandbox) {
         AntiFraud = new AntiFraud.AntiFraud() {
           ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
           DeviceID = Configuration["AntiFraudDeviceID"],

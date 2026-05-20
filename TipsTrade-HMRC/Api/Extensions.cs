@@ -79,10 +79,10 @@ namespace TipsTrade.HMRC.Api {
       }
 
       if (request.Authorization == Authorization.Application) {
-        if (string.IsNullOrEmpty(client.ServerToken))
-          throw new InvalidOperationException($"The {nameof(client.ServerToken)} cannot be empty");
+        var token = client.GetApplicationToken();
 
-        restRequest.AddHeader("Authorization", $"Bearer {client.ServerToken}");
+        // GetApplicationToken will throw if the client credentials aren't valid, so we can assume that the access token is valid.
+        restRequest.AddHeader("Authorization", $"Bearer {token.AccessToken}");
 
       } else if (request.Authorization == Authorization.User) {
         if (string.IsNullOrEmpty(client.AccessToken))

@@ -38,6 +38,11 @@ namespace TipsTrade.HMRC {
     /// <summary>Gets or sets the information used to generate the anti fraud headers.</summary>
     public AntiFraud.AntiFraud AntiFraud { get; set; }
 
+    private TokenResponse ApplicationToken { get; set; } = null;
+
+    // Synchronization object used to make GetApplicationToken thread-safe
+    private readonly object ApplicationTokenLock = new object();
+
     /// <summary>Gets the base Url used for all requests, based on the current environment.</summary>
     public string BaseUrl => IsSandbox ? SandboxUrl : ProductionUrl;
 
@@ -60,6 +65,7 @@ namespace TipsTrade.HMRC {
     public string RefreshToken { get; set; }
 
     /// <summary>The secret token used to authorise your application when making requests to any application-restricted endpoint.</summary>
+    [Obsolete("The server token flow is no longer supported. Server tokens should not be used to authorise requests.")]
     public string ServerToken { get; set; }
     #endregion
 
@@ -83,7 +89,7 @@ namespace TipsTrade.HMRC {
     public SelfAssessmentTestSupportMtdApi SelfAssessmentTestSupportMtd => GetApi<SelfAssessmentTestSupportMtdApi>();
 
     /// <summary>The Self Employment Business (MTD) API.</summary>
-    public SelfEmploymentBusinessMtdApi SelfEmploymentBusinessMtd=> GetApi<SelfEmploymentBusinessMtdApi>();
+    public SelfEmploymentBusinessMtdApi SelfEmploymentBusinessMtd => GetApi<SelfEmploymentBusinessMtdApi>();
 
     /// <summary>The Hello World API.</summary>
     public TestFraudPreventionApi TestFraudPrevention => GetApi<TestFraudPreventionApi>();
@@ -96,15 +102,25 @@ namespace TipsTrade.HMRC {
     #endregion
 
     #region Constructors
+    /// <summary>
+    /// Creates an instance of the TipsTrade.HMRC.Client class.
+    /// </summary>
+    /// <param name="clientID">The ID used to identify your application during each step of an OAuth 2.0 journey.</param>
+    /// <param name="clientSecret">The secret passphrase used to authorise your application during each step of an OAuth 2.0 journey.</param>
+    /// <param name="serverToken">The server token used to authorise your application. This parameter is deprecated and will be removed in future versions.</param>
+    /// <param name="isSandbox">A flag indicating whether the client is accessing the sandbox environment.</param>
+    [Obsolete("The server token flow is no longer supported. Use the constructor that doesn't include the serverToken parameter.")]
+    public Client(string clientID = null, string clientSecret = null, string serverToken = null, bool isSandbox = false) : this(clientID, clientSecret, isSandbox) {
+      ServerToken = serverToken;
+    }
+
     /// <summary>Creates an instance of the TipsTrade.HMRC.Client class.</summary>
     /// <param name="clientID">The ID used to identify your application during each step of an OAuth 2.0 journey.</param>
     /// <param name="clientSecret">The secret passphrase used to authorise your application during each step of an OAuth 2.0 journey.</param>
-    /// <param name="serverToken">The secret token used to authorise your application when making requests to any application-restricted endpoint.</param>
     /// <param name="isSandbox">A flag indicating whether the client is accessing the sandbox environment.</param>
-    public Client(string clientID = null, string clientSecret = null, string serverToken = null, bool isSandbox = false) {
+    public Client(string clientID = null, string clientSecret = null, bool isSandbox = false) {
       ClientID = clientID;
       ClientSecret = clientSecret;
-      ServerToken = serverToken;
       IsSandbox = isSandbox;
     }
     #endregion
@@ -191,6 +207,52 @@ namespace TipsTrade.HMRC {
       return uri.ToString();
     }
 
+    /// <summary>
+    /// Gets an application access token using the client credentials flow. This is used to access APIs that don't require user context. If the token has expired, a new one will be requested and cached for future use.
+    /// </summary>
+    /// <returns>The application access token.</returns>
+    /// <exception cref="ApiException">Thrown when the token request fails.</exception>
+    internal TokenResponse GetApplicationToken() {
+      // This is a bit messy. The client should probably be passing the Application Access Token around to the APIs that need it, but this is a bit easier to implement for now.
+      // The token is cached in memory and will be reused until it expires, at which point a new token will be requested.
+
+      // Fast path: if another thread already refreshed the token, return it without locking
+      if (ApplicationToken != null && !ApplicationToken.HasAccessTokenExpired()) {
+        return ApplicationToken;
+      }
+
+      // Ensure only one thread requests a new token at a time
+      lock (ApplicationTokenLock) {
+        // Re-check inside the lock in case another thread refreshed while we were waiting
+        if (ApplicationToken != null && !ApplicationToken.HasAccessTokenExpired()) {
+          return ApplicationToken;
+        }
+
+        var restClient = new RestClient(BaseUrl);
+        var request = new RestRequest("oauth/token", Method.Post);
+        request.AddParameter("client_secret", ClientSecret);
+        request.AddParameter("client_id", ClientID);
+        request.AddParameter("grant_type", "client_credentials");
+
+        var response = restClient.Execute<TokenResponse>(request);
+
+        // The OAuth2 flow returns different JSON in the event of an error. Check for that first
+        var oauthError = ErrorResponse.FromOAuth2Error(response.Content);
+        if (oauthError != null) {
+          throw new ApiException(oauthError.Message) {
+            ApiError = oauthError,
+            Status = response.StatusCode
+          };
+        }
+
+        response.ThrowOnError();
+
+        ApplicationToken = response.Data ?? throw new ApiException("Failed to obtain application token.");
+
+        return ApplicationToken;
+      }
+    }
+
     /// <summary></summary>
     /// <param name="uri">The Uri that the Authorization endpoint redirected back to.</param>
     /// <param name="state">
@@ -236,7 +298,7 @@ namespace TipsTrade.HMRC {
       var response = restClient.Execute<TokenResponse>(request);
       response.ThrowOnError();
 
-      var tokens = response.Data;
+      var tokens = response.Data ?? throw new ApiException("Failed to obtain user tokens.");
       AccessToken = tokens.AccessToken;
       RefreshToken = tokens.RefreshToken;
 
@@ -259,7 +321,6 @@ namespace TipsTrade.HMRC {
       request.AddParameter("refresh_token", refreshToken);
 
       var response = restClient.Execute<TokenResponse>(request);
-      response.ThrowOnError();
 
       // The OAuth2 flow returns different JSON in the event of an error. Check for that first
       var oauthError = ErrorResponse.FromOAuth2Error(response.Content);
@@ -270,7 +331,9 @@ namespace TipsTrade.HMRC {
         };
       }
 
-      var tokens = response.Data;
+      response.ThrowOnError();
+
+      var tokens = response.Data ?? throw new ApiException("Failed to obtain user tokens.");
       AccessToken = tokens.AccessToken;
       RefreshToken = tokens.RefreshToken;
 

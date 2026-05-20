@@ -11,7 +11,7 @@ namespace TipsTrade.HMRC.Tests {
       var client = GetClient();
       Assert.Equal(ClientId, client.ClientID);
       Assert.Equal(ClientSecret, client.ClientSecret);
-      Assert.Equal(ServerToken, client.ServerToken);
+      Assert.Null(client.ServerToken);
       Assert.Equal(IsSandbox, client.IsSandbox);
     }
 

@@ -30,7 +30,6 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
     private static bool IsSandbox { get; set; } = true;
 
-    protected static string ServerToken => Configuration.GetSection(Environment)["ServerToken"];
     #endregion
 
     #region Entry point
@@ -192,7 +191,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       throw new Exception($"{resp} is not a valid user type.");
     }
 
-    private static Client GetClient() => new Client(ClientId, ClientSecret, ServerToken, IsSandbox);
+    private static Client GetClient() => new Client(ClientId, ClientSecret, IsSandbox);
 
     private static void OpenUrl(string url) {
       // Dotnet has an issue executing URIs to launch in the default system browser.

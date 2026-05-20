@@ -12,9 +12,6 @@ namespace TipsTrade.HMRC.Tests {
     public void Application() {
       var client = GetClient();
       Assert.Equal("Hello Application", client.HelloWorld.SayHelloApplication());
-
-      client.ServerToken = $"{Guid.Empty}";
-      Assert.Throws<ApiException>(() => client.HelloWorld.SayHelloApplication());
     }
 
     [Fact]
