@@ -1,8 +1,10 @@
 # TipsTrade-HMRC
 
+[![Nuget](https://img.shields.io/nuget/v/TipsTrade-HMRC.svg)](https://www.nuget.org/packages/TipsTrade-HMRC/)
+
 A strongly typed .NET client for interacting with the HMRC APIs.
 
-Package version: 0.0.4-beta1 - targets `net8` and `net481`. This release adds async support and the Test Fraud Prevention / fraud feedback APIs.
+Package version: 8.0.0 targets `net8` and `net481`. This release adds async support and the Test Fraud Prevention / fraud feedback APIs.
 
 The following APIs are currently supported (available from the `Client` properties):
 * `BusinessDetailsMtd`
