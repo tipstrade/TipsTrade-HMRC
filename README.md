@@ -4,7 +4,7 @@
 
 A strongly typed .NET client for interacting with the HMRC APIs.
 
-Package version: 8.0.0 targets `net8` and `net481`. This release adds async support and the Test Fraud Prevention / fraud feedback APIs.
+The package major version follows the .NET target version (e.g. 8.x.x targets net8.0).
 
 The following APIs are currently supported (available from the `Client` properties):
 * `BusinessDetailsMtd`
@@ -25,7 +25,8 @@ Whilst I make an effort not to introduce breaking changes (I will attempt to dec
 * `IDateRange` properties renamed from `From` and `To` to `DateFrom` and `DateTo`.
 * An `AntiFraudException` is now thrown instead of an `InvalidOperationException` when the AntiFraud headers fail validation. `AntiFraudException` contains an `Errors` property with all validation errors.
 
-Release notes for `0.0.4-beta1` include:
+Release notes for `8.0.0` include:
+* Deprecate `ServerToken` (will be removed in a future release).
 * Add async support (async API method variants available).
 * Add fraud feedback / Test Fraud Prevention API.
 * Fix: missing fraud prevention headers on some API calls.

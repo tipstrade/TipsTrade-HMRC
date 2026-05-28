@@ -6,7 +6,7 @@
     <Version>8.0.0</Version>
     <Authors>John Bayly</Authors>
     <Company>TipsTrade Ltd.</Company>
-    <Description>A strongly type .Net client for interacting with the HMRC APIs</Description>
+    <Description>A strongly typed .NET client for interacting with the HMRC APIs</Description>
     <Copyright>TipsTrade Ltd. 2018-2026</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Product>TipsTrade-HMRC</Product>
@@ -14,82 +14,6 @@
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>
-0.0.5-beta1
-* Mark ServerToken as obsolete and use OAuth client credentials flow instead.
-
-0.0.4-beta1
-* Add async support
-* Add fraud feedback API
-* Fix: Missing fraud prevention headers on some API
-
-0.0.3.4
-* Add required APIs for MTD In-Year.
-* Business Details (MTD)
-* Obligations (MTD)
-* Self Employment Business (MTD)
-* Self Assessment Test Support (MTD) - partial
-* Individual Calculations (MTD) - partial
-
-0.0.3.1
-* Add VAT Number verification
-* Remove obsolete VAT Scale Charge Resource
-* Bugfix: Don't use empty MAC address for fraud prevention headers
-
-0.0.2.10
-* Fix percent encoding
-
-0.0.2.9
-* Add support for v3 of the Government Fraud Prevention headers.
-
-0.0.2.8
-* Bugfix: Handle errors correctly for RefreshAccessToken and HandleEndpointResult
-
-0.0.2.7
-* Feature: Add Test Fraud Prevention API
-* Fix: Include IPv6 link local addresses in PopulateLocalIPs()
-* Fix: Don't includ non IPv6 link local addresses in PopulateLocalIPs()
-
-0.0.2.5
-* Fix: Handle updated VAT Fuel Scale Charge page layout
-
-0.0.2.4
-* Fix: Handle updated VAT Fuel Scale Charge page layout
-
-0.0.2.3
-* Fix: ApiException thrown by Client.RefreshAccessToken will now include the OAuth2 error message
-
-0.0.2.2
-* Fix bug where TokenResponse.ExpiresTimestamp was out by 60 times.
-
-0.0.2.1
-* Bump RestSharp version to 106.6.4
-
-0.0.1.9
-* Contains breaking changes - see https://github.com/tipstrade/TipsTrade-HMRC#breaking-changes
-
-0.0.1.8
-* Strongly type the VAT period values for the FuelScaleCharge methods, and obsolete the old methods that use byte
-
-0.0.1.7
-* Add IsInvalidCredentials property to the ApiException
-
-0.0.1.6
-* Add fraud prevention headers
-
-0.0.1.5
-* Add symbols
-* Fix possible NullReferenceException when submitting VAT return
-
-0.0.1.2
-* Add live fuel scale charges - FuelScaleChargeClient
-* FuelScaleChargeResult.CO2Band now reports the upper bound of the band
-
-0.0.1.1
-* Add fuel scale charges
-
-0.0.1.0
-* Initial release</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/tipstrade/TipsTrade-HMRC</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Title>TipsTrade-HMRC</Title>
