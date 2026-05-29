@@ -24,10 +24,10 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
     public override string Version => "1.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public HelloWorldService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public HelloWorldService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public HelloWorldService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public HelloWorldService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Says "Hello Application"</summary>
     public string SayHelloApplication() {

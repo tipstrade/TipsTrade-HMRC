@@ -24,10 +24,10 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention {
     public override string Version => "1.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public TestFraudPreventionService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public TestFraudPreventionService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public TestFraudPreventionService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public TestFraudPreventionService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Submits feedback about the fraud prevention headers sent with an API request.</summary>
     public FeedbackResult GetFeedback(string api, ConnectionMethod connectionMethod) {

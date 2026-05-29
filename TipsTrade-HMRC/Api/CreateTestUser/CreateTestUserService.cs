@@ -25,10 +25,10 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     public override string Version => "1.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public CreateTestUserService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public CreateTestUserService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public CreateTestUserService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public CreateTestUserService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Executes a create test user request synchronously.</summary>
     public TResult CreateUser<TResult>(ICreateTestUserRequest<TResult> request) where TResult : UserResultBase {

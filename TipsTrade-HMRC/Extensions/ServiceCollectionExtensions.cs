@@ -29,6 +29,8 @@ namespace TipsTrade.HMRC.Extensions {
 
       services.Configure(configure);
 
+      services.AddSingleton<Api.ApplicationTokenCache>();
+
       services.AddHttpClient(Api.HmrcServiceBase.HttpClientName);
 
       services.AddHmrcOAuthService();

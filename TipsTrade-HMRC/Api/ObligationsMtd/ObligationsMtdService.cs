@@ -24,10 +24,10 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd {
     public override string Version => "3.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public ObligationsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public ObligationsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public ObligationsMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public ObligationsMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Retrieve obligations for a user's business income sources.</summary>
     public GetObligationsResponse GetIncomeAndExpenditureObligations(GetObligationsRequest request) {

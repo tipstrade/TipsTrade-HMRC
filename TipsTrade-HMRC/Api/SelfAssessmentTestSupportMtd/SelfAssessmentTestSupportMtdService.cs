@@ -23,10 +23,10 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
     public override string Version => "1.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public SelfAssessmentTestSupportMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public SelfAssessmentTestSupportMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public SelfAssessmentTestSupportMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public SelfAssessmentTestSupportMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Delete stateful test data, optionally scoped to a National Insurance number.</summary>
     public DeleteStatefulTestDataResponse DeleteStatefulTestData(string niNumber = null) {

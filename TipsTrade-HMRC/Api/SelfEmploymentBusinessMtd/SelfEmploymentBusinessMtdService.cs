@@ -24,10 +24,10 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
     public override string Version => "5.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public SelfEmploymentBusinessMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public SelfEmploymentBusinessMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public SelfEmploymentBusinessMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public SelfEmploymentBusinessMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Submit or amend the cumulative period income and expenses for a self-employment business.</summary>
     public AmendCumulativePeriodSummaryResponse CreateOrAmendCumulativePeriodSummary(AmendCumulativePeriodSummaryRequest request) {

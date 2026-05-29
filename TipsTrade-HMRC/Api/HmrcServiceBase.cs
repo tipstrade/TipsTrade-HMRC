@@ -1,3 +1,4 @@
+using AsyncKeyedLock;
 using Microsoft.Extensions.Options;
 using RestSharp;
 using System;
@@ -11,17 +12,19 @@ namespace TipsTrade.HMRC.Api {
     /// <summary>The name used to register the named <see cref="HttpClient"/> for HMRC API calls.</summary>
     internal static readonly string HttpClientName = typeof(HmrcServiceBase).FullName;
 
-    private TokenResponse _applicationToken;
-    private readonly object _applicationTokenLock = new object();
+    private static readonly AsyncKeyedLocker<string> _tokenLocks = new AsyncKeyedLocker<string>();
+
+    private readonly ApplicationTokenCache _applicationTokenCache;
     private readonly IHttpClientFactory _httpClientFactory;
     private Lazy<RestClient> _restClient;
     #endregion
 
     #region Lifecycle
     /// <summary>Initialises a new instance of <see cref="HmrcServiceBase"/> using an <see cref="IOptions{HmrcOptions}"/> instance.</summary>
-    protected HmrcServiceBase(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) {
+    protected HmrcServiceBase(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) {
       Options = options?.Value ?? throw new ArgumentNullException(nameof(options));
       _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+      _applicationTokenCache = applicationTokenCache ?? throw new ArgumentNullException(nameof(applicationTokenCache));
       _restClient = new Lazy<RestClient>(() => {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
         return new RestClient(httpClient, new RestClientOptions(Options.BaseUrl));
@@ -29,9 +32,10 @@ namespace TipsTrade.HMRC.Api {
     }
 
     /// <summary>Initialises a new instance of <see cref="HmrcServiceBase"/> using a plain <see cref="HmrcOptions"/> instance.</summary>
-    protected HmrcServiceBase(HmrcOptions options, IHttpClientFactory httpClientFactory) {
+    protected HmrcServiceBase(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) {
       Options = options ?? throw new ArgumentNullException(nameof(options));
       _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+      _applicationTokenCache = applicationTokenCache ?? throw new ArgumentNullException(nameof(applicationTokenCache));
 
       _restClient = new Lazy<RestClient>(() => {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
@@ -69,22 +73,25 @@ namespace TipsTrade.HMRC.Api {
     /// The token is cached in memory and reused until it expires.
     /// </summary>
     internal TokenResponse GetApplicationToken() {
-      if (_applicationToken != null && !_applicationToken.HasAccessTokenExpired()) {
-        return _applicationToken;
+      // Short circuit if we have a valid cached token to avoid unnecessary locking and HTTP calls
+      var cached = _applicationTokenCache.Get(Options.ClientID);
+      if (cached != null) {
+        return cached;
       }
 
-      lock (_applicationTokenLock) {
-        if (_applicationToken != null && !_applicationToken.HasAccessTokenExpired()) {
-          return _applicationToken;
+      using (_tokenLocks.Lock(Options.ClientID)) {
+        // Check the cache again inside the lock in case another thread already refreshed the token while we were waiting
+        cached = _applicationTokenCache.Get(Options.ClientID);
+        if (cached != null) {
+          return cached;
         }
 
-        var restClient = RestClient;
         var request = new RestRequest("oauth/token", Method.Post);
         request.AddParameter("client_secret", Options.ClientSecret);
         request.AddParameter("client_id", Options.ClientID);
         request.AddParameter("grant_type", "client_credentials");
 
-        var response = restClient.Execute<TokenResponse>(request);
+        var response = RestClient.Execute<TokenResponse>(request);
 
         var oauthError = ErrorResponse.FromOAuth2Error(response.Content);
         if (oauthError != null) {
@@ -96,9 +103,10 @@ namespace TipsTrade.HMRC.Api {
 
         response.ThrowOnError();
 
-        _applicationToken = response.Data ?? throw new ApiException("Failed to obtain application token.");
+        var token = response.Data ?? throw new ApiException("Failed to obtain application token.");
+        _applicationTokenCache.Set(Options.ClientID, token);
 
-        return _applicationToken;
+        return token;
       }
     }
     #endregion

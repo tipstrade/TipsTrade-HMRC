@@ -26,10 +26,10 @@ namespace TipsTrade.HMRC.Api.Vat {
     public override string Version => "2.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public VatNumberService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public VatNumberService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public VatNumberService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
+    public VatNumberService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
 
     /// <summary>Verifies the specified VAT registration number (VRN).</summary>
     public VatNumberCheckResponse CheckVrn(string vrn) {
