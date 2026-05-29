@@ -1,9 +1,11 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
+using TipsTrade.HMRC.Api.OAuth;
 
 namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
   /// <summary>Service that exposes Business Details (MTD) functions, supporting dependency injection.</summary>
@@ -23,11 +25,8 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
     /// <inheritdoc/>
     public override string Version => "2.0";
 
-    /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public BusinessDetailsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
-
-    /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public BusinessDetailsMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
+    /// <summary>Initialises a new instance using dependency-injected services.</summary>
+    public BusinessDetailsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Create or amend the type of quarterly reporting period used for a business for a specific tax year.</summary>
     public AmendQuarterlyPeriodTypeResponse CreateOrAmendQuarterlyPeriodType(AmendQuarterlyPeriodTypeRequest request) {

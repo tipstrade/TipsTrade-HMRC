@@ -15,21 +15,44 @@ namespace TipsTrade.HMRC.Extensions {
   /// <summary>Extension methods for registering HMRC API services with an <see cref="IServiceCollection"/>.</summary>
   public static class ServiceCollectionExtensions {
     /// <summary>
-    /// Registers <see cref="HmrcOptions"/> and all available HMRC API services with the <see cref="IServiceCollection"/>.
+    /// Registers HMRC API services with the <see cref="IServiceCollection"/> using the specified options provider, access token provider, and tenant provider.
     /// </summary>
-    /// <param name="services">The service collection to configure.</param>
-    /// <param name="configure">A delegate to configure the <see cref="HmrcOptions"/>.</param>
-    /// <returns>The same <see cref="IServiceCollection"/> instance so calls can be chained.</returns>
-    public static IServiceCollection AddHmrc(this IServiceCollection services, Action<HmrcOptions> configure) {
-      if (services  == null) {
+    /// <typeparam name="TAccessTokenProvider"></typeparam>
+    /// <typeparam name="TTenantProvider"></typeparam>
+    /// <param name="services"></param>
+    /// <param name="configureOptions"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IServiceCollection AddHmrc<TAccessTokenProvider, TTenantProvider>(this IServiceCollection services, Action<HmrcOptions> configureOptions)
+      where TAccessTokenProvider : class, IHmrcAccessTokenProvider
+      where TTenantProvider : class, IHmrcTenantProvider {
+      if (services == null) {
         throw new ArgumentNullException(nameof(services));
-      } else if (configure == null) {
-        throw new ArgumentNullException(nameof(configure));
       }
 
-      services.Configure(configure);
+      services.AddHmrcTenantProvider<TTenantProvider>();
+
+      return services.AddHmrc<TAccessTokenProvider>(configureOptions);
+    }
+
+    /// <summary>
+    /// Registers HMRC API services with the <see cref="IServiceCollection"/> using the specified options provider and access token provider.
+    /// </summary>
+    /// <typeparam name="TAccessTokenProvider">The type of the access token provider.</typeparam>
+    /// <param name="services">The service collection to configure.</param>
+    /// <param name="configureOptions">An action to configure the HMRC options.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance so calls can be chained.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IServiceCollection AddHmrc<TAccessTokenProvider>(this IServiceCollection services, Action<HmrcOptions> configureOptions)
+        where TAccessTokenProvider : class, IHmrcAccessTokenProvider {
+      if (services == null) {
+        throw new ArgumentNullException(nameof(services));
+      }
+
+      services.Configure(configureOptions);
 
       services.AddSingleton<Api.ApplicationTokenCache>();
+      services.AddSingleton<IHmrcAccessTokenProvider, TAccessTokenProvider>();
 
       services.AddHttpClient(Api.HmrcServiceBase.HttpClientName);
 
@@ -48,59 +71,77 @@ namespace TipsTrade.HMRC.Extensions {
       return services;
     }
 
-    /// <summary>Registers <see cref="HmrcOAuthService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>
+    /// Registers a custom implementation of <see cref="IHmrcTenantProvider"/> with the <see cref="IServiceCollection"/> as a scoped service.
+    /// This allows you to provide tenant information for multi-tenant applications when using the HMRC API services.
+    /// </summary>
+    /// <typeparam name="T">The type of the tenant provider.</typeparam>
+    /// <param name="services">The service collection to configure.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance so calls can be chained.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IServiceCollection AddHmrcTenantProvider<T>(this IServiceCollection services) where T : class, IHmrcTenantProvider {
+      if (services == null) {
+        throw new ArgumentNullException(nameof(services));
+      }
+
+      services.AddScoped<T>();
+
+      return services;
+    }
+
+    /// <summary>Registers <see cref="HmrcOAuthService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddHmrcOAuthService(this IServiceCollection services) {
-      return services.AddTransient<HmrcOAuthService>();
+      return services.AddScoped<HmrcOAuthService>();
     }
 
-    /// <summary>Registers <see cref="BusinessDetailsMtdService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="BusinessDetailsMtdService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddBusinessDetailsMtdService(this IServiceCollection services) {
-      return services.AddTransient<BusinessDetailsMtdService>();
+      return services.AddScoped<BusinessDetailsMtdService>();
     }
 
-    /// <summary>Registers <see cref="CreateTestUserService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="CreateTestUserService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddCreateTestUserService(this IServiceCollection services) {
-      return services.AddTransient<CreateTestUserService>();
+      return services.AddScoped<CreateTestUserService>();
     }
 
-    /// <summary>Registers <see cref="HelloWorldService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="HelloWorldService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddHelloWorldService(this IServiceCollection services) {
-      return services.AddTransient<HelloWorldService>();
+      return services.AddScoped<HelloWorldService>();
     }
 
-    /// <summary>Registers <see cref="IndividualCalculationsMtdService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="IndividualCalculationsMtdService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddIndividualCalculationsMtdService(this IServiceCollection services) {
-      return services.AddTransient<IndividualCalculationsMtdService>();
+      return services.AddScoped<IndividualCalculationsMtdService>();
     }
 
-    /// <summary>Registers <see cref="ObligationsMtdService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="ObligationsMtdService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddObligationsMtdService(this IServiceCollection services) {
-      return services.AddTransient<ObligationsMtdService>();
+      return services.AddScoped<ObligationsMtdService>();
     }
 
-    /// <summary>Registers <see cref="SelfAssessmentTestSupportMtdService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="SelfAssessmentTestSupportMtdService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddSelfAssessmentTestSupportMtdService(this IServiceCollection services) {
-      return services.AddTransient<SelfAssessmentTestSupportMtdService>();
+      return services.AddScoped<SelfAssessmentTestSupportMtdService>();
     }
 
-    /// <summary>Registers <see cref="SelfEmploymentBusinessMtdService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="SelfEmploymentBusinessMtdService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddSelfEmploymentBusinessMtdService(this IServiceCollection services) {
-      return services.AddTransient<SelfEmploymentBusinessMtdService>();
+      return services.AddScoped<SelfEmploymentBusinessMtdService>();
     }
 
-    /// <summary>Registers <see cref="TestFraudPreventionService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="TestFraudPreventionService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddTestFraudPreventionService(this IServiceCollection services) {
-      return services.AddTransient<TestFraudPreventionService>();
+      return services.AddScoped<TestFraudPreventionService>();
     }
 
-    /// <summary>Registers <see cref="VatService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="VatService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddVatService(this IServiceCollection services) {
-      return services.AddTransient<VatService>();
+      return services.AddScoped<VatService>();
     }
 
-    /// <summary>Registers <see cref="VatNumberService"/> with the <see cref="IServiceCollection"/>.</summary>
+    /// <summary>Registers <see cref="VatNumberService"/> with the <see cref="IServiceCollection"/> as a scoped service.</summary>
     public static IServiceCollection AddVatNumberService(this IServiceCollection services) {
-      return services.AddTransient<VatNumberService>();
+      return services.AddScoped<VatNumberService>();
     }
   }
 }

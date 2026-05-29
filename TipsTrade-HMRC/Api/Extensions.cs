@@ -48,6 +48,11 @@ namespace TipsTrade.HMRC.Api {
       return request;
     }
 
+    [Obsolete("Use CreateRequestAsync instead as this is likely to cause deadlocks.")]
+    internal static RestRequest CreateRequest(this HmrcServiceBase api, IApiRequest request) {
+      return api.CreateRequestAsync(request, CancellationToken.None).GetAwaiter().GetResult();
+    }
+
     /// <summary>
     /// Create and populate a <see cref="RestRequest"/> from a given <see cref="IApiRequest"/> using API client settings.
     /// </summary>
@@ -58,8 +63,8 @@ namespace TipsTrade.HMRC.Api {
     /// Thrown when required tokens (server or user) are missing for the requested <see cref="Authorization"/> mode,
     /// or when anti-fraud headers are required but the client's <see cref="AntiFraud"/> instance is null.
     /// </exception>
-    internal static RestRequest CreateRequest(this IHmrcService api, IApiRequest request) {
-      var options = api.GetOptions();
+    internal async static Task<RestRequest> CreateRequestAsync(this HmrcServiceBase api, IApiRequest request, CancellationToken cancellationToken) {
+      var options = api.Options;
 
       var restRequest = new RestRequest($"{api.Location}/{request.Location}", request.Method);
       restRequest.AddHeader("Accept", api.GetAcceptHeader(request.AcceptType));
@@ -79,18 +84,13 @@ namespace TipsTrade.HMRC.Api {
       }
 
       if (request.Authorization == Authorization.Application) {
-        if (!(api is HmrcServiceBase svc)) {
-          throw new InvalidOperationException($"{nameof(api)} does not inherit {typeof(HmrcServiceBase)}");
-        }
-
-        var token = svc.GetApplicationToken();
-        restRequest.AddHeader("Authorization", $"Bearer {token.AccessToken}");
+        var token = await api.GetApplicationTokenAsync(cancellationToken);
+        restRequest.AddHeader("Authorization", $"Bearer {token}");
 
       } else if (request.Authorization == Authorization.User) {
-        if (string.IsNullOrEmpty(options.AccessToken))
-          throw new InvalidOperationException($"The {nameof(options.AccessToken)} cannot be empty");
+        var accessToken = await api.GetAccessTokenAsync(cancellationToken);
 
-        restRequest.AddHeader("Authorization", $"Bearer {options.AccessToken}");
+        restRequest.AddHeader("Authorization", $"Bearer {accessToken}");
       }
 
       if (api is IRequiresAntiFraud) {
@@ -113,7 +113,8 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="api">The API instance used to execute the request.</param>
     /// <param name="request">The request model used to create the HTTP request.</param>
     /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static T ExecuteRequest<T>(this IHmrcService api, IApiRequest request) {
+    [Obsolete("Use ExecuteRequestAsync instead as this is likely to cause deadlocks.")]
+    internal static T ExecuteRequest<T>(this HmrcServiceBase api, IApiRequest request) {
       var restRequest = api.CreateRequest(request);
 
       return api.ExecuteRequest<T>(restRequest);
@@ -126,7 +127,7 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="api">The API instance used to obtain the <see cref="RestClient"/> for execution.</param>
     /// <param name="request">The <see cref="RestRequest"/> to execute.</param>
     /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static T ExecuteRequest<T>(this IHmrcService api, RestRequest request) {
+    internal static T ExecuteRequest<T>(this HmrcServiceBase api, RestRequest request) {
       var client = api.GetRestClient();
       var response = client.Execute<T>(request);
 
@@ -142,8 +143,8 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="request">The request model used to create the HTTP request.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
     /// <returns>A task that resolves to an instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static async Task<T> ExecuteRequestAsync<T>(this IHmrcService api, IApiRequest request, CancellationToken cancellationToken) {
-      var restRequest = api.CreateRequest(request);
+    internal static async Task<T> ExecuteRequestAsync<T>(this HmrcServiceBase api, IApiRequest request, CancellationToken cancellationToken) {
+      var restRequest = await api.CreateRequestAsync(request, cancellationToken).ConfigureAwait(false);
 
       return await api.ExecuteRequestAsync<T>(restRequest, cancellationToken).ConfigureAwait(false);
     }

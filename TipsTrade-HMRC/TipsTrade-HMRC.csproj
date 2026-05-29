@@ -1,54 +1,57 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net8;net481</TargetFrameworks>
-    <RootNamespace>TipsTrade.HMRC</RootNamespace>
-    <Version>8.0.0</Version>
-    <Authors>John Bayly</Authors>
-    <Company>TipsTrade Ltd.</Company>
-    <Description>A strongly typed .NET client for interacting with the HMRC APIs</Description>
-    <Copyright>TipsTrade Ltd. 2018-2026</Copyright>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Product>TipsTrade-HMRC</Product>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeSource>true</IncludeSource>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageProjectUrl>https://github.com/tipstrade/TipsTrade-HMRC</PackageProjectUrl>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Title>TipsTrade-HMRC</Title>
-    <RepositoryUrl>https://github.com/tipstrade/TipsTrade-HMRC</RepositoryUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net8;net481</TargetFrameworks>
+		<RootNamespace>TipsTrade.HMRC</RootNamespace>
+		<Version>8.0.0</Version>
+		<Authors>John Bayly</Authors>
+		<Company>TipsTrade Ltd.</Company>
+		<Description>A strongly typed .NET client for interacting with the HMRC APIs</Description>
+		<Copyright>TipsTrade Ltd. 2018-2026</Copyright>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Product>TipsTrade-HMRC</Product>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSource>true</IncludeSource>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageProjectUrl>https://github.com/tipstrade/TipsTrade-HMRC</PackageProjectUrl>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<Title>TipsTrade-HMRC</Title>
+		<RepositoryUrl>https://github.com/tipstrade/TipsTrade-HMRC</RepositoryUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Resources\**" />
-    <EmbeddedResource Remove="Resources\**" />
-    <None Remove="Resources\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Resources\**" />
+		<EmbeddedResource Remove="Resources\**" />
+		<None Remove="Resources\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AsyncKeyedLock" Version="8.0.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.8" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="RestSharp" Version="114.0.0" />
-    <PackageReference Include="System.Text.Json" Version="10.0.8" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AsyncKeyedLock" Version="8.0.2" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.8" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="RestSharp" Version="114.0.0" />
+		<PackageReference Include="System.Text.Json" Version="10.0.8" />
+		<PackageReference Include="TipsTrade.ApiClient.Core" Version="8.0.0" />
+	</ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='net481'">
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net481'">
+		<Reference Include="System.Windows.Forms" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

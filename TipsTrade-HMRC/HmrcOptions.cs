@@ -1,5 +1,3 @@
-using TipsTrade.HMRC.AntiFraud;
-
 namespace TipsTrade.HMRC {
   /// <summary>Configuration options for the HMRC API services.</summary>
   public class HmrcOptions {
@@ -8,9 +6,6 @@ namespace TipsTrade.HMRC {
 
     /// <summary>The location of the sandbox API.</summary>
     public const string SandboxUrl = "https://test-api.service.hmrc.gov.uk";
-
-    /// <summary>The short-lived access token used for user-restricted endpoints.</summary>
-    public string AccessToken { get; set; }
 
     /// <summary>Gets or sets the information used to generate the anti-fraud headers.</summary>
     public AntiFraud.AntiFraud AntiFraud { get; set; }
@@ -26,8 +21,5 @@ namespace TipsTrade.HMRC {
 
     /// <summary>A flag indicating whether the services are accessing the sandbox environment.</summary>
     public bool IsSandbox { get; set; } = false;
-
-    /// <summary>The long-lived refresh token.</summary>
-    public string RefreshToken { get; set; }
   }
 }

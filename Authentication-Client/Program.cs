@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser;
@@ -12,6 +13,7 @@ using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Extensions;
+using TipsTrade.HMRC.Tests.Authentication_Client.Providers;
 
 namespace TipsTrade.HMRC.Tests.Authentication_Client {
   class Program {
@@ -52,7 +54,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       Configuration = builder.Build();
 
       var services = new ServiceCollection();
-      services.AddHmrc(options => {
+      services.AddHmrc<AccessTokenProvider>(options => {
         options.ClientID = ClientId;
         options.ClientSecret = ClientSecret;
         options.IsSandbox = IsSandbox;
@@ -229,7 +231,7 @@ private static void OpenUrl(string url) {
       Console.WriteLine();
       Console.Write("Enter the refresh token: ");
       var refreshToken = Console.ReadLine();
-      var tokens = authClient.RefreshAccessToken(refreshToken);
+      var tokens = authClient.RefreshAccessTokenAsync(refreshToken, CancellationToken.None).GetAwaiter().GetResult();
 
       Console.WriteLine();
       Console.WriteLine("Copy these details into appsettings.tokens.json for testing:");

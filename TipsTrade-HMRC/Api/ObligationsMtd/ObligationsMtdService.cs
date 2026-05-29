@@ -1,9 +1,11 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.ObligationsMtd.Model;
+using TipsTrade.HMRC.Api.OAuth;
 
 namespace TipsTrade.HMRC.Api.ObligationsMtd {
   /// <summary>Service that exposes Obligations (MTD) functions, supporting dependency injection.</summary>
@@ -23,11 +25,8 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd {
     /// <inheritdoc/>
     public override string Version => "3.0";
 
-    /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public ObligationsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
-
-    /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public ObligationsMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
+    /// <summary>Initialises a new instance using dependency-injected services.</summary>
+    public ObligationsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Retrieve obligations for a user's business income sources.</summary>
     public GetObligationsResponse GetIncomeAndExpenditureObligations(GetObligationsRequest request) {

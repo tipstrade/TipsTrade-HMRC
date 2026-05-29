@@ -1,8 +1,10 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
+using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Api.TestFraudPrevention.Model;
 
 namespace TipsTrade.HMRC.Api.TestFraudPrevention {
@@ -23,11 +25,8 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention {
     /// <inheritdoc/>
     public override string Version => "1.0";
 
-    /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public TestFraudPreventionService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
-
-    /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public TestFraudPreventionService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
+    /// <summary>Initialises a new instance using dependency-injected services.</summary>
+    public TestFraudPreventionService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Submits feedback about the fraud prevention headers sent with an API request.</summary>
     public FeedbackResult GetFeedback(string api, ConnectionMethod connectionMethod) {

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
@@ -5,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
+using TipsTrade.HMRC.Api.OAuth;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser {
   /// <summary>Service that exposes Create Test User functions, supporting dependency injection.</summary>
@@ -24,11 +26,8 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     /// <inheritdoc/>
     public override string Version => "1.0";
 
-    /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public CreateTestUserService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
-
-    /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public CreateTestUserService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
+    /// <summary>Initialises a new instance using dependency-injected services.</summary>
+    public CreateTestUserService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Executes a create test user request synchronously.</summary>
     public TResult CreateUser<TResult>(ICreateTestUserRequest<TResult> request) where TResult : UserResultBase {

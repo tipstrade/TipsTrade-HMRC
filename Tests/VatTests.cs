@@ -29,7 +29,7 @@ namespace TipsTrade.HMRC.Tests {
       };
       PopulateDateRange(obRequest);
 
-      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<VatService>();
 
       var obligations = svc.GetObligations(obRequest);
       var periodKey = obligations.Value.Where(o => !o.IsOpen).LastOrDefault().PeriodKey;
@@ -66,7 +66,7 @@ namespace TipsTrade.HMRC.Tests {
         Vrn = Users.Organisation.User.Vrn,
       };
 
-      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<VatService>();
 
       var resp = svc.GetLiabilities(request);
       Assert.NotNull(resp);
@@ -96,7 +96,7 @@ namespace TipsTrade.HMRC.Tests {
 
       PopulateDateRange(obligations);
 
-      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<VatService>();
 
       ObligationResponse resp;
 
@@ -149,7 +149,7 @@ namespace TipsTrade.HMRC.Tests {
         Vrn = Users.Organisation.User.Vrn,
       };
 
-      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<VatService>();
 
       var resp = svc.GetPayments(request);
       Assert.NotNull(resp);
@@ -203,7 +203,7 @@ namespace TipsTrade.HMRC.Tests {
       };
       PopulateDateRange(obRequest);
 
-      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<VatService>();
 
       var obligations = svc.GetObligations(obRequest);
       var periodKey = obligations.Value.Where(o => o.IsOpen).LastOrDefault().PeriodKey;

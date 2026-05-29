@@ -13,7 +13,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void GetFinalObligations() {
-      var svc = GetService<ObligationsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<ObligationsMtdService>();
 
       var resp = svc.GetFinalObligations(new GetFinalObligationsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
@@ -45,7 +45,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void GetObligations() {
-      var svc = GetService<ObligationsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<ObligationsMtdService>();
 
       var fromDate = DateTime.Today.GetTaxYearStart();
       var toDate = DateTime.Today.GetTaxYearEnd();

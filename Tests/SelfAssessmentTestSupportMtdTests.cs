@@ -29,7 +29,7 @@ namespace TipsTrade.HMRC.Tests {
     #region Main tests
     [Fact]
     public void DeleteStatefulTestData() {
-      var svc = GetService<SelfAssessmentTestSupportMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<SelfAssessmentTestSupportMtdService>();
 
       SeedTestData(svc, Users.Organisation.User.NiNumber);
 
@@ -41,7 +41,7 @@ namespace TipsTrade.HMRC.Tests {
     #region Business Income Source tests
     [Fact]
     public void CreateBusinessIncomeSource() {
-      var svc = GetService<SelfAssessmentTestSupportMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<SelfAssessmentTestSupportMtdService>();
 
       var response = SeedTestData(svc, Users.Organisation.User.NiNumber);
 
@@ -52,7 +52,7 @@ namespace TipsTrade.HMRC.Tests {
     #region ITSA Status tests
     [Fact]
     public void CreateTestItsaStatus() {
-      var svc = GetService<SelfAssessmentTestSupportMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<SelfAssessmentTestSupportMtdService>();
 
       var resp = svc.CreateTestItsaStatus(new CreateTestItsaStatusRequest {
         NiNumber = Users.Organisation.User.NiNumber,

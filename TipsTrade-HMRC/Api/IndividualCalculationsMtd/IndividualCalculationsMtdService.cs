@@ -1,9 +1,11 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model;
+using TipsTrade.HMRC.Api.OAuth;
 
 namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
   /// <summary>Service that exposes Individual Calculations (MTD) functions, supporting dependency injection.</summary>
@@ -23,11 +25,8 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
     /// <inheritdoc/>
     public override string Version => "8.0";
 
-    /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public IndividualCalculationsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
-
-    /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public IndividualCalculationsMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
+    /// <summary>Initialises a new instance using dependency-injected services.</summary>
+    public IndividualCalculationsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>List Self Assessment tax calculations for a given National Insurance number and tax year.</summary>
     public ListSelfAssessmentCalculationsResponse ListSelfAssessmentCalculations(ListSelfAssessmentCalculationsRequest request) {

@@ -3,6 +3,8 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using TipsTrade.HMRC.Api.Model;
 
@@ -105,10 +107,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
       return response.Data ?? throw new ApiException("Failed to obtain user tokens.");
     }
 
-    /// <summary>Refreshes the user's access token using the specified refresh token.</summary>
-    /// <param name="refreshToken">The user's refresh token. This is a one-use token and will expire immediately.</param>
-    /// <returns>The <see cref="TokenResponse"/> containing the new access and refresh tokens.</returns>
-    public TokenResponse RefreshAccessToken(string refreshToken) {
+    public async Task<TokenResponse> RefreshAccessTokenAsync(string refreshToken, CancellationToken cancellationToken) {
       if (string.IsNullOrEmpty(refreshToken)) {
         throw new ArgumentException($"{nameof(refreshToken)} cannot be empty.", nameof(refreshToken));
       }
@@ -120,7 +119,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
       request.AddParameter("grant_type", "refresh_token");
       request.AddParameter("refresh_token", refreshToken);
 
-      var response = restClient.Execute<TokenResponse>(request);
+      var response = await restClient.ExecuteAsync<TokenResponse>(request, cancellationToken);
 
       var oauthError = ErrorResponse.FromOAuth2Error(response.Content);
       if (oauthError != null) {

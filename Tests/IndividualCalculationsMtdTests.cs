@@ -12,7 +12,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void ListSelfAssessmentCalculations() {
-      var svc = GetService<IndividualCalculationsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<IndividualCalculationsMtdService>();
 
       var resp = svc.ListSelfAssessmentCalculations(new ListSelfAssessmentCalculationsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
@@ -27,7 +27,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void RetrieveSelfAssessmentCalculation() {
-      var svc = GetService<IndividualCalculationsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<IndividualCalculationsMtdService>();
 
       var taxYear = DateTime.Today.GetTaxYear();
 
@@ -60,7 +60,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void SubmitFinalAssessment() {
-      var svc = GetService<IndividualCalculationsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<IndividualCalculationsMtdService>();
 
       var resp = svc.SubmitFinalAssessment(new SubmitFinalAssessmentRequest {
         NiNumber = Users.Organisation.User.NiNumber,
@@ -75,7 +75,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TriggerSelfAssessmentCalculation() {
-      var svc = GetService<IndividualCalculationsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<IndividualCalculationsMtdService>();
 
       var resp = svc.TriggerCalculation(new TriggerSelfAssessmentCalculationRequest {
         NiNumber = Users.Organisation.User.NiNumber,

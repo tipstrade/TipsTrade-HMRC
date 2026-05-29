@@ -1,8 +1,10 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Api.Vat.Model;
 
 namespace TipsTrade.HMRC.Api.Vat {
@@ -25,11 +27,8 @@ namespace TipsTrade.HMRC.Api.Vat {
     /// <inheritdoc/>
     public override string Version => "2.0";
 
-    /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public VatNumberService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
-
-    /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public VatNumberService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
+    /// <summary>Initialises a new instance using dependency-injected services.</summary>
+    public VatNumberService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Verifies the specified VAT registration number (VRN).</summary>
     public VatNumberCheckResponse CheckVrn(string vrn) {

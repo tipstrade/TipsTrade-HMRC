@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -6,12 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Extensions;
+using TipsTrade.HMRC.Tests.Providers;
 using Xunit.Abstractions;
 
 namespace TipsTrade.HMRC.Tests {
@@ -54,7 +58,8 @@ namespace TipsTrade.HMRC.Tests {
       LoadUsersFromJsonFile();
 
       var services = new ServiceCollection();
-      services.AddHmrc(options => {
+      services.AddMemoryCache();
+      services.AddHmrc<AccessTokenProvider>(options => {
         var antiFraud = BuildAntiFraud();
         options.AntiFraud = antiFraud;
         options.ClientID = ClientId;
@@ -113,29 +118,26 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     /// <summary>Resolves a DI-registered HMRC service with an optional access token.</summary>
-    protected T GetService<T>(string accessToken = null) where T : HmrcServiceBase {
-      if (accessToken == null) {
-        return ServiceProvider.GetRequiredService<T>();
-      }
-
-      return CreateServiceWithOptions<T>(GetOptions(accessToken));
+    protected T GetService<T>() where T : HmrcServiceBase {
+      return ServiceProvider.GetRequiredService<T>();
     }
 
     /// <summary>Creates an HMRC service instance using the supplied <see cref="HmrcOptions"/>.</summary>
     protected T CreateServiceWithOptions<T>(HmrcOptions options) where T : HmrcServiceBase {
       var wrappedOptions = Options.Create(options);
       var httpClientFactory = ServiceProvider.GetRequiredService<IHttpClientFactory>();
+      var accessTokenProvider = ServiceProvider.GetRequiredService<IHmrcAccessTokenProvider>();
       var tokenCache = ServiceProvider.GetRequiredService<ApplicationTokenCache>();
-      return (T)Activator.CreateInstance(typeof(T), wrappedOptions, httpClientFactory, tokenCache);
+      var oauthService = ServiceProvider.GetRequiredService<HmrcOAuthService>();
+      return (T)Activator.CreateInstance(typeof(T), wrappedOptions, httpClientFactory, accessTokenProvider, tokenCache, oauthService, null, null);
     }
 
     /// <summary>Resolves the <see cref="HmrcOAuthService"/> from the DI container.</summary>
     protected HmrcOAuthService GetOAuthService() => ServiceProvider.GetRequiredService<HmrcOAuthService>();
 
     /// <summary>Creates an <see cref="HmrcOptions"/> snapshot from the current test configuration.</summary>
-    protected HmrcOptions GetOptions(string accessToken = null) {
+    protected HmrcOptions GetOptions() {
       return new HmrcOptions {
-        AccessToken = accessToken,
         AntiFraud = BuildAntiFraud(),
         ClientID = ClientId,
         ClientSecret = ClientSecret,

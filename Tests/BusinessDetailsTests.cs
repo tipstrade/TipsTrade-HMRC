@@ -14,7 +14,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void AmendQuarterlyPeriodType() {
-      var svc = GetService<BusinessDetailsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<BusinessDetailsMtdService>();
 
       var resp = svc.CreateOrAmendQuarterlyPeriodType(new AmendQuarterlyPeriodTypeRequest {
         NiNumber = Users.Organisation.User.NiNumber,
@@ -29,7 +29,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void GetBusinessDetails() {
-      var svc = GetService<BusinessDetailsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<BusinessDetailsMtdService>();
 
       var resp = svc.GetBusinessDetails(new GetBusinessDetailsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
@@ -43,7 +43,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void GetBusinessDetailsThrows() {
-      var svc = GetService<BusinessDetailsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<BusinessDetailsMtdService>();
 
       var ex = Assert.Throws<ApiException>(() => svc.GetBusinessDetails(new GetBusinessDetailsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
@@ -54,7 +54,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void ListBusinessDetails() {
-      var svc = GetService<BusinessDetailsMtdService>(Users.Organisation.Tokens.AccessToken);
+      var svc = GetService<BusinessDetailsMtdService>();
 
       var resp = svc.ListBusinessDetails(new ListBusinessDetailsRequest {
         NiNumber = Users.Organisation.User.NiNumber,

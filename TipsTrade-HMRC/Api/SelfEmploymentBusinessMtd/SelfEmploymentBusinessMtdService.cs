@@ -1,8 +1,10 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
+using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model;
 
 namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
@@ -23,11 +25,8 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
     /// <inheritdoc/>
     public override string Version => "5.0";
 
-    /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public SelfEmploymentBusinessMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
-
-    /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public SelfEmploymentBusinessMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory, ApplicationTokenCache applicationTokenCache) : base(options, httpClientFactory, applicationTokenCache) { }
+    /// <summary>Initialises a new instance using dependency-injected services.</summary>
+    public SelfEmploymentBusinessMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Submit or amend the cumulative period income and expenses for a self-employment business.</summary>
     public AmendCumulativePeriodSummaryResponse CreateOrAmendCumulativePeriodSummary(AmendCumulativePeriodSummaryRequest request) {
