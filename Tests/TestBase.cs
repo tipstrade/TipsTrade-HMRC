@@ -16,13 +16,11 @@ using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Extensions;
 using TipsTrade.HMRC.Tests.Providers;
-using Xunit.Abstractions;
+
 
 namespace TipsTrade.HMRC.Tests {
   public class TestBase {
     protected IConfiguration Configuration { get; }
-
-    protected ITestOutputHelper Output { get; }
 
     private IServiceProvider ServiceProvider { get; }
 
@@ -46,8 +44,7 @@ namespace TipsTrade.HMRC.Tests {
     protected string RedirectUrl => Configuration["RedirectUrl"];
     #endregion
 
-    public TestBase(ITestOutputHelper output) {
-      Output = output;
+    public TestBase() {
       var builder = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
         .AddUserSecrets<TestBase>()

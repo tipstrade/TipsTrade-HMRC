@@ -2,15 +2,14 @@
 using TipsTrade.HMRC.Api.IndividualCalculationsMtd;
 using TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model;
 using TipsTrade.HMRC.Extensions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class IndividualCalculationsMtdTests : TestBase {
-    public IndividualCalculationsMtdTests(ITestOutputHelper output) : base(output) {
+    public IndividualCalculationsMtdTests() {
     }
 
-    [Fact]
+    [Test]
     public void ListSelfAssessmentCalculations() {
       var svc = GetService<IndividualCalculationsMtdService>();
 
@@ -21,11 +20,11 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = ListSelfAssessmentCalculationsRequest.ScenarioDefault,
       });
 
-      Assert.NotNull(resp);
-      Assert.NotEmpty(resp.Value);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Value, Is.Not.Empty);
     }
 
-    [Fact]
+    [Test]
     public void RetrieveSelfAssessmentCalculation() {
       var svc = GetService<IndividualCalculationsMtdService>();
 
@@ -38,11 +37,11 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioDynamic,
       });
 
-      Assert.NotNull(resp);
-      Assert.NotNull(resp.Inputs);
-      Assert.NotNull(resp.Metadata);
-      Assert.NotNull(resp.Calculation); // Valid for a processed calculation
-      Assert.Null(resp.Messages);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Inputs, Is.Not.Null);
+      Assert.That(resp.Metadata, Is.Not.Null);
+      Assert.That(resp.Calculation, Is.Not.Null); // Valid for a processed calculation
+      Assert.That(resp.Messages, Is.Null);
 
       resp = svc.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
         NiNumber = Users.Organisation.User.NiNumber,
@@ -51,14 +50,14 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioErrorMessagesExist,
       });
 
-      Assert.NotNull(resp);
-      Assert.NotNull(resp.Inputs);
-      Assert.NotNull(resp.Metadata);
-      Assert.Null(resp.Calculation); // Null for a processed calculation
-      Assert.NotNull(resp.Messages);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Inputs, Is.Not.Null);
+      Assert.That(resp.Metadata, Is.Not.Null);
+      Assert.That(resp.Calculation, Is.Null); // Null for a processed calculation
+      Assert.That(resp.Messages, Is.Not.Null);
     }
 
-    [Fact]
+    [Test]
     public void SubmitFinalAssessment() {
       var svc = GetService<IndividualCalculationsMtdService>();
 
@@ -70,10 +69,10 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = SubmitFinalAssessmentRequest.ScenarioDefault,
       });
 
-      Assert.NotNull(resp);
+      Assert.That(resp, Is.Not.Null);
     }
 
-    [Fact]
+    [Test]
     public void TriggerSelfAssessmentCalculation() {
       var svc = GetService<IndividualCalculationsMtdService>();
 
@@ -84,8 +83,8 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = TriggerSelfAssessmentCalculationRequest.ScenarioDefault,
       });
 
-      Assert.NotNull(resp);
-      Assert.NotEmpty(resp.Value);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Value, Is.Not.Empty);
     }
   }
 }

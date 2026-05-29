@@ -2,13 +2,11 @@
 using System;
 using TipsTrade.HMRC.Api.TestFraudPrevention;
 using TipsTrade.HMRC.Api.TestFraudPrevention.Model;
-using Xunit;
-using Xunit.Abstractions;
-using Xunit.Sdk;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class FraudPreventionTests : TestBase {
-    public FraudPreventionTests(ITestOutputHelper output) : base(output) { }
+    public FraudPreventionTests() { }
 
     /// <summary>
     /// Tests that the GetFeedback method of the TestFraudPrevention API returns a valid response for all services.
@@ -17,63 +15,63 @@ namespace TipsTrade.HMRC.Tests {
     /// Many services are not implemented in the sandbox. Each InlineData now includes a boolean that indicates
     /// whether the API is implemented. Unimplemented cases will be reported as skipped in Test Explorer.
     /// </remarks>
-    [SkippableTheory]
-    [InlineData("business-details-mtd", true)]
-    [InlineData("business-income-source-summary-mtd", false)]
-    [InlineData("business-source-adjustable-summary-mtd", false)]
-    [InlineData("cis-deductions-mtd", false)]
-    [InlineData("individual-calculations-mtd", true)]
-    [InlineData("individual-losses-mtd", false)]
-    [InlineData("individuals-business-end-of-period-statement-mtd", false)]
-    [InlineData("individuals-charges-mtd", false)]
-    [InlineData("individuals-disclosures-mtd", false)]
-    [InlineData("individuals-expenses-mtd", false)]
-    [InlineData("individuals-income-received-mtd", false)]
-    [InlineData("individuals-reliefs-mtd", false)]
-    [InlineData("individuals-state-benefits-mtd", false)]
-    [InlineData("obligations-mtd", true)]
-    [InlineData("other-deductions-mtd", false)]
-    [InlineData("property-business-mtd", false)]
-    [InlineData("self-assessment-mtd", false)]
-    [InlineData("self-assessment-accounts-mtd", false)]
-    [InlineData("self-assessment-assist-mtd", false)]
-    [InlineData("self-employment-business-mtd", true)]
-    [InlineData("vat-mtd", true)]
-    [InlineData("individuals-capital-gains-income-mtd", false)]
-    [InlineData("individuals-dividends-income-mtd", false)]
-    [InlineData("individuals-employments-income-mtd", false)]
-    [InlineData("individuals-foreign-income-mtd", false)]
-    [InlineData("individuals-insurance-policies-income-mtd", false)]
-    [InlineData("individuals-other-income-mtd", false)]
-    [InlineData("individuals-pensions-income-mtd", false)]
-    [InlineData("individuals-savings-income-mtd", false)]
-    [InlineData("self-assessment-individual-details-mtd", false)]
+    [Test]
+    [TestCase("business-details-mtd", true)]
+    [TestCase("business-income-source-summary-mtd", false)]
+    [TestCase("business-source-adjustable-summary-mtd", false)]
+    [TestCase("cis-deductions-mtd", false)]
+    [TestCase("individual-calculations-mtd", true)]
+    [TestCase("individual-losses-mtd", false)]
+    [TestCase("individuals-business-end-of-period-statement-mtd", false)]
+    [TestCase("individuals-charges-mtd", false)]
+    [TestCase("individuals-disclosures-mtd", false)]
+    [TestCase("individuals-expenses-mtd", false)]
+    [TestCase("individuals-income-received-mtd", false)]
+    [TestCase("individuals-reliefs-mtd", false)]
+    [TestCase("individuals-state-benefits-mtd", false)]
+    [TestCase("obligations-mtd", true)]
+    [TestCase("other-deductions-mtd", false)]
+    [TestCase("property-business-mtd", false)]
+    [TestCase("self-assessment-mtd", false)]
+    [TestCase("self-assessment-accounts-mtd", false)]
+    [TestCase("self-assessment-assist-mtd", false)]
+    [TestCase("self-employment-business-mtd", true)]
+    [TestCase("vat-mtd", true)]
+    [TestCase("individuals-capital-gains-income-mtd", false)]
+    [TestCase("individuals-dividends-income-mtd", false)]
+    [TestCase("individuals-employments-income-mtd", false)]
+    [TestCase("individuals-foreign-income-mtd", false)]
+    [TestCase("individuals-insurance-policies-income-mtd", false)]
+    [TestCase("individuals-other-income-mtd", false)]
+    [TestCase("individuals-pensions-income-mtd", false)]
+    [TestCase("individuals-savings-income-mtd", false)]
+    [TestCase("self-assessment-individual-details-mtd", false)]
     public void GetFeedback(string service, bool implemented) {
-      Skip.IfNot(implemented, $"API for service '{service}' is not implemented in the sandbox.");
+      Assume.That(implemented, Is.True, $"API for service '{service}' is not implemented in the sandbox.");
 
       var svc = GetService<TestFraudPreventionService>();
       var response = svc.GetFeedback(service, AntiFraud.ConnectionMethod.BATCH_PROCESS_DIRECT);
 
-      Assert.NotNull(response);
-      Assert.NotNull(response.Requests);
-      Assert.NotEmpty(response.Requests);
+      Assert.That(response, Is.Not.Null);
+      Assert.That(response.Requests, Is.Not.Null);
+      Assert.That(response.Requests, Is.Not.Empty);
       Assert.False(response.HasErrors());
 
-      Output.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
     }
 
-    [Fact]
+    [Test]
     public void Validate() {
       var svc = GetService<TestFraudPreventionService>();
       var response = svc.Validate();
 
-      Assert.Empty(response.Errors);
-      Assert.Empty(response.Warnings); // Warnings may be present if the dev machine has a VPN or unusual network configuration.
+      Assert.That(response.Errors, Is.Empty);
+      Assert.That(response.Warnings, Is.Empty); // Warnings may be present if the dev machine has a VPN or unusual network configuration.
 
-      Output.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
     }
 
-    [Fact]
+    [Test]
     public void PopulateLocalIPs_Predicate_Is_Called() {
       var antiFraud = BuildAntiFraud();
 
@@ -85,7 +83,7 @@ namespace TipsTrade.HMRC.Tests {
 
       antiFraud.PopulateLocalIPs(func);
 
-      Assert.True(isCalled);
+      Assert.That(isCalled, Is.True);
     }
   }
 }

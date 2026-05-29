@@ -1,29 +1,28 @@
-using TipsTrade.HMRC.Api.OAuth;
-using Xunit;
-using Xunit.Abstractions;
+﻿using TipsTrade.HMRC.Api.OAuth;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class ClientTests : TestBase {
-    public ClientTests(ITestOutputHelper output) : base(output) {
+    public ClientTests() {
     }
 
-    [Fact]
+    [Test]
     public void Credentials() {
       var options = GetOptions();
-      Assert.Equal(ClientId, options.ClientID);
-      Assert.Equal(ClientSecret, options.ClientSecret);
-      Assert.Equal(IsSandbox, options.IsSandbox);
+      Assert.That(options.ClientID, Is.EqualTo(ClientId));
+      Assert.That(options.ClientSecret, Is.EqualTo(ClientSecret));
+      Assert.That(options.IsSandbox, Is.EqualTo(IsSandbox));
     }
 
-    [Fact]
+    [Test]
     public void Urls() {
       var sandboxOptions = GetOptions();
       sandboxOptions.IsSandbox = true;
-      Assert.Equal(HmrcOptions.SandboxUrl, sandboxOptions.BaseUrl);
+      Assert.That(sandboxOptions.BaseUrl, Is.EqualTo(HmrcOptions.SandboxUrl));
 
       var productionOptions = GetOptions();
       productionOptions.IsSandbox = false;
-      Assert.Equal(HmrcOptions.ProductionUrl, productionOptions.BaseUrl);
+      Assert.That(productionOptions.BaseUrl, Is.EqualTo(HmrcOptions.ProductionUrl));
     }
   }
 }

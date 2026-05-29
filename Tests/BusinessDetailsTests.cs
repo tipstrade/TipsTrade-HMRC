@@ -4,15 +4,14 @@ using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.BusinessDetailsMtd;
 using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
 using TipsTrade.HMRC.Extensions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class BusinessDetailsTests : TestBase {
-    public BusinessDetailsTests(ITestOutputHelper output) : base(output) {
+    public BusinessDetailsTests() {
     }
 
-    [Fact]
+    [Test]
     public void AmendQuarterlyPeriodType() {
       var svc = GetService<BusinessDetailsMtdService>();
 
@@ -24,10 +23,10 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = AmendQuarterlyPeriodTypeRequest.ScenarioDefault
       });
 
-      Assert.NotNull(resp);
+      Assert.That(resp, Is.Not.Null);
     }
 
-    [Fact]
+    [Test]
     public void GetBusinessDetails() {
       var svc = GetService<BusinessDetailsMtdService>();
 
@@ -37,22 +36,22 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = GetBusinessDetailsRequest.ScenarioDefault,
       });
 
-      Assert.NotNull(resp);
-      Assert.Equal(TypeOfBusiness.SelfEmployment, resp.TypeOfBusiness);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.TypeOfBusiness, Is.EqualTo(TypeOfBusiness.SelfEmployment));
     }
 
-    [Fact]
+    [Test]
     public void GetBusinessDetailsThrows() {
       var svc = GetService<BusinessDetailsMtdService>();
 
-      var ex = Assert.Throws<ApiException>(() => svc.GetBusinessDetails(new GetBusinessDetailsRequest {
+      var ex = Assert.Throws<ApiException>((Action)(() => svc.GetBusinessDetails(new GetBusinessDetailsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         BusinessId = "XBIS12345678901", // Self-employment business
         GovTestScenario = ListBusinessDetailsRequest.ScenarioNotFound,
-      }));
+      })));
     }
 
-    [Fact]
+    [Test]
     public void ListBusinessDetails() {
       var svc = GetService<BusinessDetailsMtdService>();
 
@@ -61,24 +60,24 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = ListBusinessDetailsRequest.ScenarioBusinessAndProperty
       });
 
-      Assert.NotNull(resp);
-      Assert.NotEmpty(resp.Value);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Value, Is.Not.Empty);
 
       var ukProperty = resp.Value.First(x => x.TypeOfBusiness == TypeOfBusiness.UkProperty);
       var foreignProperty = resp.Value.First(x => x.TypeOfBusiness == TypeOfBusiness.ForeignProperty);
       var selfEmployment = resp.Value.First(x => x.TypeOfBusiness == TypeOfBusiness.SelfEmployment);
 
-      Assert.NotNull(ukProperty);
-      Assert.NotNull(ukProperty.BusinessId);
-      //Assert.NotNull(ukProperty.TradingName); // Can be null
+      Assert.That(ukProperty, Is.Not.Null);
+      Assert.That(ukProperty.BusinessId, Is.Not.Null);
+      //Assert.That(ukProperty.TradingName, Is.Not.Null); // Can be null
 
-      Assert.NotNull(foreignProperty);
-      Assert.NotNull(foreignProperty.BusinessId);
-      //Assert.NotNull(foreignProperty.TradingName); // Can be null
+      Assert.That(foreignProperty, Is.Not.Null);
+      Assert.That(foreignProperty.BusinessId, Is.Not.Null);
+      //Assert.That(foreignProperty.TradingName, Is.Not.Null); // Can be null
 
-      Assert.NotNull(selfEmployment);
-      Assert.NotNull(selfEmployment.BusinessId);
-      Assert.NotNull(selfEmployment.TradingName);
+      Assert.That(selfEmployment, Is.Not.Null);
+      Assert.That(selfEmployment.BusinessId, Is.Not.Null);
+      Assert.That(selfEmployment.TradingName, Is.Not.Null);
     }
   }
 }

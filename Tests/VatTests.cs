@@ -4,12 +4,11 @@ using System.Linq;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Vat;
 using TipsTrade.HMRC.Api.Vat.Model;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class VatTests : TestBase {
-    public VatTests(ITestOutputHelper output) : base(output) {
+    public VatTests() {
     }
 
     private void PopulateDateRange(IDateRange value) {
@@ -22,7 +21,7 @@ namespace TipsTrade.HMRC.Tests {
       value.DateTo = value.DateFrom.AddYears(1).AddDays(-1);
     }
 
-    [Fact(Skip = "Ignored as the sandbox doesn't return returns outside of 4 years.")]
+    [Test, Ignore("Ignored as the sandbox doesn't return returns outside of 4 years.")]
     public void GetReturn() {
       var obRequest = new ObligationsRequest() {
         Vrn = Users.Organisation.User.Vrn,
@@ -40,24 +39,24 @@ namespace TipsTrade.HMRC.Tests {
       };
 
       var resp = svc.GetReturn(returnRequest);
-      Assert.NotNull(resp);
-      Assert.Equal(periodKey, resp.PeriodKey);
-      Assert.NotDefault(resp.VatDueSales);
-      Assert.NotDefault(resp.VatDueAcquisitions);
-      Assert.NotDefault(resp.TotalVatDue);
-      Assert.NotDefault(resp.VatReclaimedCurrPeriod);
-      Assert.NotDefault(resp.NetVatDue);
-      Assert.NotDefault(resp.TotalValueSalesExVAT);
-      Assert.NotDefault(resp.TotalValuePurchasesExVAT);
-      Assert.NotDefault(resp.TotalValueGoodsSuppliedExVAT);
-      Assert.NotDefault(resp.TotalAcquisitionsExVAT);
-      Assert.NotDefault(resp.Finalised);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.PeriodKey, Is.EqualTo(periodKey));
+      AssertExtensions.NotDefault(resp.VatDueSales);
+      AssertExtensions.NotDefault(resp.VatDueAcquisitions);
+      AssertExtensions.NotDefault(resp.TotalVatDue);
+      AssertExtensions.NotDefault(resp.VatReclaimedCurrPeriod);
+      AssertExtensions.NotDefault(resp.NetVatDue);
+      AssertExtensions.NotDefault(resp.TotalValueSalesExVAT);
+      AssertExtensions.NotDefault(resp.TotalValuePurchasesExVAT);
+      AssertExtensions.NotDefault(resp.TotalValueGoodsSuppliedExVAT);
+      AssertExtensions.NotDefault(resp.TotalAcquisitionsExVAT);
+      AssertExtensions.NotDefault(resp.Finalised);
 
-      Output.WriteLine("VAT Retrieved return:");
-      Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Progress.WriteLine("VAT Retrieved return:");
+      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
 
-    [Fact]
+    [Test]
     public void Liabilities() {
       var request = new LiabilitiesRequest() {
         GovTestScenario = LiabilitiesRequest.ScenarioMultipleLiabilities,
@@ -69,25 +68,25 @@ namespace TipsTrade.HMRC.Tests {
       var svc = GetService<VatService>();
 
       var resp = svc.GetLiabilities(request);
-      Assert.NotNull(resp);
-      Assert.NotEmpty(resp.Value);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Value, Is.Not.Empty);
 
       foreach (var item in resp.Value) {
-        Assert.NotNull(item.TaxPeriod);
-        Assert.NotDefault(item.TaxPeriod.DateFrom);
-        Assert.NotDefault(item.TaxPeriod.DateTo);
-        Assert.NotNull(item.Type);
-        Assert.NotDefault(item.OriginalAmount);
+        Assert.That(item.TaxPeriod, Is.Not.Null);
+        AssertExtensions.NotDefault(item.TaxPeriod.DateFrom);
+        AssertExtensions.NotDefault(item.TaxPeriod.DateTo);
+        Assert.That(item.Type, Is.Not.Null);
+        AssertExtensions.NotDefault(item.OriginalAmount);
         if (item.Due != null) {
-          Assert.NotDefault(item.Due);
+          AssertExtensions.NotDefault(item.Due);
         }
       }
 
-      Output.WriteLine("VAT Liabilities");
-      Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Progress.WriteLine("VAT Liabilities");
+      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
 
-    [Fact]
+    [Test]
     public void Obligations() {
       var obligations = new ObligationsRequest() {
         GovTestScenario = ObligationsRequest.ScenarioMonthlylyMet2,
@@ -102,45 +101,45 @@ namespace TipsTrade.HMRC.Tests {
 
       // All, expect only two to be fulfilled
       resp = svc.GetObligations(obligations);
-      Assert.NotNull(resp);
-      Assert.NotEmpty(resp.Value);
-      Assert.Equal(2, resp.Value.Where(x => x.IsFulfilled).Count());
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Value, Is.Not.Empty);
+      Assert.That(resp.Value.Where(x => x.IsFulfilled).Count(), Is.EqualTo(2));
       foreach (var item in resp.Value) {
-        Assert.NotDefault(item.Start);
-        Assert.NotDefault(item.End);
-        Assert.NotDefault(item.Due);
-        Assert.NotNull(item.PeriodKey);
+        AssertExtensions.NotDefault(item.Start);
+        AssertExtensions.NotDefault(item.End);
+        AssertExtensions.NotDefault(item.Due);
+        Assert.That(item.PeriodKey, Is.Not.Null);
       }
 
-      Output.WriteLine("VAT Obligations");
-      Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Progress.WriteLine("VAT Obligations");
+      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
 
       // Fulfulled
       obligations.Status = "F";
       obligations.GovTestScenario = null;
       resp = svc.GetObligations(obligations);
-      Assert.NotNull(resp);
-      Assert.NotEmpty(resp.Value);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Value, Is.Not.Empty);
       foreach (var item in resp.Value) {
-        Assert.Equal("F", item.Status);
-        Assert.True(item.IsFulfilled);
-        Assert.NotNull(item.Received);
+        Assert.That(item.Status, Is.EqualTo("F"));
+        Assert.That(item.IsFulfilled, Is.True);
+        Assert.That(item.Received, Is.Not.Null);
       }
 
       // Open
       obligations.Status = "O";
       obligations.GovTestScenario = null;
       resp = svc.GetObligations(obligations);
-      Assert.NotNull(resp);
-      Assert.NotEmpty(resp.Value);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Value, Is.Not.Empty);
       foreach (var item in resp.Value) {
-        Assert.Equal("O", item.Status);
-        Assert.True(item.IsOpen);
-        Assert.Null(item.Received);
+        Assert.That(item.Status, Is.EqualTo("O"));
+        Assert.That(item.IsOpen, Is.True);
+        Assert.That(item.Received, Is.Null);
       }
     }
 
-    [Fact]
+    [Test]
     public void Payments() {
       var request = new PaymentsRequest() {
         GovTestScenario = PaymentsRequest.ScenarioMultiplePayment,
@@ -152,21 +151,21 @@ namespace TipsTrade.HMRC.Tests {
       var svc = GetService<VatService>();
 
       var resp = svc.GetPayments(request);
-      Assert.NotNull(resp);
-      Assert.NotEmpty(resp.Value);
+      Assert.That(resp, Is.Not.Null);
+      Assert.That(resp.Value, Is.Not.Empty);
 
       foreach (var item in resp.Value) {
-        Assert.NotDefault(item.Amount);
+        AssertExtensions.NotDefault(item.Amount);
         if (item.Received != null) {
-          Assert.NotDefault(item.Received);
+          AssertExtensions.NotDefault(item.Received);
         }
       }
 
-      Output.WriteLine("VAT Payments");
-      Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Progress.WriteLine("VAT Payments");
+      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
 
-    [Fact]
+    [Test]
     public void ReturnSerialization() {
       // Taken from the docs
       var json = @"{
@@ -184,19 +183,19 @@ namespace TipsTrade.HMRC.Tests {
 
       var resp = JsonConvert.DeserializeObject<VatReturn>(json);
 
-      Assert.Equal("#001", resp.PeriodKey);
-      Assert.Equal(7724.92M, resp.VatDueSales);
-      Assert.Equal(100.00M, resp.VatDueAcquisitions);
-      Assert.Equal(7824.92M, resp.TotalVatDue);
-      Assert.Equal(1681.08M, resp.VatReclaimedCurrPeriod);
-      Assert.Equal(6143.84M, resp.NetVatDue);
-      Assert.Equal(38622M, resp.TotalValueSalesExVAT);
-      Assert.Equal(8405M, resp.TotalValuePurchasesExVAT);
-      Assert.Equal(200M, resp.TotalValueGoodsSuppliedExVAT);
-      Assert.Equal(300M, resp.TotalAcquisitionsExVAT);
+      Assert.That(resp.PeriodKey, Is.EqualTo("#001"));
+      Assert.That(resp.VatDueSales, Is.EqualTo(7724.92M));
+      Assert.That(resp.VatDueAcquisitions, Is.EqualTo(100.00M));
+      Assert.That(resp.TotalVatDue, Is.EqualTo(7824.92M));
+      Assert.That(resp.VatReclaimedCurrPeriod, Is.EqualTo(1681.08M));
+      Assert.That(resp.NetVatDue, Is.EqualTo(6143.84M));
+      Assert.That(resp.TotalValueSalesExVAT, Is.EqualTo(38622M));
+      Assert.That(resp.TotalValuePurchasesExVAT, Is.EqualTo(8405M));
+      Assert.That(resp.TotalValueGoodsSuppliedExVAT, Is.EqualTo(200M));
+      Assert.That(resp.TotalAcquisitionsExVAT, Is.EqualTo(300M));
     }
 
-    [Fact(Skip = "The submission can only be run once.")]
+    [Test, Ignore("The submission can only be run once.")]
     public void Submission() {
       var obRequest = new ObligationsRequest() {
         Vrn = Users.Organisation.User.Vrn,
@@ -226,20 +225,20 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = SubmitRequest.ScenarioDuplicateSubmission
       };
 
-      var ex = Assert.Throws<Api.ApiException>(() => svc.SubmitReturn(request));
-      Assert.Equal("Business validation error", ex.Message);
-      Assert.Equal("BUSINESS_ERROR", ex.ApiError.Code);
-      Assert.Equal("Business validation error", ex.ApiError.Message);
-      Assert.Single(ex.ApiError.Errors);
-      Assert.Equal("DUPLICATE_SUBMISSION", ex.ApiError.Errors.First().Code);
-      Assert.Equal("The VAT return was already submitted for the given period.", ex.ApiError.Errors.First().Message);
+      var ex = Assert.Throws<Api.ApiException>((Action)(() => svc.SubmitReturn(request)));
+      Assert.That(ex.Message, Is.EqualTo("Business validation error"));
+      Assert.That(ex.ApiError.Code, Is.EqualTo("BUSINESS_ERROR"));
+      Assert.That(ex.ApiError.Message, Is.EqualTo("Business validation error"));
+      Assert.That(ex.ApiError.Errors, Has.Length.EqualTo(1));
+      Assert.That(ex.ApiError.Errors.First().Code, Is.EqualTo("DUPLICATE_SUBMISSION"));
+      Assert.That(ex.ApiError.Errors.First().Message, Is.EqualTo("The VAT return was already submitted for the given period."));
 
       request.GovTestScenario = null;
 
       var resp = svc.SubmitReturn(request);
 
-      Output.WriteLine("VAT Submission:");
-      Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Progress.WriteLine("VAT Submission:");
+      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
   }
 }

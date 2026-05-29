@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Xunit;
+using NUnit.Framework;
 using Nsft = Newtonsoft.Json;
 using Stj = System.Text.Json;
 
 namespace TipsTrade.HMRC.Tests {
   public class ConverterTests {
-    [Fact]
+    [Test]
     public void DateOnlySerializationNewtonsoft() {
       var expectedDate = DateTime.Now;
       var expectedString = $"\"{expectedDate.ToString("yyyy-MM-dd")}\"";
@@ -16,13 +16,13 @@ namespace TipsTrade.HMRC.Tests {
       };
 
       var actualString = Nsft.JsonConvert.SerializeObject(expectedDate, settings);
-      Assert.Equal(expectedString, actualString);
+      Assert.That(actualString, Is.EqualTo(expectedString));
 
       var actualDate = Nsft.JsonConvert.DeserializeObject<DateTime>(actualString, settings);
-      Assert.Equal(expectedDate.Date, actualDate);
+      Assert.That(actualDate, Is.EqualTo(expectedDate.Date));
     }
 
-    [Fact]
+    [Test]
     public void DateOnlySerializationNewtonsoft_Attributes() {
       var expectedObj = new TestDateClass {
         Date = new DateTime(2024, 1, 1).Date,
@@ -31,18 +31,18 @@ namespace TipsTrade.HMRC.Tests {
 
       var jsonNulls = Nsft.JsonConvert.SerializeObject(new TestDateClass { });
       var actualJsonNull = Nsft.JsonConvert.DeserializeObject<TestDateClass>(jsonNulls);
-      Assert.Equal("{\"Date\":\"0001-01-01\",\"OptionalDate\":null}", jsonNulls);
-      Assert.Equal(default(DateTime), actualJsonNull.Date);
-      Assert.Null(actualJsonNull.OptionalDate);
+      Assert.That(jsonNulls, Is.EqualTo("{\"Date\":\"0001-01-01\",\"OptionalDate\":null}"));
+      Assert.That(actualJsonNull.Date, Is.EqualTo(default(DateTime)));
+      Assert.That(actualJsonNull.OptionalDate, Is.Null);
 
       var jsonNonNull = Nsft.JsonConvert.SerializeObject(expectedObj);
       var actualJsonNonNull = Nsft.JsonConvert.DeserializeObject<TestDateClass>(jsonNonNull);
-      Assert.Equal("{\"Date\":\"2024-01-01\",\"OptionalDate\":\"2024-01-01\"}", jsonNonNull);
-      Assert.Equal(expectedObj.Date, actualJsonNonNull.Date);
-      Assert.Equal(expectedObj.OptionalDate, actualJsonNonNull.OptionalDate);
+      Assert.That(jsonNonNull, Is.EqualTo("{\"Date\":\"2024-01-01\",\"OptionalDate\":\"2024-01-01\"}"));
+      Assert.That(actualJsonNonNull.Date, Is.EqualTo(expectedObj.Date));
+      Assert.That(actualJsonNonNull.OptionalDate, Is.EqualTo(expectedObj.OptionalDate));
     }
 
-    [Fact]
+    [Test]
     public void DateOnlySerializationNewtonsoft_Nullable() {
       DateTime? expectedDate = null;
       var expectedString = "null";
@@ -52,16 +52,16 @@ namespace TipsTrade.HMRC.Tests {
       };
 
       var actualString = Nsft.JsonConvert.SerializeObject(expectedDate, settings);
-      Assert.Equal(expectedString, actualString);
+      Assert.That(actualString, Is.EqualTo(expectedString));
 
       var actualDate = Nsft.JsonConvert.DeserializeObject<DateTime?>(actualString, settings);
-      Assert.Equal(expectedDate, actualDate);
+      Assert.That(actualDate, Is.EqualTo(expectedDate));
 
       var defaultDate = Nsft.JsonConvert.DeserializeObject<DateTime>("null", settings);
-      Assert.Equal(default, defaultDate);
+      Assert.That(defaultDate, Is.EqualTo(default(DateTime)));
     }
 
-    [Fact]
+    [Test]
     public void DateOnlySerializationNewtonsoft_Throws() {
       var settings = new Nsft.JsonSerializerSettings {
         Converters = new List<Nsft.JsonConverter>() { new Api.Model.Converters.NewtonsoftDateOnlyConverter() }
@@ -72,7 +72,7 @@ namespace TipsTrade.HMRC.Tests {
       var ex3 = Assert.Throws<Nsft.JsonSerializationException>(() => { Nsft.JsonConvert.DeserializeObject<DateTime>("0", settings); });
     }
 
-    [Fact]
+    [Test]
     public void DateOnlySerializationSystemTextJson() {
       var expectedDate = DateTime.Now;
       var expectedString = $"\"{expectedDate.ToString("yyyy-MM-dd")}\"";
@@ -81,13 +81,13 @@ namespace TipsTrade.HMRC.Tests {
       settings.Converters.Add(new Api.Model.Converters.StjDateOnlyConverter());
 
       var actualString = Stj.JsonSerializer.Serialize(expectedDate, settings);
-      Assert.Equal(expectedString, actualString);
+      Assert.That(actualString, Is.EqualTo(expectedString));
 
       var actualDate = Stj.JsonSerializer.Deserialize<DateTime>(actualString, settings);
-      Assert.Equal(expectedDate.Date, actualDate);
+      Assert.That(actualDate, Is.EqualTo(expectedDate.Date));
     }
 
-    [Fact]
+    [Test]
     public void DateOnlySerializationSystemTextJson_Attributes() {
       var expectedObj = new TestDateClass {
         Date = new DateTime(2024, 1, 1).Date,
@@ -96,18 +96,18 @@ namespace TipsTrade.HMRC.Tests {
 
       var jsonNulls = Stj.JsonSerializer.Serialize(new TestDateClass { });
       var actualJsonNull = Stj.JsonSerializer.Deserialize<TestDateClass>(jsonNulls);
-      Assert.Equal("{\"Date\":\"0001-01-01\",\"OptionalDate\":null}", jsonNulls);
-      Assert.Equal(default, actualJsonNull.Date);
-      Assert.Null(actualJsonNull.OptionalDate);
+      Assert.That(jsonNulls, Is.EqualTo("{\"Date\":\"0001-01-01\",\"OptionalDate\":null}"));
+      Assert.That(actualJsonNull.Date, Is.EqualTo(default(DateTime)));
+      Assert.That(actualJsonNull.OptionalDate, Is.Null);
 
       var jsonNonNull = Stj.JsonSerializer.Serialize(expectedObj);
       var actualJsonNonNull = Stj.JsonSerializer.Deserialize<TestDateClass>(jsonNonNull);
-      Assert.Equal("{\"Date\":\"2024-01-01\",\"OptionalDate\":\"2024-01-01\"}", jsonNonNull);
-      Assert.Equal(expectedObj.Date, actualJsonNonNull.Date);
-      Assert.Equal(expectedObj.OptionalDate, actualJsonNonNull.OptionalDate);
+      Assert.That(jsonNonNull, Is.EqualTo("{\"Date\":\"2024-01-01\",\"OptionalDate\":\"2024-01-01\"}"));
+      Assert.That(actualJsonNonNull.Date, Is.EqualTo(expectedObj.Date));
+      Assert.That(actualJsonNonNull.OptionalDate, Is.EqualTo(expectedObj.OptionalDate));
     }
 
-    [Fact]
+    [Test]
     public void DateOnlySerializationSystemTextJson_Nullable() {
       DateTime? expectedDate = null;
       var expectedString = "null";
@@ -116,13 +116,13 @@ namespace TipsTrade.HMRC.Tests {
       settings.Converters.Add(new Api.Model.Converters.StjDateOnlyConverter());
 
       var actualString = Stj.JsonSerializer.Serialize(expectedDate, settings);
-      Assert.Equal(expectedString, actualString);
+      Assert.That(actualString, Is.EqualTo(expectedString));
 
       var actualDate = Stj.JsonSerializer.Deserialize<DateTime?>(actualString, settings);
-      Assert.Equal(expectedDate, actualDate);
+      Assert.That(actualDate, Is.EqualTo(expectedDate));
     }
 
-    [Fact]
+    [Test]
     public void DateOnlySerializationSystemTextJson_Throws() {
       var settings = new Stj.JsonSerializerOptions();
       settings.Converters.Add(new Api.Model.Converters.StjDateOnlyConverter());

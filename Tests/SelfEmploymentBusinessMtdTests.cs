@@ -7,68 +7,67 @@ using TipsTrade.HMRC.Api.ObligationsMtd.Model;
 using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd;
 using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model;
 using TipsTrade.HMRC.Extensions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class SelfEmploymentBusinessMtdTests : TestBase {
-    public SelfEmploymentBusinessMtdTests(ITestOutputHelper output) : base(output) {
+    public SelfEmploymentBusinessMtdTests() {
     }
 
-    [Fact]
+    [Test]
     public void CumulativePeriodSummaryResult_AddConsolidatedExpenses() {
       var result = new CumulativePeriodSummaryResult();
 
       result.AddConsolidatedExpenses(100);
-      Assert.NotNull(result.PeriodExpenses);
-      Assert.Equal(100, result.PeriodExpenses["consolidatedExpenses"]);
-      Assert.Null(result.PeriodDisallowableExpenses);
+      Assert.That(result.PeriodExpenses, Is.Not.Null);
+      Assert.That(result.PeriodExpenses["consolidatedExpenses"], Is.EqualTo(100));
+      Assert.That(result.PeriodDisallowableExpenses, Is.Null);
     }
 
-    [Fact]
+    [Test]
     public void CumulativePeriodSummaryResult_AddDetailedExpenses() {
       var result = new CumulativePeriodSummaryResult();
 
       // Empty
       result.AddDetailedExpenses();
-      Assert.NotEmpty(result.PeriodExpenses);
-      Assert.NotEmpty(result.PeriodDisallowableExpenses);
+      Assert.That(result.PeriodExpenses, Is.Not.Empty);
+      Assert.That(result.PeriodDisallowableExpenses, Is.Not.Empty);
 
       // Valid values
       result.AddDetailedExpenses(new Dictionary<string, decimal> {
         {"costOfGoods", 100 },
       });
-      Assert.NotEmpty(result.PeriodExpenses);
-      Assert.Equal(100, result.PeriodExpenses["costOfGoods"]);
-      Assert.NotEmpty(result.PeriodDisallowableExpenses);
+      Assert.That(result.PeriodExpenses, Is.Not.Empty);
+      Assert.That(result.PeriodExpenses["costOfGoods"], Is.EqualTo(100));
+      Assert.That(result.PeriodDisallowableExpenses, Is.Not.Empty);
     }
 
-    [Fact]
+    [Test]
     public void CumulativePeriodSummaryResult_AddDetailedExpenses_Throws() {
       var result = new CumulativePeriodSummaryResult();
 
       // Throws on invalid key
-      var ex = Assert.Throws<ArgumentException>(() => {
+      var ex = Assert.Throws<ArgumentException>((Action)(() => {
         result.AddDetailedExpenses(new Dictionary<string, decimal> {
           { "xxx-invalid-key", 100 }
         });
-      });
-      Assert.Contains("xxx-invalid-key", ex.Message);
+      }));
+      Assert.That(ex.Message, Does.Contain("xxx-invalid-key"));
 
       // Throws on consolidatedExpenses
-      ex = Assert.Throws<ArgumentException>(() => {
+      ex = Assert.Throws<ArgumentException>((Action)(() => {
         result.AddDetailedExpenses(new Dictionary<string, decimal> {
           { "consolidatedExpenses", 100 }
         });
-      });
-      Assert.Contains("consolidatedExpenses", ex.Message);
+      }));
+      Assert.That(ex.Message, Does.Contain("consolidatedExpenses"));
 
       // Doesn't alter the existing the object
-      Assert.Null(result.PeriodExpenses);
-      Assert.Null(result.PeriodDisallowableExpenses);
+      Assert.That(result.PeriodExpenses, Is.Null);
+      Assert.That(result.PeriodDisallowableExpenses, Is.Null);
     }
 
-    [Fact]
+    [Test]
     public void CreateOrAmendCumulativePeriodSummary() {
       var svc = GetService<SelfEmploymentBusinessMtdService>();
 
@@ -89,10 +88,10 @@ namespace TipsTrade.HMRC.Tests {
 
       var resp = svc.CreateOrAmendCumulativePeriodSummary(request);
 
-      Assert.NotNull(resp);
+      Assert.That(resp, Is.Not.Null);
     }
 
-    [Fact]
+    [Test]
     public void GetCumulativePeriodSummary() {
       var svc = GetService<SelfEmploymentBusinessMtdService>();
 
@@ -104,7 +103,7 @@ namespace TipsTrade.HMRC.Tests {
       });
     }
 
-    [Fact]
+    [Test]
     public void ItsaJourney() {
       var businessDetailsSvc = GetService<BusinessDetailsMtdService>();
       var obligationsSvc = GetService<ObligationsMtdService>();

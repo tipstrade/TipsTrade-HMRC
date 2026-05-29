@@ -1,34 +1,33 @@
 ﻿using System;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.HelloWorld;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class HelloWorldTests : TestBase {
-    public HelloWorldTests(ITestOutputHelper output) : base(output) {
+    public HelloWorldTests() {
     }
 
-    [Fact]
+    [Test]
     public void Application() {
       var svc = GetService<HelloWorldService>();
-      Assert.Equal("Hello Application", svc.SayHelloApplication());
+      Assert.That(svc.SayHelloApplication(), Is.EqualTo("Hello Application"));
     }
 
-    [Fact]
+    [Test]
     public void Hello() {
       var svc = GetService<HelloWorldService>();
-      Assert.Equal("Hello World", svc.SayHelloWorld());
+      Assert.That(svc.SayHelloWorld(), Is.EqualTo("Hello World"));
     }
 
-    [Fact]
+    [Test]
     public void User() {
       var svc = GetService<HelloWorldService>();
-      Assert.Equal("Hello User", svc.SayHelloUser());
+      Assert.That(svc.SayHelloUser(), Is.EqualTo("Hello User"));
 
       // TODO: Fix this
       //svc = GetService<HelloWorldService>($"{Guid.Empty}");
-      //Assert.Throws<ApiException>(() => svc.SayHelloUser());
+      //Assert.Throws<ApiException>((Action)(() => svc.SayHelloUser()));
     }
   }
 }

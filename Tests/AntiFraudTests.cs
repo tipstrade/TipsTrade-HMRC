@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using TipsTrade.HMRC.AntiFraud;
-using Xunit;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class AntiFraudTests {
-    [Fact]
+    [Test]
     public void AntiFraudHeaderValidation() {
       var af = new AntiFraud.AntiFraud() {
         ConnectionMethod = ConnectionMethod.DESKTOP_APP_DIRECT,
@@ -14,14 +14,14 @@ namespace TipsTrade.HMRC.Tests {
 
       const int expectedErrors = 4;
 
-      var ex = Assert.Throws<AntiFraudException>(() => af.GetAntiFraudHeaders());
-      Assert.Equal(expectedErrors, ex.Errors.Count());
+      var ex = Assert.Throws<AntiFraudException>((Action)(() => af.GetAntiFraudHeaders()));
+      Assert.That(ex.Errors.Count(), Is.EqualTo(expectedErrors));
 
       Assert.False(af.Validate(out string[] errors));
-      Assert.Equal(expectedErrors, errors.Count());
+      Assert.That(errors.Count(), Is.EqualTo(expectedErrors));
     }
 
-    [Fact]
+    [Test]
     public void GetAntiFraudHeaders() {
       var af = new AntiFraud.AntiFraud() {
         ConnectionMethod = ConnectionMethod.DESKTOP_APP_DIRECT,
@@ -42,10 +42,10 @@ namespace TipsTrade.HMRC.Tests {
 
     }
 
-    [Fact]
+    [Test]
     public void GetPropertiesForMethod() {
       var props = AntiFraud.AntiFraud.GetPropertiesForMethod(ConnectionMethod.DESKTOP_APP_DIRECT);
-      Assert.Equal(14, props.Count());
+      Assert.That(props.Count(), Is.EqualTo(14));
     }
   }
 }

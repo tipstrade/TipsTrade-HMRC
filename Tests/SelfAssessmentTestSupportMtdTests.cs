@@ -3,12 +3,11 @@ using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
 using TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd;
 using TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model;
 using TipsTrade.HMRC.Extensions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class SelfAssessmentTestSupportMtdTests : TestBase {
-    public SelfAssessmentTestSupportMtdTests(ITestOutputHelper output) : base(output) {
+    public SelfAssessmentTestSupportMtdTests() {
     }
 
     private static string SeedTestData(SelfAssessmentTestSupportMtdService svc, string niNumber) {
@@ -27,30 +26,30 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     #region Main tests
-    [Fact]
+    [Test]
     public void DeleteStatefulTestData() {
       var svc = GetService<SelfAssessmentTestSupportMtdService>();
 
       SeedTestData(svc, Users.Organisation.User.NiNumber);
 
       var resp = svc.DeleteStatefulTestData(Users.Organisation.User.NiNumber);
-      Assert.NotNull(resp);
+      Assert.That(resp, Is.Not.Null);
     }
     #endregion
 
     #region Business Income Source tests
-    [Fact]
+    [Test]
     public void CreateBusinessIncomeSource() {
       var svc = GetService<SelfAssessmentTestSupportMtdService>();
 
       var response = SeedTestData(svc, Users.Organisation.User.NiNumber);
 
-      Assert.IsType<string>(response);
+      Assert.That(response, Is.InstanceOf<string>());
     }
     #endregion
 
     #region ITSA Status tests
-    [Fact]
+    [Test]
     public void CreateTestItsaStatus() {
       var svc = GetService<SelfAssessmentTestSupportMtdService>();
 
@@ -66,7 +65,7 @@ namespace TipsTrade.HMRC.Tests {
         ]
       });
 
-      Assert.NotNull(resp);
+      Assert.That(resp, Is.Not.Null);
     }
     #endregion
   }

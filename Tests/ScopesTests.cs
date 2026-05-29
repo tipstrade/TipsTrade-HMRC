@@ -1,25 +1,24 @@
 ﻿using System.Linq;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class ScopesTests : TestBase {
-    public ScopesTests(ITestOutputHelper output) : base(output) {
+    public ScopesTests() {
     }
 
-    [Fact]
+    [Test]
     public void AllScopes() {
       var scopes = Scopes.GetScopes();
-      Assert.NotEmpty(scopes);
+      Assert.That(scopes, Is.Not.Empty);
     }
 
-    [Fact]
+    [Test]
     public void HelloWorld() {
       var scopes = Scopes.GetScopes<Api.HelloWorld.HelloWorldService>();
-      Assert.Single(scopes);
+      Assert.That(scopes, Has.Exactly(1).Items);
     }
 
-    [Fact]
+    [Test]
     public void SelfAssessment() {
       var expected = new[] {
         Scopes.SelfAssessmentRead,
@@ -27,24 +26,24 @@ namespace TipsTrade.HMRC.Tests {
       };
 
       var businessDetailsMtd  = Scopes.GetScopes<Api.BusinessDetailsMtd.BusinessDetailsMtdService>();
-      Assert.Equal(2, businessDetailsMtd.Count());
+      Assert.That(businessDetailsMtd.Count(), Is.EqualTo(2));
 
       var obligationsMtd = Scopes.GetScopes<Api.ObligationsMtd.ObligationsMtdService>();
-      Assert.Equal(2, obligationsMtd.Count());
+      Assert.That(obligationsMtd.Count(), Is.EqualTo(2));
 
       var selfAssessmentTestSupportMtd = Scopes.GetScopes<Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdService>();
-      Assert.Equal(2, selfAssessmentTestSupportMtd.Count());
+      Assert.That(selfAssessmentTestSupportMtd.Count(), Is.EqualTo(2));
      
       var selfEmploymentBusinessMtd = Scopes.GetScopes<Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdService>();
-      Assert.Equal(2, selfEmploymentBusinessMtd.Count());
+      Assert.That(selfEmploymentBusinessMtd.Count(), Is.EqualTo(2));
     }
 
-    [Fact]
+    [Test]
     public void Vat() {
       var scopes = Scopes.GetScopes<Api.Vat.VatService>();
-      Assert.Equal(2, scopes.Count());
-      Assert.Contains(scopes, s => Scopes.VATRead.Equals(s));
-      Assert.Contains(scopes, s => Scopes.VATWrite.Equals(s));
+      Assert.That(scopes.Count(), Is.EqualTo(2));
+      Assert.That(scopes, Has.Some.Matches<string>(s => Scopes.VATRead.Equals(s)));
+      Assert.That(scopes, Has.Some.Matches<string>(s => Scopes.VATWrite.Equals(s)));
     }
   }
 }

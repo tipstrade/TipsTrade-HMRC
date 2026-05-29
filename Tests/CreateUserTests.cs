@@ -1,26 +1,25 @@
 ﻿using Newtonsoft.Json;
 using TipsTrade.HMRC.Api.CreateTestUser;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class CreateUserTests : TestBase {
-    public CreateUserTests(ITestOutputHelper output) : base(output) {
+    public CreateUserTests() {
     }
 
     private void TestCreateTestUserFactory<T>(string json) where T : class, ICreateTestUserRequest {
       var request = CreateTestUserFactory.CreateTestUserFull<T>();
-      Assert.NotEmpty(request.ServiceNames);
+      Assert.That(request.ServiceNames, Is.Not.Empty);
 
       var fromDocs = JsonConvert.DeserializeObject<T>(json);
 
       request.ServiceNames.Sort();
       fromDocs.ServiceNames.Sort();
 
-      Assert.Equal(fromDocs.ServiceNames.Count, request.ServiceNames.Count);
+      Assert.That(request.ServiceNames.Count, Is.EqualTo(fromDocs.ServiceNames.Count));
       for (int i = 0; i < request.ServiceNames.Count; i++) {
-        Assert.Equal(fromDocs.ServiceNames[i], request.ServiceNames[i]);
+        Assert.That(request.ServiceNames[i], Is.EqualTo(fromDocs.ServiceNames[i]));
       }
     }
 
@@ -30,18 +29,18 @@ namespace TipsTrade.HMRC.Tests {
       var svc = GetService<CreateTestUserService>();
 
       var result = svc.CreateUser(request);
-      Assert.NotNull(result);
+      Assert.That(result, Is.Not.Null);
 
       foreach (var prop in result.GetType().GetProperties()) {
         var value = prop.GetValue(result);
-        Assert.NotNull(value);
+        Assert.That(value, Is.Not.Null);
       }
 
-      Output.WriteLine($"Created {result.GetType()}:");
-      Output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
+      TestContext.Progress.WriteLine($"Created {result.GetType()}:");
+      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
     }
 
-    [Fact]
+    [Test]
     public void CreateTestUserFactoryAgent() {
       TestCreateTestUserFactory<CreateAgentRequest>(@"{
   ""serviceNames"": [
@@ -50,7 +49,7 @@ namespace TipsTrade.HMRC.Tests {
 }");
     }
 
-    [Fact]
+    [Test]
     public void CreateTestUserFactoryIndividual() {
       TestCreateTestUserFactory<CreateIndividualRequest>(@"{
   ""serviceNames"": [
@@ -62,7 +61,7 @@ namespace TipsTrade.HMRC.Tests {
 }");
     }
 
-    [Fact]
+    [Test]
     public void CreateTestUserFactoryOrganisation() {
       TestCreateTestUserFactory<CreateOrganisationRequest>(@"{
   ""serviceNames"": [
@@ -81,29 +80,29 @@ namespace TipsTrade.HMRC.Tests {
 }");
     }
 
-    [Fact]
+    [Test]
     public void CreateTestUserFactoryPredicate() {
       CreateOrganisationRequest request;
 
       request = CreateTestUserFactory.CreateTestUser<CreateOrganisationRequest>(s => s == null);
-      Assert.Empty(request.ServiceNames);
+      Assert.That(request.ServiceNames, Is.Empty);
 
       request = CreateTestUserFactory.CreateTestUser<CreateOrganisationRequest>(s => CreateOrganisationRequest.CorporationTax.Equals(s));
-      Assert.Single(request.ServiceNames);
+      Assert.That(request.ServiceNames, Has.Count.EqualTo(1));
     }
 
-    [Fact(Skip = "Skipped so we don't keep creating new users.")]
+    [Test, Ignore("Skipped so we don't keep creating new users.")]
     public void CreateAgent() {
       TestCreateUser<CreateAgentRequest, AgentResult>();
     }
 
-    [Fact(Skip = "Skipped so we don't keep creating new users.")]
+    [Test, Ignore("Skipped so we don't keep creating new users.")]
     public void CreateIndividual() {
       TestCreateUser<CreateIndividualRequest, IndividualResult>();
     }
 
-    [Fact(Skip = "Skipped so we don't keep creating new users.")]
-    public void CreateOganisation() {
+    [Test, Ignore("Skipped so we don't keep creating new users.")]
+    public void CreateOrganisation() {
       TestCreateUser<CreateOrganisationRequest, OrganisationResult>();
     }
   }
