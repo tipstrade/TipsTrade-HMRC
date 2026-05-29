@@ -17,8 +17,8 @@ namespace TipsTrade.HMRC.Tests {
       var ex = Assert.Throws<AntiFraudException>((Action)(() => af.GetAntiFraudHeaders()));
       Assert.That(ex.Errors.Count(), Is.EqualTo(expectedErrors));
 
-      Assert.False(af.Validate(out string[] errors));
-      Assert.That(errors.Count(), Is.EqualTo(expectedErrors));
+      Assert.That(af.Validate(out var errors), Is.False);
+      Assert.That(errors.Length, Is.EqualTo(expectedErrors));
     }
 
     [Test]

@@ -55,7 +55,7 @@ namespace TipsTrade.HMRC.Tests {
       Assert.That(response, Is.Not.Null);
       Assert.That(response.Requests, Is.Not.Null);
       Assert.That(response.Requests, Is.Not.Empty);
-      Assert.False(response.HasErrors());
+      Assert.That(response.HasErrors(), Is.False);
 
       TestContext.Progress.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
     }

@@ -67,9 +67,9 @@ namespace TipsTrade.HMRC.Tests {
         Converters = new List<Nsft.JsonConverter>() { new Api.Model.Converters.NewtonsoftDateOnlyConverter() }
       };
 
-      var ex1 = Assert.Throws<Nsft.JsonSerializationException>(() => { Nsft.JsonConvert.DeserializeObject<DateTime>("\"invalid-date\"", settings); });
-      var ex2 = Assert.Throws<Nsft.JsonSerializationException>(() => { Nsft.JsonConvert.DeserializeObject<DateTime>("\"2026-02-12T11:39:22.878Z\"", settings); });
-      var ex3 = Assert.Throws<Nsft.JsonSerializationException>(() => { Nsft.JsonConvert.DeserializeObject<DateTime>("0", settings); });
+      Assert.That((Action)(() => Nsft.JsonConvert.DeserializeObject<DateTime>("\"invalid-date\"", settings)), Throws.InstanceOf<Nsft.JsonSerializationException>());
+      Assert.That((Action)(() => Nsft.JsonConvert.DeserializeObject<DateTime>("\"2026-02-12T11:39:22.878Z\"", settings)), Throws.InstanceOf<Nsft.JsonSerializationException>());
+      Assert.That((Action)(() => Nsft.JsonConvert.DeserializeObject<DateTime>("0", settings)), Throws.InstanceOf<Nsft.JsonSerializationException>());
     }
 
     [Test]
@@ -127,9 +127,9 @@ namespace TipsTrade.HMRC.Tests {
       var settings = new Stj.JsonSerializerOptions();
       settings.Converters.Add(new Api.Model.Converters.StjDateOnlyConverter());
 
-      var ex1 = Assert.Throws<Stj.JsonException>(() => { Stj.JsonSerializer.Deserialize<DateTime>("\"invalid-date\"", settings); });
-      var ex2 = Assert.Throws<Stj.JsonException>(() => { Stj.JsonSerializer.Deserialize<DateTime>("\"2026-02-12T11:39:22.878Z\"", settings); });
-      var ex3 = Assert.Throws<Stj.JsonException>(() => { Stj.JsonSerializer.Deserialize<DateTime>("0", settings); });
+      Assert.That((Action)(() => Stj.JsonSerializer.Deserialize<DateTime>("\"invalid-date\"", settings)), Throws.InstanceOf<Stj.JsonException>());
+      Assert.That((Action)(() => Stj.JsonSerializer.Deserialize<DateTime>("\"2026-02-12T11:39:22.878Z\"", settings)), Throws.InstanceOf<Stj.JsonException>());
+      Assert.That((Action)(() => Stj.JsonSerializer.Deserialize<DateTime>("0", settings)), Throws.InstanceOf<Stj.JsonException>());
     }
 
     #region Inner classes

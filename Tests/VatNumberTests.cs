@@ -1,5 +1,4 @@
-﻿using System;
-using TipsTrade.HMRC.Api;
+﻿using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.Vat;
 using NUnit.Framework;
 
@@ -13,8 +12,8 @@ namespace TipsTrade.HMRC.Tests {
       var svc = GetService<VatNumberService>();
       var action = () => svc.CheckVrn("");
 
-       Assert.That(action, Throws.ArgumentException);
-      }
+      Assert.That(action, Throws.ArgumentException);
+    }
 
     [Test]
     public void InvalidNumber() {
