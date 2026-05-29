@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using TipsTrade.HMRC.Api.ObligationsMtd;
 using TipsTrade.HMRC.Api.ObligationsMtd.Model;
 using TipsTrade.HMRC.Extensions;
 using Xunit;
@@ -12,10 +13,9 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void GetFinalObligations() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<ObligationsMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.ObligationsMtd.GetFinalObligations(new GetFinalObligationsRequest {
+      var resp = svc.GetFinalObligations(new GetFinalObligationsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         GovTestScenario = GetFinalObligationsRequest.ScenarioMultiple
       });
@@ -45,14 +45,13 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void GetObligations() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<ObligationsMtdService>(Users.Organisation.Tokens.AccessToken);
 
       var fromDate = DateTime.Today.GetTaxYearStart();
       var toDate = DateTime.Today.GetTaxYearEnd();
       var businessId = "XBIS12345678901"; // Self-employment business
 
-      var resp = client.ObligationsMtd.GetIncomeAndExpenditureObligations(new GetObligationsRequest {
+      var resp = svc.GetIncomeAndExpenditureObligations(new GetObligationsRequest {
         FromDate = fromDate,
         ToDate = toDate,
         NiNumber = Users.Organisation.User.NiNumber,

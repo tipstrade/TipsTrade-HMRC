@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using TipsTrade.HMRC.Api.Model;
+using TipsTrade.HMRC.Api.Vat;
 using TipsTrade.HMRC.Api.Vat.Model;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,10 +29,9 @@ namespace TipsTrade.HMRC.Tests {
       };
       PopulateDateRange(obRequest);
 
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
 
-      var obligations = client.Vat.GetObligations(obRequest);
+      var obligations = svc.GetObligations(obRequest);
       var periodKey = obligations.Value.Where(o => !o.IsOpen).LastOrDefault().PeriodKey;
 
       var returnRequest = new ReturnRequest() {
@@ -39,7 +39,7 @@ namespace TipsTrade.HMRC.Tests {
         PeriodKey = periodKey
       };
 
-      var resp = client.Vat.GetReturn(returnRequest);
+      var resp = svc.GetReturn(returnRequest);
       Assert.NotNull(resp);
       Assert.Equal(periodKey, resp.PeriodKey);
       Assert.NotDefault(resp.VatDueSales);
@@ -66,10 +66,9 @@ namespace TipsTrade.HMRC.Tests {
         Vrn = Users.Organisation.User.Vrn,
       };
 
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.Vat.GetLiabilities(request);
+      var resp = svc.GetLiabilities(request);
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
 
@@ -97,13 +96,12 @@ namespace TipsTrade.HMRC.Tests {
 
       PopulateDateRange(obligations);
 
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
 
       ObligationResponse resp;
 
       // All, expect only two to be fulfilled
-      resp = client.Vat.GetObligations(obligations);
+      resp = svc.GetObligations(obligations);
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
       Assert.Equal(2, resp.Value.Where(x => x.IsFulfilled).Count());
@@ -120,7 +118,7 @@ namespace TipsTrade.HMRC.Tests {
       // Fulfulled
       obligations.Status = "F";
       obligations.GovTestScenario = null;
-      resp = client.Vat.GetObligations(obligations);
+      resp = svc.GetObligations(obligations);
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
       foreach (var item in resp.Value) {
@@ -132,7 +130,7 @@ namespace TipsTrade.HMRC.Tests {
       // Open
       obligations.Status = "O";
       obligations.GovTestScenario = null;
-      resp = client.Vat.GetObligations(obligations);
+      resp = svc.GetObligations(obligations);
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
       foreach (var item in resp.Value) {
@@ -151,10 +149,9 @@ namespace TipsTrade.HMRC.Tests {
         Vrn = Users.Organisation.User.Vrn,
       };
 
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.Vat.GetPayments(request);
+      var resp = svc.GetPayments(request);
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.Value);
 
@@ -206,10 +203,9 @@ namespace TipsTrade.HMRC.Tests {
       };
       PopulateDateRange(obRequest);
 
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
 
-      var obligations = client.Vat.GetObligations(obRequest);
+      var obligations = svc.GetObligations(obRequest);
       var periodKey = obligations.Value.Where(o => o.IsOpen).LastOrDefault().PeriodKey;
 
       var request = new SubmitRequest() {
@@ -230,7 +226,7 @@ namespace TipsTrade.HMRC.Tests {
         GovTestScenario = SubmitRequest.ScenarioDuplicateSubmission
       };
 
-      var ex = Assert.Throws<Api.ApiException>(() => client.Vat.SubmitReturn(request));
+      var ex = Assert.Throws<Api.ApiException>(() => svc.SubmitReturn(request));
       Assert.Equal("Business validation error", ex.Message);
       Assert.Equal("BUSINESS_ERROR", ex.ApiError.Code);
       Assert.Equal("Business validation error", ex.ApiError.Message);
@@ -240,7 +236,7 @@ namespace TipsTrade.HMRC.Tests {
 
       request.GovTestScenario = null;
 
-      var resp = client.Vat.SubmitReturn(request);
+      var resp = svc.SubmitReturn(request);
 
       Output.WriteLine("VAT Submission:");
       Output.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));

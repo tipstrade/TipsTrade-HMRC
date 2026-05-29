@@ -1,5 +1,6 @@
 ﻿using System;
 using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
+using TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd;
 using TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model;
 using TipsTrade.HMRC.Extensions;
 using Xunit;
@@ -10,8 +11,8 @@ namespace TipsTrade.HMRC.Tests {
     public SelfAssessmentTestSupportMtdTests(ITestOutputHelper output) : base(output) {
     }
 
-    private static string SeedTestData(Client client, string niNumber) {
-      var response = client.SelfAssessmentTestSupportMtd.CreateBusinessIncomeSource(new CreateTestBusinessRequest {
+    private static string SeedTestData(SelfAssessmentTestSupportMtdService svc, string niNumber) {
+      var response = svc.CreateBusinessIncomeSource(new CreateTestBusinessRequest {
         NiNumber = niNumber,
         BusinessDetails = new BusinessDetailsResult {
           TypeOfBusiness = TypeOfBusiness.SelfEmployment,
@@ -28,12 +29,11 @@ namespace TipsTrade.HMRC.Tests {
     #region Main tests
     [Fact]
     public void DeleteStatefulTestData() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<SelfAssessmentTestSupportMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      SeedTestData(client, Users.Organisation.User.NiNumber);
+      SeedTestData(svc, Users.Organisation.User.NiNumber);
 
-      var resp = client.SelfAssessmentTestSupportMtd.DeleteStatefulTestData(Users.Organisation.User.NiNumber);
+      var resp = svc.DeleteStatefulTestData(Users.Organisation.User.NiNumber);
       Assert.NotNull(resp);
     }
     #endregion
@@ -41,10 +41,9 @@ namespace TipsTrade.HMRC.Tests {
     #region Business Income Source tests
     [Fact]
     public void CreateBusinessIncomeSource() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<SelfAssessmentTestSupportMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var response = SeedTestData(client, Users.Organisation.User.NiNumber);
+      var response = SeedTestData(svc, Users.Organisation.User.NiNumber);
 
       Assert.IsType<string>(response);
     }
@@ -53,10 +52,9 @@ namespace TipsTrade.HMRC.Tests {
     #region ITSA Status tests
     [Fact]
     public void CreateTestItsaStatus() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<SelfAssessmentTestSupportMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.SelfAssessmentTestSupportMtd.CreateTestItsaStatus(new CreateTestItsaStatusRequest {
+      var resp = svc.CreateTestItsaStatus(new CreateTestItsaStatusRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = DateTime.Now.GetTaxYear(),
         ItsaStatusDetails = [

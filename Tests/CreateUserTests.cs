@@ -27,9 +27,9 @@ namespace TipsTrade.HMRC.Tests {
     private void TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest<TUser> where TUser : UserResultBase {
       var request = CreateTestUserFactory.CreateTestUserFull<TRequest>();
 
-      var client = GetClient();
+      var svc = GetService<CreateTestUserService>();
 
-      var result = client.CreateTestUser.CreateUser(request);
+      var result = svc.CreateUser(request);
       Assert.NotNull(result);
 
       foreach (var prop in result.GetType().GetProperties()) {

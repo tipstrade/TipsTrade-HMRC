@@ -2,6 +2,9 @@
 using System;
 using System.Web;
 using TipsTrade.HMRC.Api;
+using TipsTrade.HMRC.Api.HelloWorld;
+using TipsTrade.HMRC.Api.OAuth;
+using TipsTrade.HMRC.Api.Vat;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -12,13 +15,13 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void EndpointUrl() {
-      var client = GetClient();
+      var oAuth = GetOAuthService();
 
       var scopes = new string[] { "hello", "read:vat", "write:vat" };
 
       var encodedRedirect = HttpUtility.UrlEncode(RedirectUrl);
       var expected = $"https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=7Y7IDapnKX7uGrPhN1SIRe63e1Ya&scope=hello+read%3avat+write%3avat&state=4f00d15e-de25-4796-999f-266ea4429889&redirect_uri={encodedRedirect}";
-      var url = client.GetAuthorizationEndpoint(State, RedirectUrl, scopes);
+      var url = oAuth.GetAuthorizationEndpoint(State, RedirectUrl, scopes);
 
       Assert.Equal(expected, url);
 
@@ -28,18 +31,18 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void GetApplicationTokenThrows() {
-      var client = GetClient();
-      client.ClientSecret = "bad-secret";
+      var badOptions = GetOptions();
+      badOptions.ClientSecret = "bad-secret";
+      var badSvc = CreateServiceWithOptions<HelloWorldService>(badOptions);
 
       // GetApplicationToken is used internally, so the easiest way is to call HelloWorld which will call it if AccessToken isn't set.
-      var ex = Assert.Throws<ApiException>(() => client.HelloWorld.SayHelloApplication());
+      var ex = Assert.Throws<ApiException>(() => badSvc.SayHelloApplication());
       Assert.NotNull(ex.Message);
       Assert.Equal(System.Net.HttpStatusCode.Unauthorized, ex.Status);
     }
 
     [Fact]
     public void InvalidCredentials() {
-      var client = GetClient();
       ApiException ex;
 
       var request = new Api.Vat.Model.ObligationsRequest() {
@@ -48,10 +51,11 @@ namespace TipsTrade.HMRC.Tests {
         DateTo = DateTime.Today
       };
 
-      Assert.Throws<InvalidOperationException>(() => client.Vat.GetObligations(request));
+      var svcNoToken = GetService<VatService>();
+      Assert.Throws<InvalidOperationException>(() => svcNoToken.GetObligations(request));
 
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
-      ex = Assert.Throws<ApiException>(() => client.Vat.GetObligations(request));
+      var svcBadToken = GetService<VatService>(Users.Organisation.Tokens.AccessToken);
+      ex = Assert.Throws<ApiException>(() => svcBadToken.GetObligations(request));
 
       // The sandbox environment doesn't appear to return the status codes expected.
       //Assert.True(ex.IsInvalidCredentials);
@@ -62,10 +66,10 @@ namespace TipsTrade.HMRC.Tests {
     public void HandleRedirectUrlError() {
       var uri = $"{RedirectUrl}?error=access_denied&error_description=user+denied+the+authorization&state=4f00d15e-de25-4796-999f-266ea4429889&error_code=USER_DENIED_AUTHORIZATION";
 
-      var client = GetClient();
+      var oAuth = GetOAuthService();
 
-      Assert.Throws<InvalidOperationException>(() => client.HandleEndpointResult(uri, ""));
-      Assert.Throws<ApiException>(() => client.HandleEndpointResult(uri, State));
+      Assert.Throws<InvalidOperationException>(() => oAuth.HandleEndpointResult(uri, ""));
+      Assert.Throws<ApiException>(() => oAuth.HandleEndpointResult(uri, State));
     }
 
     [Fact(Skip = "Skipped so the code is one-use only.")]
@@ -73,9 +77,9 @@ namespace TipsTrade.HMRC.Tests {
     public void HandleRedirectUrlSuccess() {
       var uri = $"{RedirectUrl}?code=640f35efde314a91b32d696710759a5d&state=4f00d15e-de25-4796-999f-266ea4429889";
 
-      var client = GetClient();
+      var oAuth = GetOAuthService();
 
-      var tokens = client.HandleEndpointResult(uri, State);
+      var tokens = oAuth.HandleEndpointResult(uri, State);
       Assert.NotNull(tokens.AccessToken);
       Assert.NotNull(tokens.RefreshToken);
       Assert.NotEqual(0, tokens.ExpiresIn);
@@ -90,12 +94,12 @@ namespace TipsTrade.HMRC.Tests {
     [Fact(Skip = "Skipped so we don't accidentally expire our RefreshToken.")]
     //[Fact]
     public void RefreshToken() {
-      var client = GetClient();
+      var oAuth = GetOAuthService();
 
       var start = DateTime.UtcNow;
       var expiresSlew = 10; // Allowed slew for the expires
 
-      var tokens = client.RefreshAccessToken(Users.Organisation.Tokens.RefreshToken);
+      var tokens = oAuth.RefreshAccessToken(Users.Organisation.Tokens.RefreshToken);
       Assert.NotNull(tokens.AccessToken);
       Assert.NotNull(tokens.RefreshToken);
       Assert.NotEqual(0, tokens.ExpiresIn);

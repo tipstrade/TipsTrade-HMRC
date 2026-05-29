@@ -1,4 +1,5 @@
 ﻿using System;
+using TipsTrade.HMRC.Api.IndividualCalculationsMtd;
 using TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model;
 using TipsTrade.HMRC.Extensions;
 using Xunit;
@@ -11,10 +12,9 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void ListSelfAssessmentCalculations() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<IndividualCalculationsMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.IndividualCalculationsMtd.ListSelfAssessmentCalculations(new ListSelfAssessmentCalculationsRequest {
+      var resp = svc.ListSelfAssessmentCalculations(new ListSelfAssessmentCalculationsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = DateTime.Today.GetTaxYear(),
         CalculationType = CalculationType.InYear,
@@ -27,12 +27,11 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void RetrieveSelfAssessmentCalculation() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<IndividualCalculationsMtdService>(Users.Organisation.Tokens.AccessToken);
 
       var taxYear = DateTime.Today.GetTaxYear();
 
-      var resp = client.IndividualCalculationsMtd.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
+      var resp = svc.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = taxYear,
         CalculationId = $"{Guid.NewGuid()}",
@@ -45,7 +44,7 @@ namespace TipsTrade.HMRC.Tests {
       Assert.NotNull(resp.Calculation); // Valid for a processed calculation
       Assert.Null(resp.Messages);
 
-      resp = client.IndividualCalculationsMtd.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
+      resp = svc.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = taxYear,
         CalculationId = $"{Guid.NewGuid()}",
@@ -61,10 +60,9 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void SubmitFinalAssessment() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<IndividualCalculationsMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.IndividualCalculationsMtd.SubmitFinalAssessment(new SubmitFinalAssessmentRequest {
+      var resp = svc.SubmitFinalAssessment(new SubmitFinalAssessmentRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = DateTime.Today.GetTaxYear(),
         CalculationId = $"{Guid.NewGuid()}",
@@ -77,10 +75,9 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void TriggerSelfAssessmentCalculation() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<IndividualCalculationsMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.IndividualCalculationsMtd.TriggerCalculation(new TriggerSelfAssessmentCalculationRequest {
+      var resp = svc.TriggerCalculation(new TriggerSelfAssessmentCalculationRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = DateTime.Today.GetTaxYear(),
         CalculationType = CalculationType.InYear,

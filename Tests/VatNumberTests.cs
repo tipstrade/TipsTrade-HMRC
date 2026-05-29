@@ -1,5 +1,6 @@
 ﻿using System;
 using TipsTrade.HMRC.Api;
+using TipsTrade.HMRC.Api.Vat;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -10,23 +11,23 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void EmptyValidNumber() {
-      var client = GetClient();
+      var svc = GetService<VatNumberService>();
 
-      Assert.Throws<ArgumentException>(() => client.VatNumber.CheckVrn(""));
+      Assert.Throws<ArgumentException>(() => svc.CheckVrn(""));
     }
 
     [Fact]
     public void InvalidNumber() {
-      var client = GetClient();
+      var svc = GetService<VatNumberService>();
 
-      Assert.Throws<ApiException>(() => client.VatNumber.CheckVrn("000000000"));
+      Assert.Throws<ApiException>(() => svc.CheckVrn("000000000"));
     }
 
     [Fact]
     public void ValidNumber() {
-      var client = GetClient();
+      var svc = GetService<VatNumberService>();
 
-      var resp = client.VatNumber.CheckVrn("553557881");
+      var resp = svc.CheckVrn("553557881");
 
       // {"target":{"name":"Credite Sberger Donal Inc.","vatNumber":"553557881","address":{"line1":"131B Barton Hamlet","postcode":"SW97 5CK","countryCode":"GB"}},"processingDate":"2024-09-03T09:56:20+01:00"}
       Assert.NotNull(resp);
@@ -39,9 +40,9 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void ValidNumberVerified() {
-      var client = GetClient();
+      var svc = GetService<VatNumberService>();
 
-      var resp = client.VatNumber.CheckVrn("553557881", "146295999727");
+      var resp = svc.CheckVrn("553557881", "146295999727");
 
       Assert.NotNull(resp);
       Assert.NotEmpty(resp.ConsultationNumber);

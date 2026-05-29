@@ -1,5 +1,6 @@
 ﻿using System;
 using TipsTrade.HMRC.Api;
+using TipsTrade.HMRC.Api.HelloWorld;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -10,25 +11,23 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void Application() {
-      var client = GetClient();
-      Assert.Equal("Hello Application", client.HelloWorld.SayHelloApplication());
+      var svc = GetService<HelloWorldService>();
+      Assert.Equal("Hello Application", svc.SayHelloApplication());
     }
 
     [Fact]
     public void Hello() {
-      var client = GetClient();
-      Assert.Equal("Hello World", client.HelloWorld.SayHelloWorld());
+      var svc = GetService<HelloWorldService>();
+      Assert.Equal("Hello World", svc.SayHelloWorld());
     }
 
     [Fact]
     public void User() {
-      var client = GetClient();
+      var svc = GetService<HelloWorldService>(Users.Organisation.Tokens.AccessToken);
+      Assert.Equal("Hello User", svc.SayHelloUser());
 
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
-      Assert.Equal("Hello User", client.HelloWorld.SayHelloUser());
-
-      client.AccessToken = $"{Guid.Empty}";
-      Assert.Throws<ApiException>(() => client.HelloWorld.SayHelloUser());
+      svc = GetService<HelloWorldService>($"{Guid.Empty}");
+      Assert.Throws<ApiException>(() => svc.SayHelloUser());
     }
   }
 }

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TipsTrade.HMRC.Api.BusinessDetailsMtd;
+using TipsTrade.HMRC.Api.ObligationsMtd;
 using TipsTrade.HMRC.Api.ObligationsMtd.Model;
+using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd;
 using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model;
 using TipsTrade.HMRC.Extensions;
 using Xunit;
@@ -67,8 +70,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void CreateOrAmendCumulativePeriodSummary() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<SelfEmploymentBusinessMtdService>(Users.Organisation.Tokens.AccessToken);
 
       var request = new AmendCumulativePeriodSummaryRequest {
         BusinessId = "XAIS12345678910",
@@ -85,17 +87,16 @@ namespace TipsTrade.HMRC.Tests {
         }.AddConsolidatedExpenses(100)
       };
 
-      var resp = client.SelfEmploymentBusinessMtd.CreateOrAmendCumulativePeriodSummary(request);
+      var resp = svc.CreateOrAmendCumulativePeriodSummary(request);
 
       Assert.NotNull(resp);
     }
 
     [Fact]
     public void GetCumulativePeriodSummary() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<SelfEmploymentBusinessMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.SelfEmploymentBusinessMtd.GetCumulativePeriodSummary(new GetCumulativePeriodSummaryRequest {
+      var resp = svc.GetCumulativePeriodSummary(new GetCumulativePeriodSummaryRequest {
         BusinessId = "XAIS12345678910",
         GovTestScenario = GetCumulativePeriodSummaryRequest.ScenarioConsolidatedExpenses,
         NiNumber = Users.Organisation.User.NiNumber,
@@ -105,15 +106,17 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void ItsaJourney() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var accessToken = Users.Organisation.Tokens.AccessToken;
+      var businessDetailsSvc = GetService<BusinessDetailsMtdService>(accessToken);
+      var obligationsSvc = GetService<ObligationsMtdService>(accessToken);
+      var selfEmploymentSvc = GetService<SelfEmploymentBusinessMtdService>(accessToken);
 
-      var businesses = client.BusinessDetailsMtd.ListBusinessDetails(new Api.BusinessDetailsMtd.Model.ListBusinessDetailsRequest {
+      var businesses = businessDetailsSvc.ListBusinessDetails(new Api.BusinessDetailsMtd.Model.ListBusinessDetailsRequest {
         NiNumber = Users.Organisation.User.NiNumber
       });
       var businessId = businesses.Value.First().BusinessId;
 
-      var business = client.BusinessDetailsMtd.GetBusinessDetails(new Api.BusinessDetailsMtd.Model.GetBusinessDetailsRequest {
+      var business = businessDetailsSvc.GetBusinessDetails(new Api.BusinessDetailsMtd.Model.GetBusinessDetailsRequest {
         BusinessId = businessId,
         NiNumber = Users.Organisation.User.NiNumber
       });
@@ -121,7 +124,7 @@ namespace TipsTrade.HMRC.Tests {
       var fromDate = DateTime.Today.GetTaxYearStart();
       var toDate = DateTime.Today.GetTaxYearEnd();
 
-      var obligations = client.ObligationsMtd.GetIncomeAndExpenditureObligations(new Api.ObligationsMtd.Model.GetObligationsRequest {
+      var obligations = obligationsSvc.GetIncomeAndExpenditureObligations(new Api.ObligationsMtd.Model.GetObligationsRequest {
         FromDate = fromDate,
         ToDate = toDate,
         NiNumber = Users.Organisation.User.NiNumber,
@@ -135,7 +138,7 @@ namespace TipsTrade.HMRC.Tests {
         .OrderBy(o => o.PeriodEndDate)
         .First();
 
-      var summary = client.SelfEmploymentBusinessMtd.GetCumulativePeriodSummary(new GetCumulativePeriodSummaryRequest {
+      var summary = selfEmploymentSvc.GetCumulativePeriodSummary(new GetCumulativePeriodSummaryRequest {
         BusinessId = businessId,
         NiNumber = Users.Organisation.User.NiNumber,
         TaxYear = firstOpenObligation.PeriodStartDate.GetTaxYear()

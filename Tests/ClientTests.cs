@@ -1,3 +1,4 @@
+using TipsTrade.HMRC.Api.OAuth;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -8,22 +9,21 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void Credentials() {
-      var client = GetClient();
-      Assert.Equal(ClientId, client.ClientID);
-      Assert.Equal(ClientSecret, client.ClientSecret);
-      Assert.Null(client.ServerToken);
-      Assert.Equal(IsSandbox, client.IsSandbox);
+      var options = GetOptions();
+      Assert.Equal(ClientId, options.ClientID);
+      Assert.Equal(ClientSecret, options.ClientSecret);
+      Assert.Equal(IsSandbox, options.IsSandbox);
     }
 
     [Fact]
     public void Urls() {
-      var client = GetClient();
+      var sandboxOptions = GetOptions();
+      sandboxOptions.IsSandbox = true;
+      Assert.Equal(HmrcOptions.SandboxUrl, sandboxOptions.BaseUrl);
 
-      client.IsSandbox = true;
-      Assert.Equal(Client.SandboxUrl, client.BaseUrl);
-
-      client.IsSandbox = false;
-      Assert.Equal(Client.ProductionUrl, client.BaseUrl);
+      var productionOptions = GetOptions();
+      productionOptions.IsSandbox = false;
+      Assert.Equal(HmrcOptions.ProductionUrl, productionOptions.BaseUrl);
     }
   }
 }

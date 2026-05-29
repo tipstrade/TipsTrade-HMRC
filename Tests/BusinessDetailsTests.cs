@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using TipsTrade.HMRC.Api;
+using TipsTrade.HMRC.Api.BusinessDetailsMtd;
 using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
 using TipsTrade.HMRC.Extensions;
 using Xunit;
@@ -13,10 +14,9 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void AmendQuarterlyPeriodType() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<BusinessDetailsMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.BusinessDetailsMtd.CreateOrAmendQuarterlyPeriodType(new AmendQuarterlyPeriodTypeRequest {
+      var resp = svc.CreateOrAmendQuarterlyPeriodType(new AmendQuarterlyPeriodTypeRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         BusinessId = "XBIS12345678901", // Self-employment business
         TaxYear = DateTime.Now.GetTaxYear(),
@@ -29,10 +29,9 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void GetBusinessDetails() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<BusinessDetailsMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.BusinessDetailsMtd.GetBusinessDetails(new GetBusinessDetailsRequest {
+      var resp = svc.GetBusinessDetails(new GetBusinessDetailsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         BusinessId = "XBIS12345678901", // Self-employment business
         GovTestScenario = GetBusinessDetailsRequest.ScenarioDefault,
@@ -44,10 +43,9 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void GetBusinessDetailsThrows() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<BusinessDetailsMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var ex = Assert.Throws<ApiException>(() => client.BusinessDetailsMtd.GetBusinessDetails(new GetBusinessDetailsRequest {
+      var ex = Assert.Throws<ApiException>(() => svc.GetBusinessDetails(new GetBusinessDetailsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         BusinessId = "XBIS12345678901", // Self-employment business
         GovTestScenario = ListBusinessDetailsRequest.ScenarioNotFound,
@@ -56,10 +54,9 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void ListBusinessDetails() {
-      var client = GetClient();
-      client.AccessToken = Users.Organisation.Tokens.AccessToken;
+      var svc = GetService<BusinessDetailsMtdService>(Users.Organisation.Tokens.AccessToken);
 
-      var resp = client.BusinessDetailsMtd.ListBusinessDetails(new ListBusinessDetailsRequest {
+      var resp = svc.ListBusinessDetails(new ListBusinessDetailsRequest {
         NiNumber = Users.Organisation.User.NiNumber,
         GovTestScenario = ListBusinessDetailsRequest.ScenarioBusinessAndProperty
       });

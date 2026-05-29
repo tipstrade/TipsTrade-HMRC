@@ -1,11 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using TipsTrade.HMRC.AntiFraud;
+using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
+using TipsTrade.HMRC.Api.OAuth;
+using TipsTrade.HMRC.Extensions;
 using Xunit.Abstractions;
 
 namespace TipsTrade.HMRC.Tests {
@@ -13,6 +19,8 @@ namespace TipsTrade.HMRC.Tests {
     protected IConfiguration Configuration { get; }
 
     protected ITestOutputHelper Output { get; }
+
+    private IServiceProvider ServiceProvider { get; }
 
     #region State properties
     protected string State => Configuration["State"];
@@ -44,42 +52,52 @@ namespace TipsTrade.HMRC.Tests {
       Configuration = builder.Build();
 
       LoadUsersFromJsonFile();
+
+      var services = new ServiceCollection();
+      services.AddHmrc(options => {
+        var antiFraud = BuildAntiFraud();
+        options.AntiFraud = antiFraud;
+        options.ClientID = ClientId;
+        options.ClientSecret = ClientSecret;
+        options.IsSandbox = IsSandbox;
+      });
+
+      ServiceProvider = services.BuildServiceProvider();
     }
 
-    protected Client GetClient() {
-      var client = new Client(ClientId, ClientSecret, IsSandbox) {
-        AntiFraud = new AntiFraud.AntiFraud() {
-          ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
-          DeviceID = Configuration["AntiFraudDeviceID"],
-          Screens = new Screen[] {
+    /// <summary>Builds and configures the <see cref="AntiFraud.AntiFraud"/> instance used for all requests.</summary>
+    protected AntiFraud.AntiFraud BuildAntiFraud() {
+      var antiFraud = new AntiFraud.AntiFraud() {
+        ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
+        DeviceID = Configuration["AntiFraudDeviceID"],
+        Screens = new Screen[] {
           new Screen() {
-            ColourDepth = 32, ScalingFactor=1, Size = new Size(1920,1080) }
-          },
-          TimeZone = TimeZoneInfo.Local,
-          UserIDs = new Dictionary<string, string>() {
-            { "os", System.Environment.UserName }
-          },
-          VendorProductName = "TipsTrade.HMRC.Tests",
-          VendorVersion = new Dictionary<string, string>() {
-            { "TipsTrade.HMRC.Tests", "0.0.0.1" },
-            { "Another Vendor", $"{new Version(0, 0, 1, 2)}" }
-          },
-          WindowSize = new Size(1024, 768)
-        }
+            ColourDepth = 32, ScalingFactor = 1, Size = new Size(1920, 1080) }
+        },
+        TimeZone = TimeZoneInfo.Local,
+        UserIDs = new Dictionary<string, string>() {
+          { "os", System.Environment.UserName }
+        },
+        VendorProductName = "TipsTrade.HMRC.Tests",
+        VendorVersion = new Dictionary<string, string>() {
+          { "TipsTrade.HMRC.Tests", "0.0.0.1" },
+          { "Another Vendor", $"{new Version(0, 0, 1, 2)}" }
+        },
+        WindowSize = new Size(1024, 768)
       };
 
-      client.AntiFraud.PopulateLocalIPs();
-      client.AntiFraud.PopulateMACAddresses();
-      client.AntiFraud.PopulateUserAgent();
-      client.AntiFraud.VendorForwarded = new Forwarded[] {
-        new Forwarded { By = System.Net.IPAddress.Parse("8.8.8.8"), For = System.Net.IPAddress.Parse("fe80::21a6:9255:4c0b:78e4%14")}
+      antiFraud.PopulateLocalIPs();
+      antiFraud.PopulateMACAddresses();
+      antiFraud.PopulateUserAgent();
+      antiFraud.VendorForwarded = new Forwarded[] {
+        new Forwarded { By = System.Net.IPAddress.Parse("8.8.8.8"), For = System.Net.IPAddress.Parse("fe80::21a6:9255:4c0b:78e4%14") }
       };
 
-      // Even though the documentation states that that these are optional, the API returns an error
-      client.AntiFraud.UserAgent.DeviceManufacturer = "Dell";
-      client.AntiFraud.UserAgent.DeviceModel = "XPS Gaming PC";
+      // Even though the documentation states that these are optional, the API returns an error
+      antiFraud.UserAgent.DeviceManufacturer = "Dell";
+      antiFraud.UserAgent.DeviceModel = "XPS Gaming PC";
 
-      client.AntiFraud.MultiFactor = new[] {
+      antiFraud.MultiFactor = new[] {
         new MultiFactor() {
           Method = MFAMethod.AUTH_CODE,
           TimeStamp = DateTime.Now,
@@ -87,19 +105,38 @@ namespace TipsTrade.HMRC.Tests {
         }
       };
 
-      client.AntiFraud.VendorLicenceIDs = new Dictionary<string, string>() {
+      antiFraud.VendorLicenceIDs = new Dictionary<string, string>() {
         { "Example", "https://example.com" }
       };
 
-      return client;
+      return antiFraud;
     }
+
+    /// <summary>Resolves a DI-registered HMRC service with an optional access token.</summary>
+    protected T GetService<T>(string accessToken = null) where T : HmrcServiceBase {
+      if (accessToken == null) {
+        return ServiceProvider.GetRequiredService<T>();
+      }
+
+      return CreateServiceWithOptions<T>(GetOptions(accessToken));
+    }
+
+    /// <summary>Creates an HMRC service instance using the supplied <see cref="HmrcOptions"/>.</summary>
+    protected T CreateServiceWithOptions<T>(HmrcOptions options) where T : HmrcServiceBase {
+      var wrappedOptions = Options.Create(options);
+      var httpClientFactory = ServiceProvider.GetRequiredService<IHttpClientFactory>();
+      var tokenCache = ServiceProvider.GetRequiredService<ApplicationTokenCache>();
+      return (T)Activator.CreateInstance(typeof(T), wrappedOptions, httpClientFactory, tokenCache);
+    }
+
+    /// <summary>Resolves the <see cref="HmrcOAuthService"/> from the DI container.</summary>
+    protected HmrcOAuthService GetOAuthService() => ServiceProvider.GetRequiredService<HmrcOAuthService>();
 
     /// <summary>Creates an <see cref="HmrcOptions"/> snapshot from the current test configuration.</summary>
     protected HmrcOptions GetOptions(string accessToken = null) {
-      var client = GetClient();
       return new HmrcOptions {
         AccessToken = accessToken,
-        AntiFraud = client.AntiFraud,
+        AntiFraud = BuildAntiFraud(),
         ClientID = ClientId,
         ClientSecret = ClientSecret,
         IsSandbox = IsSandbox

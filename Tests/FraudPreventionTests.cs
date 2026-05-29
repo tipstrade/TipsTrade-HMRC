@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using TipsTrade.HMRC.Api.TestFraudPrevention;
 using TipsTrade.HMRC.Api.TestFraudPrevention.Model;
 using Xunit;
 using Xunit.Abstractions;
@@ -50,8 +51,8 @@ namespace TipsTrade.HMRC.Tests {
     public void GetFeedback(string service, bool implemented) {
       Skip.IfNot(implemented, $"API for service '{service}' is not implemented in the sandbox.");
 
-      var client = GetClient();
-      var response = client.TestFraudPrevention.GetFeedback(service, AntiFraud.ConnectionMethod.BATCH_PROCESS_DIRECT);
+      var svc = GetService<TestFraudPreventionService>();
+      var response = svc.GetFeedback(service, AntiFraud.ConnectionMethod.BATCH_PROCESS_DIRECT);
 
       Assert.NotNull(response);
       Assert.NotNull(response.Requests);
@@ -63,8 +64,8 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void Validate() {
-      var client = GetClient();
-      var response = client.TestFraudPrevention.Validate();
+      var svc = GetService<TestFraudPreventionService>();
+      var response = svc.Validate();
 
       Assert.Empty(response.Errors);
       Assert.Empty(response.Warnings); // Warnings may be present if the dev machine has a VPN or unusual network configuration.
@@ -74,7 +75,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void PopulateLocalIPs_Predicate_Is_Called() {
-      var client = GetClient();
+      var antiFraud = BuildAntiFraud();
 
       bool isCalled = false;
       Func<System.Net.IPAddress, bool> func = (ip) => {
@@ -82,7 +83,7 @@ namespace TipsTrade.HMRC.Tests {
         return true;
       };
 
-      client.AntiFraud.PopulateLocalIPs(func);
+      antiFraud.PopulateLocalIPs(func);
 
       Assert.True(isCalled);
     }
