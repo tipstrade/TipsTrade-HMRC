@@ -1,15 +1,22 @@
-﻿using Newtonsoft.Json;
+﻿using Moq;
+using Newtonsoft.Json;
+using NUnit.Framework;
 using System;
+using System.Threading;
 using System.Web;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.HelloWorld;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Api.Vat;
-using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class AuthTests : TestBase {
     public AuthTests() {
+    }
+
+    [SetUp]
+    protected override void CustomSetup() {
+      SetupCredentialsForOrganisation();
     }
 
     [Test]
@@ -30,6 +37,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Test]
     public void GetApplicationTokenThrows() {
+      // TODO: This should be improved
       var badOptions = GetOptions();
       badOptions.ClientSecret = "bad-secret";
       var badSvc = CreateServiceWithOptions<HelloWorldService>(badOptions);
@@ -40,25 +48,30 @@ namespace TipsTrade.HMRC.Tests {
       Assert.That(ex.Status, Is.EqualTo(System.Net.HttpStatusCode.Unauthorized));
     }
 
-    [Test, Ignore("Cannot test invalid credentials in the sandbox environment.")]
+    [Test]
     public void InvalidCredentials() {
-      //ApiException ex;
+      // Reset and and add some bad credentials to the AccessTokenProvider so we can test the handling of invalid credentials.
+      AccessTokenProvider.Reset();
+      AccessTokenProvider.Setup(m => m.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Api.Model.TokenResponse() {
+        AccessToken = "bad-token",
+        RefreshToken = "bad-refresh-token",
+        ExpiresIn = 3600,
+        ExpiresTimestamp = DateTime.UtcNow.AddHours(1),
+        Scope = "hello read:vat write:vat",
+        TokenType = "Bearer"
+      });
 
-      //var request = new Api.Vat.Model.ObligationsRequest() {
-      //  Vrn = "000000000",
-      //  DateFrom = DateTime.Today.AddYears(-1),
-      //  DateTo = DateTime.Today
-      //};
+      ApiException ex;
+      var request = new Api.Vat.Model.ObligationsRequest() {
+        Vrn = "000000000",
+        DateFrom = DateTime.Today.AddYears(-1),
+        DateTo = DateTime.Today
+      };
 
-      //var svcNoToken = GetService<VatService>();
-      //Assert.Throws<ApiException>((Action)(() => svcNoToken.GetObligations(request)));
+      var service = GetService<VatService>();
+      var action = () => service.GetObligations(request);
 
-      //var svcBadToken = GetService<VatService>();
-      //ex = Assert.Throws<ApiException>((Action)(() => svcBadToken.GetObligations(request)));
-
-      //// The sandbox environment doesn't appear to return the status codes expected.
-      ////Assert.That(ex.IsInvalidCredentials, Is.True);
-      ////Assert.That(ex.Status, Is.EqualTo(HttpStatusCode.Unauthorized));
+      Assert.That(action, Throws.TypeOf<ApiException>());
     }
 
     [Test]

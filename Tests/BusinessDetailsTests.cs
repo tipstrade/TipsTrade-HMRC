@@ -11,6 +11,11 @@ namespace TipsTrade.HMRC.Tests {
     public BusinessDetailsTests() {
     }
 
+    [SetUp]
+    protected override void CustomSetup() {
+      SetupCredentialsForOrganisation();
+    }
+
     [Test]
     public void AmendQuarterlyPeriodType() {
       var svc = GetService<BusinessDetailsMtdService>();

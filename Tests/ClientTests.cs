@@ -6,6 +6,10 @@ namespace TipsTrade.HMRC.Tests {
     public ClientTests() {
     }
 
+    [SetUp]
+    protected override void CustomSetup() {
+    }
+
     [Test]
     public void Credentials() {
       var options = GetOptions();

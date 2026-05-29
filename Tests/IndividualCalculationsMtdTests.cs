@@ -9,6 +9,11 @@ namespace TipsTrade.HMRC.Tests {
     public IndividualCalculationsMtdTests() {
     }
 
+    [SetUp]
+    protected override void CustomSetup() {
+      SetupCredentialsForOrganisation();
+    }
+
     [Test]
     public void ListSelfAssessmentCalculations() {
       var svc = GetService<IndividualCalculationsMtdService>();

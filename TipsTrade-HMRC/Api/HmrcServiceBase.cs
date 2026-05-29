@@ -16,7 +16,7 @@ namespace TipsTrade.HMRC.Api {
   public abstract class HmrcServiceBase : IHmrcService, IWithLogger {
     #region Fields
     /// <summary>The name used to register the named <see cref="HttpClient"/> for HMRC API calls.</summary>
-    internal static readonly string HttpClientName = typeof(HmrcServiceBase).FullName;
+    internal static readonly string HttpClientName = typeof(HmrcServiceBase).FullName ?? typeof(HmrcServiceBase).Name;
 
     private static readonly AsyncKeyedLocker<string> _tokenLocks = new AsyncKeyedLocker<string>();
 

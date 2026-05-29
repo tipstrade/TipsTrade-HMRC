@@ -1,28 +1,28 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Moq;
 using Newtonsoft.Json;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Extensions;
-using TipsTrade.HMRC.Tests.Providers;
-
 
 namespace TipsTrade.HMRC.Tests {
-  public class TestBase {
+  public abstract class TestBase {
+    protected Mock<IHmrcAccessTokenProvider> AccessTokenProvider;
+
     protected IConfiguration Configuration { get; }
 
-    private IServiceProvider ServiceProvider { get; }
+    private IServiceProvider ServiceProvider { get; set; }
 
     #region State properties
     protected string State => Configuration["State"];
@@ -53,18 +53,67 @@ namespace TipsTrade.HMRC.Tests {
       Configuration = builder.Build();
 
       LoadUsersFromJsonFile();
+    }
 
+    protected void SetupCredentialsForOrganisation() {
+      AccessTokenProvider.Setup(x => x.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(Users.Organisation.Tokens);
+    }
+
+    protected virtual void CustomSetup() { }
+
+    [SetUp]
+    protected void Setup() {
+      CustomSetup();
+    }
+
+    /// <summary>
+    /// Builds the <see cref="IServiceProvider"/> used by the test class.
+    /// Called automatically by <see cref="SetupOnce"/>; invoke that from a
+    /// <c>[OneTimeSetUp]</c> method in the derived class, or rely on the base
+    /// <c>[OneTimeSetUp]</c> when no override is needed.
+    /// </summary>
+    [OneTimeSetUp]
+    protected void SetupOnce() {
       var services = new ServiceCollection();
       services.AddMemoryCache();
-      services.AddHmrc<AccessTokenProvider>(options => {
-        var antiFraud = BuildAntiFraud();
-        options.AntiFraud = antiFraud;
-        options.ClientID = ClientId;
-        options.ClientSecret = ClientSecret;
-        options.IsSandbox = IsSandbox;
-      });
+
+      // Mock the access token provider.
+      AccessTokenProvider = new Mock<IHmrcAccessTokenProvider>();
+
+      services.Configure((Action<HmrcOptions>)ConfigureHmrc);
+
+      services.AddSingleton<Api.ApplicationTokenCache>(); // Needed for the Application Tokens
+      services.AddSingleton(AccessTokenProvider.Object); // Our mocked access token provider
+
+      services.AddHmrcOAuthService();
+      services.AddHttpClient(Api.HmrcServiceBase.HttpClientName);
+
+      services.AddBusinessDetailsMtdService();
+      services.AddCreateTestUserService();
+      services.AddHelloWorldService();
+      services.AddIndividualCalculationsMtdService();
+      services.AddObligationsMtdService();
+      services.AddSelfAssessmentTestSupportMtdService();
+      services.AddSelfEmploymentBusinessMtdService();
+      services.AddTestFraudPreventionService();
+      services.AddVatService();
+      services.AddVatNumberService();
 
       ServiceProvider = services.BuildServiceProvider();
+    }
+
+    [OneTimeTearDown]
+    protected virtual void TeardownOnce() {
+      (ServiceProvider as IDisposable)?.Dispose();
+      ServiceProvider = null;
+    }
+
+    protected virtual void ConfigureHmrc(HmrcOptions options) {
+      var antiFraud = BuildAntiFraud();
+      options.AntiFraud = antiFraud;
+      options.ClientID = ClientId;
+      options.ClientSecret = ClientSecret;
+      options.IsSandbox = IsSandbox;
     }
 
     /// <summary>Builds and configures the <see cref="AntiFraud.AntiFraud"/> instance used for all requests.</summary>

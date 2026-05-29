@@ -10,6 +10,11 @@ namespace TipsTrade.HMRC.Tests {
     public ObligationsMtdTests() {
     }
 
+    [SetUp]
+    protected override void CustomSetup() {
+      SetupCredentialsForOrganisation();
+    }
+
     [Test]
     public void GetFinalObligations() {
       var svc = GetService<ObligationsMtdService>();

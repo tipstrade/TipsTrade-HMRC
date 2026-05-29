@@ -10,6 +10,11 @@ namespace TipsTrade.HMRC.Tests {
     public SelfAssessmentTestSupportMtdTests() {
     }
 
+    [SetUp]
+    protected override void CustomSetup() {
+      SetupCredentialsForOrganisation();
+    }
+
     private static string SeedTestData(SelfAssessmentTestSupportMtdService svc, string niNumber) {
       var response = svc.CreateBusinessIncomeSource(new CreateTestBusinessRequest {
         NiNumber = niNumber,

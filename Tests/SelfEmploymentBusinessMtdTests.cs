@@ -14,6 +14,11 @@ namespace TipsTrade.HMRC.Tests {
     public SelfEmploymentBusinessMtdTests() {
     }
 
+    [SetUp]
+    protected override void CustomSetup() {
+      SetupCredentialsForOrganisation();
+    }
+
     [Test]
     public void CumulativePeriodSummaryResult_AddConsolidatedExpenses() {
       var result = new CumulativePeriodSummaryResult();

@@ -11,6 +11,11 @@ namespace TipsTrade.HMRC.Tests {
     public VatTests() {
     }
 
+    [SetUp]
+    protected override void CustomSetup() {
+      SetupCredentialsForOrganisation();
+    }
+
     private void PopulateDateRange(IDateRange value) {
       var year = DateTime.Now.Year;
       if (DateTime.Now.Month < 3) {
