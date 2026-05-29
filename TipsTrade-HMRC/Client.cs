@@ -19,6 +19,8 @@ using TipsTrade.HMRC.Api.IndividualCalculationsMtd;
 
 namespace TipsTrade.HMRC {
   /// <summary>The Api client used to interact with the HMRC API.</summary>
+  /// <remarks>This class is obsolete. Use the DI-based services registered via <c>IServiceCollection.AddHmrc()</c> instead.</remarks>
+  [Obsolete("Client is obsolete. Use the DI-based services registered via IServiceCollection.AddHmrc() instead.")]
   public class Client {
     #region Fields
     /// <summary>The location of the production API.</summary>

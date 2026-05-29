@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using TipsTrade.HMRC.Api.BusinessDetailsMtd;
+using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Api.CreateTestUser;
 using TipsTrade.HMRC.Api.HelloWorld;
 using TipsTrade.HMRC.Api.IndividualCalculationsMtd;
@@ -28,6 +29,7 @@ namespace TipsTrade.HMRC.Extensions {
 
       services.Configure(configure);
 
+      services.AddHmrcOAuthService();
       services.AddBusinessDetailsMtdService();
       services.AddCreateTestUserService();
       services.AddHelloWorldService();
@@ -40,6 +42,11 @@ namespace TipsTrade.HMRC.Extensions {
       services.AddVatNumberService();
 
       return services;
+    }
+
+    /// <summary>Registers <see cref="HmrcOAuthService"/> with the <see cref="IServiceCollection"/>.</summary>
+    public static IServiceCollection AddHmrcOAuthService(this IServiceCollection services) {
+      return services.AddTransient<HmrcOAuthService>();
     }
 
     /// <summary>Registers <see cref="BusinessDetailsMtdService"/> with the <see cref="IServiceCollection"/>.</summary>

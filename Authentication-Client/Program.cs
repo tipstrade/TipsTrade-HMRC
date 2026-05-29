@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -9,6 +10,8 @@ using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
+using TipsTrade.HMRC.Api.OAuth;
+using TipsTrade.HMRC.Extensions;
 
 namespace TipsTrade.HMRC.Tests.Authentication_Client {
   class Program {
@@ -30,6 +33,8 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
     private static bool IsSandbox { get; set; } = true;
 
+    private static IServiceProvider Services { get; set; }
+
     #endregion
 
     #region Entry point
@@ -46,16 +51,24 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       Configuration = builder.Build();
 
+      var services = new ServiceCollection();
+      services.AddHmrc(options => {
+        options.ClientID = ClientId;
+        options.ClientSecret = ClientSecret;
+        options.IsSandbox = IsSandbox;
+      });
+      Services = services.BuildServiceProvider();
+
       try {
-        var client = GetClient();
+        var authClient = Services.GetRequiredService<HmrcOAuthService>();
 
         switch (ShowMainMenu()) {
           case MainMenu.RefreshToken:
-            RefreshToken(client);
+            RefreshToken(authClient);
             break;
 
           case MainMenu.CreateUser:
-            await Authenticate(client);
+            await Authenticate(authClient);
             break;
 
         }
@@ -77,16 +90,17 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
     #endregion
 
     #region Methods
-    private static async Task Authenticate(Client client) {
-      var request = GetUserRequest(client);
-      var user = CreateUser(client, request);
+    private static async Task Authenticate(HmrcOAuthService authClient) {
+      var createTestUser = Services.GetRequiredService<CreateTestUserService>();
+      var request = GetUserRequest(createTestUser);
+      var user = CreateUser(createTestUser, request);
 
       Console.ForegroundColor = ConsoleColor.Green;
       Console.WriteLine(JsonConvert.SerializeObject(user, Formatting.Indented));
       Console.ResetColor();
       Console.Write("");
 
-      var tokens = await GetAuthCode(client, user);
+      var tokens = await GetAuthCode(authClient, user);
 
       Console.WriteLine();
       Console.WriteLine("Copy these details into appsettings.tokens.json for testing:");
@@ -100,7 +114,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       Console.Write("");
     }
 
-    private static UserResultBase CreateUser(Client client, ICreateTestUserRequest request) {
+    private static UserResultBase CreateUser(CreateTestUserService createTestUser, ICreateTestUserRequest request) {
       request.ServiceNames.AddRange(request.GetServiceNames());
       UserResultBase result;
 
@@ -109,11 +123,11 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       // Not ideal, as it requires maintenance when new request types are added, but it allows us to avoid reflection or dynamic typing in this test client.
       if (request is ICreateTestUserRequest<AgentResult> agentRequest) {
-        result = client.CreateTestUser.CreateUser(agentRequest);
+        result = createTestUser.CreateUser(agentRequest);
       } else if (request is ICreateTestUserRequest<IndividualResult> individualRequest) {
-        result = client.CreateTestUser.CreateUser(individualRequest);
+        result = createTestUser.CreateUser(individualRequest);
       } else if (request is ICreateTestUserRequest<OrganisationResult> organisationRequest) {
-        result = client.CreateTestUser.CreateUser(organisationRequest);
+        result = createTestUser.CreateUser(organisationRequest);
       } else {
         throw new Exception($"Unsupported request type {request.GetType()}.");
       }
@@ -122,11 +136,11 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       return result;
     }
 
-    private static async Task<TokenResponse> GetAuthCode(Client client, UserResultBase user) {
+    private static async Task<TokenResponse> GetAuthCode(HmrcOAuthService authClient, UserResultBase user) {
       var state = $"{Guid.NewGuid()}";
       var scopes = Scopes.GetScopes();
       var redirectUrl = new Uri(Configuration["RedirectUrl"]);
-      var url = client.GetAuthorizationEndpoint(state, redirectUrl, scopes);
+      var url = authClient.GetAuthorizationEndpoint(state, redirectUrl, scopes);
 
       var server = new System.Net.HttpListener {
         Prefixes = { $"{redirectUrl.Scheme}://{redirectUrl.Authority}/" }
@@ -162,13 +176,13 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       Console.WriteLine();
       Console.Write("Validating...");
-      var resp = client.HandleEndpointResult(redirectedTo, state);
+      var resp = authClient.HandleEndpointResult(redirectedTo, state);
       Console.WriteLine(" done");
 
       return resp;
     }
 
-    private static ICreateTestUserRequest GetUserRequest(Client client) {
+    private static ICreateTestUserRequest GetUserRequest(CreateTestUserService createTestUser) {
       var types = new Type[] {
         typeof(CreateAgentRequest),
         typeof(CreateOrganisationRequest),
@@ -191,9 +205,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       throw new Exception($"{resp} is not a valid user type.");
     }
 
-    private static Client GetClient() => new Client(ClientId, ClientSecret, IsSandbox);
-
-    private static void OpenUrl(string url) {
+private static void OpenUrl(string url) {
       // Dotnet has an issue executing URIs to launch in the default system browser.
       // See: https://github.com/dotnet/runtime/issues/17938
       try {
@@ -213,11 +225,11 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       }
     }
 
-    private static void RefreshToken(Client client) {
+    private static void RefreshToken(HmrcOAuthService authClient) {
       Console.WriteLine();
       Console.Write("Enter the refresh token: ");
       var refreshToken = Console.ReadLine();
-      var tokens = client.RefreshAccessToken(refreshToken);
+      var tokens = authClient.RefreshAccessToken(refreshToken);
 
       Console.WriteLine();
       Console.WriteLine("Copy these details into appsettings.tokens.json for testing:");
