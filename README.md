@@ -2,11 +2,11 @@
 
 [![Nuget](https://img.shields.io/nuget/v/TipsTrade-HMRC.svg)](https://www.nuget.org/packages/TipsTrade-HMRC/)
 
-A strongly typed .NET client for interacting with the HMRC APIs.
+A strongly typed .NET library for interacting with the HMRC APIs.
 
 The package major version follows the .NET target version (e.g. 8.x.x targets net8.0).
 
-The following APIs are currently supported (available from the `Client` properties):
+The following services are currently supported (available from the `Client` properties):
 * `BusinessDetailsMtd`
 * `CreateTestUser`
 * `HelloWorld`
@@ -30,6 +30,15 @@ Release notes for `8.0.0` include:
 * Add async support (async API method variants available).
 * Add fraud feedback / Test Fraud Prevention API.
 * Fix: missing fraud prevention headers on some API calls.
+
+#### Service-based refactor breaking changes
+This refactor introduces a service-based architecture and removes the old API wrapper layer. If you are upgrading from earlier versions, note the following breaking changes:
+
+* `*Api` types have been replaced by `*Service` types (for example, `VatApi` -> `VatService`, `HelloWorldApi` -> `HelloWorldService`).
+* Internal API construction via `ApiFactory` and `IClient` has been removed.
+* Scope helper calls that referenced API types must now reference service types (for example, `Scopes.GetScopes<Api.Vat.VatService>()`).
+* Direct integration points that depended on old internal API wrapper classes/interfaces must be updated to use service classes and `HmrcOptions`.
+* DI registration is now available via `ServiceCollection` extension methods (`AddHmrc(...)` and per-service add methods).
 
 ## HMRC Developer Account
 A HMRC developer account is required - [Login Here][1]. To make requests you need to create an application which provides:
@@ -80,23 +89,23 @@ You can reference scope constants directly:
 var scopes = new string[] {Scopes.Hello, Scopes.VATRead, Scopes.VATWrite};
 ```
 
-In addition, the you can use the `Scopes.GetScopes` helper methods to retrieve scopes for a specific Api, or to filter scopes by name or value:
+In addition, you can use the `Scopes.GetScopes` helper methods to retrieve scopes for a specific service, or to filter scopes by name or value:
 ```C#
 // Get all the possible scopes - you probably won't want to do this in production.
 var scopes = Scopes.GetScopes();
 
-// Get all the scopes for the specified Api
-var scopes = Scopes.GetScopes<Api.Vat.VatApi>();
+// Get all the scopes for the specified service
+var scopes = Scopes.GetScopes<Api.Vat.VatService>();
 
 // All Scopes in the Scopes class that contains "VAT", eg. "VATRead", "VATWrite"
 var scopes = Scopes.GetScopes(nameFilter: (name) => name.Contains("VAT"));
 
-// All scopes in the Scopes class that are for the VAT api, and contain "read"
-var scopes = Scopes.GetScopes<Api.Vat.VatApi>(valueFilter: (value) => value.Contains("read"));
+// All scopes in the Scopes class that are for the VAT service, and contain "read"
+var scopes = Scopes.GetScopes<Api.Vat.VatService>(valueFilter: (value) => value.Contains("read"));
 ```
 
-## Creating the Api Client
-The `Client` class requires credentials before calling most API methods.
+## Creating the client
+The `Client` class requires credentials before calling most service methods.
 ```C#
 // Creates a client with production credentials
 var client = new Client("Client ID", "Client secret");
@@ -165,18 +174,18 @@ private static void RefreshToken(Client client) {
 }
 ```
 
-Async variants of token and API calls are available in this release.
+Async variants of token and service calls are available in this release.
 
-## Invoking API methods
-APIs are available as properties on the `Client` instance (see list at the top). Both synchronous and asynchronous method variants are provided (where appropriate),
+## Invoking service methods
+Services are available as properties on the `Client` instance (see list at the top). Both synchronous and asynchronous method variants are provided (where appropriate),
 e.g., `client.Vat.GetObligations(...)` and `client.Vat.GetObligationsAsync(...)`.
 
 ### Exception handling
-API methods can throw `ApiException`. `ApiException.Message` contains the core message; `ApiException.ApiError` may contain `ErrorResponse` objects in `ApiError.Errors`.
+Service methods can throw `ApiException`. `ApiException.Message` contains the core message; `ApiException.ApiError` may contain `ErrorResponse` objects in `ApiError.Errors`.
 
 `InvalidOperationException` may be thrown if the `Client` state is invalid for the request.
 
-APIs that require AntiFraud headers will throw `AntiFraudException` if headers are missing/invalid. `AntiFraudException.Errors` contains all validation messages.
+Services that require AntiFraud headers will throw `AntiFraudException` if headers are missing/invalid. `AntiFraudException.Errors` contains all validation messages.
 
 Example:
 ```C#
@@ -193,7 +202,7 @@ try {
 }
 ```
 
-### CreateTestUser API
+### CreateTestUser service
 In Sandbox you must create test users regularly (Sandbox data is cleared periodically). Use the `CreateTestUserFactory` helpers:
 
 ```C#
@@ -206,7 +215,7 @@ var orgVatRequest = CreateTestUserFactory.CreateTestUser<CreateOrganisationReque
 var user = client.CreateTestUser.CreateUser(orgRequest);
 ```
 
-### HelloWorld API
+### HelloWorld service
 Simple echo endpoints to verify credentials:
 ```C#
 // Returns "Hello World" - no application or user credentials are required
@@ -220,7 +229,7 @@ var tokens = client.RefreshAccessToken("Saved Refresh Token");
 var resp = client.HelloWorld.SayHelloUser();
 ```
 
-### VAT (MTD) API
+### VAT (MTD) service
 
 #### Get obligations
 VAT returns are indexed by a "Period Key". `ObligationsResult` implements `IComparable` so results can be sorted. Note: HMRC specify that the Period Key should not be shown to end users.
@@ -278,7 +287,7 @@ var resp = client.Vat.SubmitReturn(request);
 Other VAT methods: `GetLiabilities`, `GetPayments` - see API docs in code.
 
 ## Fraud prevention headers
-Certain APIs require fraud-prevention headers. Any API implementing `IRequiresAntiFraud` expects `Client.AntiFraud` to be populated. Missing or invalid headers throw `AntiFraudException` with `Errors`.
+Certain services require fraud-prevention headers. Any service implementing `IRequiresAntiFraud` expects `Client.AntiFraud` to be populated. Missing or invalid headers throw `AntiFraudException` with `Errors`.
 
 The `AntiFraud` helper includes:
 ```C#

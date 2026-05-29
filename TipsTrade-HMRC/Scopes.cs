@@ -8,29 +8,29 @@ namespace TipsTrade.HMRC {
   /// <summary>Provides all the scopes supported.</summary>
   public class Scopes {
     /// <summary>Provides access to the Hello World functions.</summary>
-    [ScopeApi(typeof(Api.HelloWorld.HelloWorldApi))]
+    [ScopeApi(typeof(Api.HelloWorld.HelloWorldService))]
     public const string Hello = "hello";
 
     /// <summary>Provides read-access to the Self-Assessment functions.</summary>
-    [ScopeApi(typeof(Api.BusinessDetailsMtd.BusinessDetailsMtdApi))]
-    [ScopeApi(typeof(Api.ObligationsMtd.ObligationsMtdApi))]
-    [ScopeApi(typeof(Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdApi))]
-    [ScopeApi(typeof(Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdApi))]
+    [ScopeApi(typeof(Api.BusinessDetailsMtd.BusinessDetailsMtdService))]
+    [ScopeApi(typeof(Api.ObligationsMtd.ObligationsMtdService))]
+    [ScopeApi(typeof(Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdService))]
+    [ScopeApi(typeof(Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdService))]
     public const string SelfAssessmentRead = "read:self-assessment";
 
     /// <summary>Provides write-access to the Self-Assessment functions.</summary>
-    [ScopeApi(typeof(Api.BusinessDetailsMtd.BusinessDetailsMtdApi))]
-    [ScopeApi(typeof(Api.ObligationsMtd.ObligationsMtdApi))]
-    [ScopeApi(typeof(Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdApi))]
-    [ScopeApi(typeof(Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdApi))]
+    [ScopeApi(typeof(Api.BusinessDetailsMtd.BusinessDetailsMtdService))]
+    [ScopeApi(typeof(Api.ObligationsMtd.ObligationsMtdService))]
+    [ScopeApi(typeof(Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdService))]
+    [ScopeApi(typeof(Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdService))]
     public const string SelfAssessmentWrite = "write:self-assessment";
 
     /// <summary>Provides read-access to the VAT functions.</summary>
-    [ScopeApi(typeof(Api.Vat.VatApi))]
+    [ScopeApi(typeof(Api.Vat.VatService))]
     public const string VATRead = "read:vat";
 
     /// <summary>Provides write-access to the VAT functions.</summary>
-    [ScopeApi(typeof(Api.Vat.VatApi))]
+    [ScopeApi(typeof(Api.Vat.VatService))]
     public const string VATWrite = "write:vat";
 
     /// <summary>Gets all the scopes that are valid for the specified Api type.</summary>

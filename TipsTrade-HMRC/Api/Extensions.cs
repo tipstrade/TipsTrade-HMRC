@@ -59,7 +59,7 @@ namespace TipsTrade.HMRC.Api {
     /// or when anti-fraud headers are required but the client's <see cref="AntiFraud"/> instance is null.
     /// </exception>
     internal static RestRequest CreateRequest(this IApi api, IApiRequest request) {
-      var client = api.GetClient();
+      var options = api.GetOptions();
 
       var restRequest = new RestRequest($"{api.Location}/{request.Location}", request.Method);
       restRequest.AddHeader("Accept", api.GetAcceptHeader(request.AcceptType));
@@ -70,7 +70,7 @@ namespace TipsTrade.HMRC.Api {
         restRequest.AddHeader("Content-Type", request.ContentType);
       }
 
-      if (client.IsSandbox && request is IGovTestScenario govTest) {
+      if (options.IsSandbox && request is IGovTestScenario govTest) {
         restRequest.AddGovTestScenario(govTest);
       }
 
@@ -79,22 +79,23 @@ namespace TipsTrade.HMRC.Api {
       }
 
       if (request.Authorization == Authorization.Application) {
-        var token = client.GetApplicationToken();
+        if (!(api is HmrcServiceBase svc)) {
+          throw new InvalidOperationException($"{nameof(api)} does not inherit {typeof(HmrcServiceBase)}");
+        }
 
-        // GetApplicationToken will throw if the client credentials aren't valid, so we can assume that the access token is valid.
+        var token = svc.GetApplicationToken();
         restRequest.AddHeader("Authorization", $"Bearer {token.AccessToken}");
 
       } else if (request.Authorization == Authorization.User) {
-        if (string.IsNullOrEmpty(client.AccessToken))
-          throw new InvalidOperationException($"The {nameof(client.AccessToken)} cannot be empty");
+        if (string.IsNullOrEmpty(options.AccessToken))
+          throw new InvalidOperationException($"The {nameof(options.AccessToken)} cannot be empty");
 
-        restRequest.AddHeader("Authorization", $"Bearer {client.AccessToken}");
-
+        restRequest.AddHeader("Authorization", $"Bearer {options.AccessToken}");
       }
 
       if (api is IRequiresAntiFraud) {
-        if (client.AntiFraud == null) throw new InvalidOperationException($"The {api.Name} requires Anti Fraud headers.");
-        foreach (var item in client.AntiFraud.GetAntiFraudHeaders()) {
+        if (options.AntiFraud == null) throw new InvalidOperationException($"The {api.Name} requires Anti Fraud headers.");
+        foreach (var item in options.AntiFraud.GetAntiFraudHeaders()) {
           restRequest.AddHeader(item.Key, item.Value);
         }
       }
@@ -176,26 +177,24 @@ namespace TipsTrade.HMRC.Api {
     }
 
     /// <summary>
-    /// Gets the HMRC <see cref="Client"/> instance associated with the specified <see cref="IApi"/>.
+    /// Gets the <see cref="HmrcOptions"/> from an <see cref="IApi"/> instance.
+    /// Supports <see cref="IHmrcService"/> implementations.
     /// </summary>
-    /// <param name="api">The API instance that must also implement <see cref="IClient"/>.</param>
-    /// <returns>The <see cref="Client"/> associated with <paramref name="api"/>.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if <paramref name="api"/> does not implement <see cref="IClient"/>.</exception>
-    internal static Client GetClient(this IApi api) {
-      if (!(api is IClient)) {
-        throw new InvalidOperationException($"{nameof(api)} does not implement {typeof(IClient)}");
+    internal static HmrcOptions GetOptions(this IApi api) {
+      if (api is IHmrcService svc) {
+        return svc.Options;
       }
 
-      return ((IClient)api).Client;
+      throw new InvalidOperationException($"{nameof(api)} does not implement {typeof(IHmrcService)}");
     }
 
     /// <summary>
-    /// Construct a new <see cref="RestClient"/> using the <see cref="Client.BaseUrl"/> of the specified API's client.
+    /// Construct a new <see cref="RestClient"/> using the <see cref="HmrcOptions.BaseUrl"/> of the specified API's options.
     /// </summary>
     /// <param name="api">The API instance used to obtain the base URL.</param>
     /// <returns>A new <see cref="RestClient"/> configured with the client's base URL.</returns>
     internal static RestClient GetRestClient(this IApi api) {
-      return new RestClient(api.GetClient().BaseUrl);
+      return new RestClient(api.GetOptions().BaseUrl);
     }
 
     /// <summary>

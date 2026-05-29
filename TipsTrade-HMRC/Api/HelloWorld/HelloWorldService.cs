@@ -1,32 +1,33 @@
-﻿using System.Threading;
+using Microsoft.Extensions.Options;
+using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.Api.HelloWorld.Model;
 using TipsTrade.HMRC.HelloWorld.Api.Model;
 
 namespace TipsTrade.HMRC.Api.HelloWorld {
-  /// <summary>The API that exposes Hello World function.</summary>
-  public class HelloWorldApi : IApi, IClient {
-    #region Properties
-    /// <summary>The client used to make requests.</summary>
-    Client IClient.Client { get; set; }
+  /// <summary>Service that exposes Hello World functions, supporting dependency injection.</summary>
+  public class HelloWorldService : HmrcServiceBase {
+    /// <inheritdoc/>
+    public override string Description => "A 'hello world' example of an API on the HMRC API Developer Hub.";
 
-    /// <summary>The description of the API.</summary>
-    public string Description => "A 'hello world' example of an API on the HMRC API Developer Hub.";
+    /// <inheritdoc/>
+    public override bool IsStable => true;
 
-    /// <summary>A flag indicating whether this version of the API is stable.</summary>
-    public bool IsStable => true;
+    /// <inheritdoc/>
+    public override string Location => "hello";
 
-    /// <summary>The relative location of the API.</summary>
-    public string Location => "hello";
+    /// <inheritdoc/>
+    public override string Name => "Hello World API";
 
-    /// <summary>The name of the API.</summary>
-    public string Name => "Hello World API";
+    /// <inheritdoc/>
+    public override string Version => "1.0";
 
-    /// <summary>The version of the API that the client should target.</summary>
-    public string Version => "1.0";
-    #endregion
+    /// <summary>Initialises a new instance using dependency-injected options.</summary>
+    public HelloWorldService(IOptions<HmrcOptions> options) : base(options) { }
 
-    #region Methods
+    /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
+    public HelloWorldService(HmrcOptions options) : base(options) { }
+
     /// <summary>Says "Hello Application"</summary>
     public string SayHelloApplication() {
       return this.ExecuteRequest<MessageResponse>(
@@ -34,7 +35,7 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
         ).Message;
     }
 
-    /// <summary>Says "Hello Application"</summary>
+    /// <summary>Says "Hello Application" asynchronously.</summary>
     public async Task<string> SayHelloApplicationAsync(CancellationToken cancellationToken = default) {
       var response = await this.ExecuteRequestAsync<MessageResponse>(
         new HelloRequest("application", Authorization.Application),
@@ -50,7 +51,7 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
         ).Message;
     }
 
-    /// <summary>Says "Hello User"</summary>
+    /// <summary>Says "Hello User" asynchronously.</summary>
     public async Task<string> SayHelloUserAsync(CancellationToken cancellationToken = default) {
       var response = await this.ExecuteRequestAsync<MessageResponse>(
         new HelloRequest("user", Authorization.User),
@@ -67,7 +68,7 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
         ).Message;
     }
 
-    /// <summary>Says "Hello World"</summary>
+    /// <summary>Says "Hello World" asynchronously.</summary>
     public async Task<string> SayHelloWorldAsync(CancellationToken cancellationToken = default) {
       var response = await this.ExecuteRequestAsync<MessageResponse>(
         new HelloRequest("world", Authorization.Open),
@@ -76,6 +77,5 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
 
       return response.Message;
     }
-    #endregion
   }
 }

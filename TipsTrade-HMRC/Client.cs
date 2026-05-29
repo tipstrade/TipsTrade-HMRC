@@ -29,9 +29,6 @@ namespace TipsTrade.HMRC {
     #endregion
 
     #region Properties
-    /// <summary>A cached list of APIs.</summary>
-    private List<Api.IApi> Apis = new List<IApi>();
-
     /// <summary>The short-lived access token.</summary>
     public string AccessToken { get; set; }
 
@@ -71,34 +68,34 @@ namespace TipsTrade.HMRC {
 
     #region APIs
     /// <summary>The Business Details (MTD) API.</summary>
-    public BusinessDetailsMtdApi BusinessDetailsMtd => GetApi<BusinessDetailsMtdApi>();
+    public BusinessDetailsMtdService BusinessDetailsMtd => GetService<BusinessDetailsMtdService>();
+
+    /// <summary>The Create Test User API.</summary>
+    public CreateTestUserService CreateTestUser => GetService<CreateTestUserService>();
 
     /// <summary>The Hello World API.</summary>
-    public CreateTestUserApi CreateTestUser => GetApi<CreateTestUserApi>();
-
-    /// <summary>The Hello World API.</summary>
-    public HelloWorldApi HelloWorld => GetApi<HelloWorldApi>();
+    public HelloWorldService HelloWorld => GetService<HelloWorldService>();
 
     /// <summary>The Individual Calculations (MTD) API.</summary>
-    public IndividualCalculationsMtdApi IndividualCalculationsMtd => GetApi<IndividualCalculationsMtdApi>();
+    public IndividualCalculationsMtdService IndividualCalculationsMtd => GetService<IndividualCalculationsMtdService>();
 
     /// <summary>The Obligations (MTD) API.</summary>
-    public ObligationsMtdApi ObligationsMtd => GetApi<ObligationsMtdApi>();
+    public ObligationsMtdService ObligationsMtd => GetService<ObligationsMtdService>();
 
     /// <summary>The Self Assessment Test Support (MTD) API.</summary>
-    public SelfAssessmentTestSupportMtdApi SelfAssessmentTestSupportMtd => GetApi<SelfAssessmentTestSupportMtdApi>();
+    public SelfAssessmentTestSupportMtdService SelfAssessmentTestSupportMtd => GetService<SelfAssessmentTestSupportMtdService>();
 
     /// <summary>The Self Employment Business (MTD) API.</summary>
-    public SelfEmploymentBusinessMtdApi SelfEmploymentBusinessMtd => GetApi<SelfEmploymentBusinessMtdApi>();
+    public SelfEmploymentBusinessMtdService SelfEmploymentBusinessMtd => GetService<SelfEmploymentBusinessMtdService>();
 
-    /// <summary>The Hello World API.</summary>
-    public TestFraudPreventionApi TestFraudPrevention => GetApi<TestFraudPreventionApi>();
+    /// <summary>The Test Fraud Prevention Headers API.</summary>
+    public TestFraudPreventionService TestFraudPrevention => GetService<TestFraudPreventionService>();
 
     /// <summary>The VAT API.</summary>
-    public VatApi Vat => GetApi<VatApi>();
+    public VatService Vat => GetService<VatService>();
 
     /// <summary>The VAT Number API.</summary>
-    public VatNumberApi VatNumber => GetApi<VatNumberApi>();
+    public VatNumberService VatNumber => GetService<VatNumberService>();
     #endregion
 
     #region Constructors
@@ -126,14 +123,19 @@ namespace TipsTrade.HMRC {
     #endregion
 
     #region Methods
-    /// <summary>Gets the specifeid API from the cache.</summary>
-    private T GetApi<T>() where T : class, Api.IApi, Api.IClient {
-      var found = Apis.Where(x => x is T).FirstOrDefault() as T;
-      if (found == null) {
-        found = Api.ApiFactory<T>.Create(this);
-        Apis.Add(found);
-      }
-      return found;
+    /// <summary>Builds an <see cref="HmrcOptions"/> snapshot from the current client state.</summary>
+    private HmrcOptions BuildOptions() => new HmrcOptions {
+      AccessToken = AccessToken,
+      AntiFraud = AntiFraud,
+      ClientID = ClientID,
+      ClientSecret = ClientSecret,
+      IsSandbox = IsSandbox,
+      RefreshToken = RefreshToken
+    };
+
+    /// <summary>Creates a new instance of the specified service type using the current client options.</summary>
+    private T GetService<T>() where T : HmrcServiceBase {
+      return (T)Activator.CreateInstance(typeof(T), BuildOptions());
     }
 
     /// <summary>Gets the Uri for the Authorization endpoint.</summary>

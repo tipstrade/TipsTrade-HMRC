@@ -94,6 +94,18 @@ namespace TipsTrade.HMRC.Tests {
       return client;
     }
 
+    /// <summary>Creates an <see cref="HmrcOptions"/> snapshot from the current test configuration.</summary>
+    protected HmrcOptions GetOptions(string accessToken = null) {
+      var client = GetClient();
+      return new HmrcOptions {
+        AccessToken = accessToken,
+        AntiFraud = client.AntiFraud,
+        ClientID = ClientId,
+        ClientSecret = ClientSecret,
+        IsSandbox = IsSandbox
+      };
+    }
+
     private void LoadUsersFromJsonFile() {
       Users = LoadFromJsonFile<HmrcUsers>("hmrc-users.json");
     }

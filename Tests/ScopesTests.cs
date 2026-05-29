@@ -15,7 +15,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Fact]
     public void HelloWorld() {
-      var scopes = Scopes.GetScopes<Api.HelloWorld.HelloWorldApi>();
+      var scopes = Scopes.GetScopes<Api.HelloWorld.HelloWorldService>();
       Assert.Single(scopes);
     }
 
@@ -26,22 +26,22 @@ namespace TipsTrade.HMRC.Tests {
         Scopes.SelfAssessmentWrite
       };
 
-      var businessDetailsMtd  = Scopes.GetScopes<Api.BusinessDetailsMtd.BusinessDetailsMtdApi>();
+      var businessDetailsMtd  = Scopes.GetScopes<Api.BusinessDetailsMtd.BusinessDetailsMtdService>();
       Assert.Equal(2, businessDetailsMtd.Count());
 
-      var obligationsMtd = Scopes.GetScopes<Api.ObligationsMtd.ObligationsMtdApi>();
+      var obligationsMtd = Scopes.GetScopes<Api.ObligationsMtd.ObligationsMtdService>();
       Assert.Equal(2, obligationsMtd.Count());
 
-      var selfAssessmentTestSupportMtd = Scopes.GetScopes<Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdApi>();
+      var selfAssessmentTestSupportMtd = Scopes.GetScopes<Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdService>();
       Assert.Equal(2, selfAssessmentTestSupportMtd.Count());
      
-      var selfEmploymentBusinessMtd = Scopes.GetScopes<Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdApi>();
+      var selfEmploymentBusinessMtd = Scopes.GetScopes<Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdService>();
       Assert.Equal(2, selfEmploymentBusinessMtd.Count());
     }
 
     [Fact]
     public void Vat() {
-      var scopes = Scopes.GetScopes<Api.Vat.VatApi>();
+      var scopes = Scopes.GetScopes<Api.Vat.VatService>();
       Assert.Equal(2, scopes.Count());
       Assert.Contains(scopes, s => Scopes.VATRead.Equals(s));
       Assert.Contains(scopes, s => Scopes.VATWrite.Equals(s));

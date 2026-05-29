@@ -1,0 +1,55 @@
+using Microsoft.Extensions.Options;
+using System.Threading;
+using System.Threading.Tasks;
+using TipsTrade.HMRC.AntiFraud;
+using TipsTrade.HMRC.Api.TestFraudPrevention.Model;
+
+namespace TipsTrade.HMRC.Api.TestFraudPrevention {
+  /// <summary>Service that exposes Test Fraud Prevention Header functions, supporting dependency injection.</summary>
+  public class TestFraudPreventionService : HmrcServiceBase, IRequiresAntiFraud {
+    /// <inheritdoc/>
+    public override string Description => "An API for testing Fraud Prevention headers.";
+
+    /// <inheritdoc/>
+    public override bool IsStable => false;
+
+    /// <inheritdoc/>
+    public override string Location => "test/fraud-prevention-headers";
+
+    /// <inheritdoc/>
+    public override string Name => "Test Fraud Prevention Headers API";
+
+    /// <inheritdoc/>
+    public override string Version => "1.0";
+
+    /// <summary>Initialises a new instance using dependency-injected options.</summary>
+    public TestFraudPreventionService(IOptions<HmrcOptions> options) : base(options) { }
+
+    /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
+    public TestFraudPreventionService(HmrcOptions options) : base(options) { }
+
+    /// <summary>Submits feedback about the fraud prevention headers sent with an API request.</summary>
+    public FeedbackResult GetFeedback(string api, ConnectionMethod connectionMethod) {
+      return this.ExecuteRequest<FeedbackResult>(new FeedbackRequest { Api = api, ConnectionMethod = connectionMethod });
+    }
+
+    /// <summary>Asynchronously submits feedback about the fraud prevention headers sent with an API request.</summary>
+    public async Task<FeedbackResult> GetFeedbackAsync(string api, ConnectionMethod connectionMethod, CancellationToken cancellationToken = default) {
+      return await this.ExecuteRequestAsync<FeedbackResult>(
+        new FeedbackRequest { Api = api, ConnectionMethod = connectionMethod },
+        cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Validates fraud prevention headers submitted with this HTTP request.</summary>
+    public ValidateResult Validate() {
+      return this.ExecuteRequest<ValidateResult>(new ValidateRequest());
+    }
+
+    /// <summary>Validates fraud prevention headers submitted with this HTTP request asynchronously.</summary>
+    public async Task<ValidateResult> ValidateAsync(CancellationToken cancellationToken = default) {
+      return await this.ExecuteRequestAsync<ValidateResult>(
+        new ValidateRequest(),
+        cancellationToken).ConfigureAwait(false);
+    }
+  }
+}
