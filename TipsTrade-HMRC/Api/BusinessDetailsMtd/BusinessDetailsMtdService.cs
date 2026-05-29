@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
@@ -23,10 +24,10 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
     public override string Version => "2.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public BusinessDetailsMtdService(IOptions<HmrcOptions> options) : base(options) { }
+    public BusinessDetailsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public BusinessDetailsMtdService(HmrcOptions options) : base(options) { }
+    public BusinessDetailsMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>Create or amend the type of quarterly reporting period used for a business for a specific tax year.</summary>
     public AmendQuarterlyPeriodTypeResponse CreateOrAmendQuarterlyPeriodType(AmendQuarterlyPeriodTypeRequest request) {

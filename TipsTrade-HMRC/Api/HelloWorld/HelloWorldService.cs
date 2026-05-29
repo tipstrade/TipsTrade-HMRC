@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.Api.HelloWorld.Model;
@@ -23,10 +24,10 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
     public override string Version => "1.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public HelloWorldService(IOptions<HmrcOptions> options) : base(options) { }
+    public HelloWorldService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public HelloWorldService(HmrcOptions options) : base(options) { }
+    public HelloWorldService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>Says "Hello Application"</summary>
     public string SayHelloApplication() {

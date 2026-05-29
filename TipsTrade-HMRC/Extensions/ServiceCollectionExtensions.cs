@@ -29,6 +29,8 @@ namespace TipsTrade.HMRC.Extensions {
 
       services.Configure(configure);
 
+      services.AddHttpClient(Api.HmrcServiceBase.HttpClientName);
+
       services.AddHmrcOAuthService();
       services.AddBusinessDetailsMtdService();
       services.AddCreateTestUserService();

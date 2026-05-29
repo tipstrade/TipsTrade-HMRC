@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model;
@@ -22,10 +23,10 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
     public override string Version => "1.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public SelfAssessmentTestSupportMtdService(IOptions<HmrcOptions> options) : base(options) { }
+    public SelfAssessmentTestSupportMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public SelfAssessmentTestSupportMtdService(HmrcOptions options) : base(options) { }
+    public SelfAssessmentTestSupportMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>Delete stateful test data, optionally scoped to a National Insurance number.</summary>
     public DeleteStatefulTestDataResponse DeleteStatefulTestData(string niNumber = null) {

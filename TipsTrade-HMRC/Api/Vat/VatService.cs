@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
@@ -23,10 +24,10 @@ namespace TipsTrade.HMRC.Api.Vat {
     public override string Version => "1.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public VatService(IOptions<HmrcOptions> options) : base(options) { }
+    public VatService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public VatService(HmrcOptions options) : base(options) { }
+    public VatService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>Retrieve VAT liabilities.</summary>
     public LiabilitiesResponse GetLiabilities(LiabilitiesRequest request) {

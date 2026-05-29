@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
@@ -23,10 +24,10 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
     public override string Version => "8.0";
 
     /// <summary>Initialises a new instance using dependency-injected options.</summary>
-    public IndividualCalculationsMtdService(IOptions<HmrcOptions> options) : base(options) { }
+    public IndividualCalculationsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>Initialises a new instance using a plain <see cref="HmrcOptions"/> object.</summary>
-    public IndividualCalculationsMtdService(HmrcOptions options) : base(options) { }
+    public IndividualCalculationsMtdService(HmrcOptions options, IHttpClientFactory httpClientFactory) : base(options, httpClientFactory) { }
 
     /// <summary>List Self Assessment tax calculations for a given National Insurance number and tax year.</summary>
     public ListSelfAssessmentCalculationsResponse ListSelfAssessmentCalculations(ListSelfAssessmentCalculationsRequest request) {

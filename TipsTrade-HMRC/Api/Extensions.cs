@@ -13,7 +13,7 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api {
   /// <summary>
-  /// A collection of methods extending the functionality of <see cref="IApi"/> objects.
+  /// A collection of methods extending the functionality of <see cref="IHmrcService"/> objects.
   /// </summary>
   public static class Extensions {
     /// <summary>
@@ -58,7 +58,7 @@ namespace TipsTrade.HMRC.Api {
     /// Thrown when required tokens (server or user) are missing for the requested <see cref="Authorization"/> mode,
     /// or when anti-fraud headers are required but the client's <see cref="AntiFraud"/> instance is null.
     /// </exception>
-    internal static RestRequest CreateRequest(this IApi api, IApiRequest request) {
+    internal static RestRequest CreateRequest(this IHmrcService api, IApiRequest request) {
       var options = api.GetOptions();
 
       var restRequest = new RestRequest($"{api.Location}/{request.Location}", request.Method);
@@ -113,7 +113,7 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="api">The API instance used to execute the request.</param>
     /// <param name="request">The request model used to create the HTTP request.</param>
     /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static T ExecuteRequest<T>(this IApi api, IApiRequest request) {
+    internal static T ExecuteRequest<T>(this IHmrcService api, IApiRequest request) {
       var restRequest = api.CreateRequest(request);
 
       return api.ExecuteRequest<T>(restRequest);
@@ -126,7 +126,7 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="api">The API instance used to obtain the <see cref="RestClient"/> for execution.</param>
     /// <param name="request">The <see cref="RestRequest"/> to execute.</param>
     /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static T ExecuteRequest<T>(this IApi api, RestRequest request) {
+    internal static T ExecuteRequest<T>(this IHmrcService api, RestRequest request) {
       var client = api.GetRestClient();
       var response = client.Execute<T>(request);
 
@@ -142,7 +142,7 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="request">The request model used to create the HTTP request.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
     /// <returns>A task that resolves to an instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static async Task<T> ExecuteRequestAsync<T>(this IApi api, IApiRequest request, CancellationToken cancellationToken) {
+    internal static async Task<T> ExecuteRequestAsync<T>(this IHmrcService api, IApiRequest request, CancellationToken cancellationToken) {
       var restRequest = api.CreateRequest(request);
 
       return await api.ExecuteRequestAsync<T>(restRequest, cancellationToken).ConfigureAwait(false);
@@ -156,7 +156,7 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="request">The <see cref="RestRequest"/> to execute.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
     /// <returns>A task that resolves to an instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static async Task<T> ExecuteRequestAsync<T>(this IApi api, RestRequest request, CancellationToken cancellationToken) {
+    internal static async Task<T> ExecuteRequestAsync<T>(this IHmrcService api, RestRequest request, CancellationToken cancellationToken) {
       var client = api.GetRestClient();
       var response = await client.ExecuteAsync<T>(request, cancellationToken).ConfigureAwait(false);
 
@@ -172,29 +172,28 @@ namespace TipsTrade.HMRC.Api {
     /// <remarks>
     /// See HMRC API versioning guidance: <see href="https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning" />
     /// </remarks>
-    internal static string GetAcceptHeader(this IApi api, string contentType) {
+    internal static string GetAcceptHeader(this IHmrcService api, string contentType) {
       return $"application/vnd.hmrc.{api.Version}+{contentType}";
     }
 
     /// <summary>
-    /// Gets the <see cref="HmrcOptions"/> from an <see cref="IApi"/> instance.
-    /// Supports <see cref="IHmrcService"/> implementations.
+    /// Gets the <see cref="HmrcOptions"/> from an <see cref="IHmrcService"/> instance.
     /// </summary>
-    internal static HmrcOptions GetOptions(this IApi api) {
-      if (api is IHmrcService svc) {
-        return svc.Options;
-      }
-
-      throw new InvalidOperationException($"{nameof(api)} does not implement {typeof(IHmrcService)}");
+    internal static HmrcOptions GetOptions(this IHmrcService api) {
+      return api.Options;
     }
 
     /// <summary>
-    /// Construct a new <see cref="RestClient"/> using the <see cref="HmrcOptions.BaseUrl"/> of the specified API's options.
+    /// Gets a <see cref="RestClient"/> backed by the named <see cref="System.Net.Http.HttpClient"/> from the DI factory.
     /// </summary>
-    /// <param name="api">The API instance used to obtain the base URL.</param>
-    /// <returns>A new <see cref="RestClient"/> configured with the client's base URL.</returns>
-    internal static RestClient GetRestClient(this IApi api) {
-      return new RestClient(api.GetOptions().BaseUrl);
+    /// <param name="api">The API instance used to obtain the base URL and HTTP client.</param>
+    /// <returns>A <see cref="RestClient"/> configured with the client's base URL.</returns>
+    internal static RestClient GetRestClient(this IHmrcService api) {
+      if (api is HmrcServiceBase svc) {
+        return svc.RestClient;
+      }
+
+      throw new InvalidOperationException($"{nameof(api)} does not inherit {typeof(HmrcServiceBase)}");
     }
 
     /// <summary>
