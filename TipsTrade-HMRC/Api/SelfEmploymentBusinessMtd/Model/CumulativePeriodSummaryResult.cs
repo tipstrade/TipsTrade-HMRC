@@ -43,7 +43,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
     /// <param name="values">The values to replace in the dictionary.</param>
     /// <returns>The updated dictionary.</returns>
     /// <exception cref="ArgumentException">Thrown when invalid keys are provided in the values dictionary.</exception>
-    private static Dictionary<T, V> ReplaceValueOrThrow<T, V>(this Dictionary<T, V> dictionary, Dictionary<T, V> values) {
+    private static Dictionary<T, V> ReplaceValueOrThrow<T, V>(this Dictionary<T, V> dictionary, Dictionary<T, V> values) where T : notnull {
       if (values == null) {
         return dictionary;
       }
