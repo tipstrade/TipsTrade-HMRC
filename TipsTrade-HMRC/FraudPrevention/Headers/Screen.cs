@@ -1,11 +1,11 @@
-﻿namespace TipsTrade.HMRC.AntiFraud {
+﻿namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// <summary>Represents an object that contains client screen information.</summary>
-  public class Screen : IAntiFraudValue {
+  public class Screen : IFraudPreventionValue {
     /// <summary>Gets or sets the colour depth of the screen.</summary>
-    public int? ColourDepth { get; set; }
+    public int ColourDepth { get; set; }
 
     /// <summary>Gets or sets the reported scaling factor of the screen.</summary>
-    public float? ScalingFactor { get; set; }
+    public float ScalingFactor { get; set; }
 
     /// <summary>Gets or sets the dimensions of the screen.</summary>
     public Size Size { get; set; }
@@ -13,21 +13,25 @@
     /// <summary>
     /// Initializes a new instance of the <see cref="Screen"/> class with the specified width and height.
     /// </summary>
-    public Screen(int width, int height, int? colourDepth = null, float? scalingFactor = null) : this(new Size(width, height), colourDepth, scalingFactor) {
+    public Screen(int width, int height, int colourDepth, float scalingFactor) : this(new Size(width, height), colourDepth, scalingFactor) {
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Screen"/> class with the specified size.
     /// </summary>
-    public Screen(Size size, int? colourDepth, float? scalingFactor) {
+    public Screen(Size size, int colourDepth, float scalingFactor) {
       Size = size;
       ColourDepth = colourDepth;
       ScalingFactor = scalingFactor;
     }
 
-    /// <summary>Retuns a string that contains the anti fraud header value.</summary>
+    /// <summary>Returns a string that contains the fraud prevention header value.</summary>
     public string GetHeaderValue() {
-      return $"width={Size.Width}&height={Size.Height}&scaling-factor={ScalingFactor}&colour-depth={ColourDepth}";
+      // Ensure the scaling factor is formatted with a dot as the decimal separator, regardless of the current culture.
+      var scalingText = ScalingFactor.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+
+      // Ensure the scaling factor is formatted with a dot as the decimal separator, regardless of the current culture.
+      return $"width={Size.Width}&height={Size.Height}&scaling-factor={scalingText}&colour-depth={ColourDepth}";
     }
 
 #if NETFRAMEWORK

@@ -4,13 +4,13 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Api.TestFraudPrevention.Model;
+using TipsTrade.HMRC.FraudPrevention;
 
 namespace TipsTrade.HMRC.Api.TestFraudPrevention {
   /// <summary>Service that exposes Test Fraud Prevention Header functions, supporting dependency injection.</summary>
-  public class TestFraudPreventionService : HmrcServiceBase, IRequiresAntiFraud {
+  public class TestFraudPreventionService : HmrcServiceBase, IRequiresFraudPrevention {
     /// <inheritdoc/>
     public override string Description => "An API for testing Fraud Prevention headers.";
 

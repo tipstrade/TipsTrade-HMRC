@@ -1,6 +1,6 @@
 ﻿using RestSharp;
-using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.Model;
+using TipsTrade.HMRC.FraudPrevention;
 
 namespace TipsTrade.HMRC.Api.TestFraudPrevention.Model {
   internal class FeedbackRequest : IApiRequestWithParameters {

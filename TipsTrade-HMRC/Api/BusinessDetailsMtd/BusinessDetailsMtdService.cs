@@ -4,13 +4,13 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.BusinessDetailsMtd.Model;
 using TipsTrade.HMRC.Api.OAuth;
+using TipsTrade.HMRC.FraudPrevention;
 
 namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
   /// <summary>Service that exposes Business Details (MTD) functions, supporting dependency injection.</summary>
-  public class BusinessDetailsMtdService : HmrcServiceBase, IRequiresAntiFraud {
+  public class BusinessDetailsMtdService : HmrcServiceBase, IRequiresFraudPrevention {
     /// <inheritdoc/>
     public override string Description => "Business Details API to retrieve detailed information about a customer's self-employment or property business.";
 

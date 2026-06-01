@@ -1,16 +1,16 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using TipsTrade.HMRC.AntiFraud;
-using TipsTrade.HMRC.Api.ObligationsMtd.Model;
 using TipsTrade.HMRC.Api.OAuth;
-using System;
+using TipsTrade.HMRC.Api.ObligationsMtd.Model;
+using TipsTrade.HMRC.FraudPrevention;
 
 namespace TipsTrade.HMRC.Api.ObligationsMtd {
   /// <summary>Service that exposes Obligations (MTD) functions, supporting dependency injection.</summary>
-  public class ObligationsMtdService : HmrcServiceBase, IRequiresAntiFraud {
+  public class ObligationsMtdService : HmrcServiceBase, IRequiresFraudPrevention {
     /// <inheritdoc/>
     public override string Description => "Retrieve obligations for a user's business income sources.";
 

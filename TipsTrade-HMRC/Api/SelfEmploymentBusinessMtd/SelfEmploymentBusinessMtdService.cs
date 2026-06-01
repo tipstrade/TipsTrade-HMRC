@@ -4,13 +4,13 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model;
+using TipsTrade.HMRC.FraudPrevention;
 
 namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
   /// <summary>Service that exposes Self Employment Business (MTD) functions, supporting dependency injection.</summary>
-  public class SelfEmploymentBusinessMtdService : HmrcServiceBase, IRequiresAntiFraud {
+  public class SelfEmploymentBusinessMtdService : HmrcServiceBase, IRequiresFraudPrevention {
     /// <inheritdoc/>
     public override string Description => "Create or amend a self-employment annual summary for a tax year.";
 

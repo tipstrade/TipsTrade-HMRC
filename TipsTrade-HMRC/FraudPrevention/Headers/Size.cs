@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace TipsTrade.HMRC.AntiFraud {
+namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// <summary>Represents an object that contains size information.</summary>
-  public class Size : IAntiFraudValue {
-    /// <summary>Gets or sets the width of the screen.</summary>
+  public class Size : IFraudPreventionValue {
+    /// <summary>Gets or sets the height of the screen.</summary>
     public int Height { get; set; }
 
     /// <summary>Gets or sets the width of the screen.</summary>
     public int Width { get; set; }
 
-    /// <summary>Retuns a string that contains the anti fraud header value.</summary>
+    /// <summary>Returns a string that contains the fraud-prevention header value.</summary>
     public string GetHeaderValue() {
       return $"width={Width}&height={Height}";
     }

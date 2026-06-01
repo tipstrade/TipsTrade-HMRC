@@ -7,14 +7,17 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
-using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Extensions;
+using TipsTrade.HMRC.FraudPrevention;
+using TipsTrade.HMRC.FraudPrevention.ConnectionMethods;
+using TipsTrade.HMRC.FraudPrevention.Headers;
 
 namespace TipsTrade.HMRC.Tests {
   public abstract class TestBase {
@@ -34,15 +37,17 @@ namespace TipsTrade.HMRC.Tests {
     #endregion
 
     #region Client properties
-    protected string ClientId => Configuration.GetSection(Environment)["ClientID"];
+    protected string ClientId => Configuration.GetSection(Environment)["ClientID"] ?? throw new InvalidOperationException("ClientID is not configured.");
 
-    protected string ClientSecret => Configuration.GetSection(Environment)["ClientSecret"];
+    protected string ClientSecret => Configuration.GetSection(Environment)["ClientSecret"] ?? throw new InvalidOperationException("ClientSecret is not configured.");
 
     private string Environment => IsSandbox ? "Sandbox" : "Production";
 
+    protected string FraudPreventionDeviceId => Configuration["FraudPreventionDeviceId"] ?? throw new InvalidOperationException("FraudPreventionDeviceId is not configured.");
+
     protected bool IsSandbox => true;
 
-    protected string RedirectUrl => Configuration["RedirectUrl"];
+    protected string RedirectUrl => Configuration["RedirectUrl"] ?? throw new InvalidOperationException("RedirectUrl is not configured.");
     #endregion
 
     public TestBase() {
@@ -84,7 +89,7 @@ namespace TipsTrade.HMRC.Tests {
       // Mock the HMRC options.
       HmrcOptionsMock = new Mock<IOptions<HmrcOptions>>();
       var hmrcOptions = new global::TipsTrade.HMRC.HmrcOptions {
-        AntiFraud = BuildAntiFraud(),
+        FraudPreventionConfig = BuildFraudPrevention<BatchProcessDirect>(),
         ClientID = ClientId,
         ClientSecret = ClientSecret,
         IsSandbox = IsSandbox
@@ -119,47 +124,102 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     /// <summary>
-    /// Builds an <see cref="AntiFraud.AntiFraud"/> instance with all properties populated.
+    /// Builds the fraud prevention headers for the tests, using the various header interfaces to populate the relevant properties.
     /// </summary>
-    protected AntiFraud.AntiFraud BuildAntiFraud() {
-      var antiFraud = new AntiFraud.AntiFraud() {
-        ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
-        DeviceID = Configuration["AntiFraudDeviceID"],
-        Screens = [new Screen(1920, 1080, 32, 1)],
-        TimeZone = TimeZoneInfo.Local,
-        UserIDs = new Dictionary<string, string>() {
+    protected T BuildFraudPrevention<T>() where T : IFraudPrevention, new() {
+      var headers = new T();
+
+      if (headers is IBrowserDoNotTrack doNotTrack) {
+        doNotTrack.BrowserDoNotTrack = true;
+      }
+
+      if (headers is IBrowserJavaScriptUserAgent browserUserAgent) {
+        browserUserAgent.BrowserJavaScriptUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome";
+      }
+
+      if (headers is IBrowserPlugins browserPlugins) {
+        browserPlugins.BrowserPlugins = new List<string>() { "Plugin 1", "Plugin 2" };
+      }
+
+      if (headers is IDeviceId deviceId) {
+        deviceId.DeviceId = FraudPreventionDeviceId;
+      }
+
+      if (headers is ILocalIps localIps) {
+        localIps.PopulateLocalIps();
+      }
+
+      if (headers is IMacAddresses macAddresses) {
+        macAddresses.PopulateMacAddresses();
+      }
+
+      if (headers is IMultiFactor multiFactorAuthentication) {
+        multiFactorAuthentication.MultiFactor = [new MultiFactor() { TimeStamp = DateTime.UtcNow.AddMinutes(-1), Method = MFAMethod.TOTP, UniqueReference = $"{Guid.NewGuid()}" }];
+      }
+
+      if (headers is IPublicIp publicIp) {
+        publicIp.PublicIp = IPAddress.Parse("1.1.1.1");
+      }
+
+      if (headers is IPublicPort publicPort) {
+        publicPort.PublicPort = 12345;
+      }
+
+      if (headers is IScreens screens) {
+        screens.Screens = [
+          new Screen(1080,1920, 32, 1),
+          new Screen(1080,1920, 32, 1)
+        ];
+      }
+
+      if (headers is ITimeZone timeZone) {
+        timeZone.TimeZone = TimeZoneInfo.Local;
+      }
+
+      if (headers is IUserAgent userAgent) {
+        userAgent.PopulateUserAgent();
+
+        // Even though the documentation states that these are optional, the API returns an error if they are not included.
+        userAgent.UserAgent.DeviceManufacturer = "Dell";
+        userAgent.UserAgent.DeviceModel = "XPS Gaming PC";
+      }
+
+      if (headers is IUserIds userIds) {
+        userIds.UserIds = new Dictionary<string, string>() {
           { "os", System.Environment.UserName }
-        },
-        VendorProductName = "TipsTrade.HMRC.Tests",
-        VendorVersion = new Dictionary<string, string>() {
+        };
+      }
+
+      if (headers is IVendorForwarded vendorForwarded) {
+        vendorForwarded.VendorForwarded = [new Forwarded(IPAddress.Parse("1.1.1.1"), IPAddress.Parse("2.2.2.2"))];
+      }
+
+      if (headers is IVendorLicenceIDs vendorLicenceIDs) {
+        vendorLicenceIDs.VendorLicenceIDs = new Dictionary<string, string>() {
+          { "Example", "https://example.com" }
+        };
+      }
+
+      if (headers is IVendorProductName vendorProductName) {
+        vendorProductName.VendorProductName = "TipsTrade.HMRC.Tests";
+      }
+
+      if (headers is IVendorPublicIP vendorPublicIP) {
+        vendorPublicIP.VendorPublicIP = IPAddress.Parse("8.8.8.8");
+      }
+
+      if (headers is IVendorVersion vendorVersion) {
+        vendorVersion.VendorVersion = new Dictionary<string, string>() {
           { "TipsTrade.HMRC.Tests", "0.0.0.1" },
           { "Another Vendor", $"{new Version(0, 0, 1, 2)}" }
-        },
-        WindowSize = new Size(1024, 768)
-      };
+        };
+      }
 
-      antiFraud.PopulateLocalIPs();
-      antiFraud.PopulateMACAddresses();
-      antiFraud.PopulateUserAgent();
-      antiFraud.VendorForwarded = [new Forwarded(System.Net.IPAddress.Parse("8.8.8.8"), System.Net.IPAddress.Parse("fe80::21a6:9255:4c0b:78e4%14"))];
+      if (headers is IWindowSize windowSize) {
+        windowSize.WindowSize = new System.Drawing.Size(1080, 1920);
+      }
 
-      // Even though the documentation states that these are optional, the API returns an error
-      antiFraud.UserAgent.DeviceManufacturer = "Dell";
-      antiFraud.UserAgent.DeviceModel = "XPS Gaming PC";
-
-      antiFraud.MultiFactor = new[] {
-        new MultiFactor() {
-          Method = MFAMethod.AUTH_CODE,
-          TimeStamp = DateTime.Now,
-          UniqueReference = $"{Guid.NewGuid()}"
-        }
-      };
-
-      antiFraud.VendorLicenceIDs = new Dictionary<string, string>() {
-        { "Example", "https://example.com" }
-      };
-
-      return antiFraud;
+      return headers;
     }
 
     /// <summary>Resolves a DI-registered HMRC service with an optional access token.</summary>

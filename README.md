@@ -317,7 +317,7 @@ Example usage:
 ```C#
 client.AntiFraud = new AntiFraud.AntiFraud() {
   ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
-  DeviceID = Configuration["AntiFraudDeviceID"],
+  DeviceID = Configuration["FraudPreventionDeviceId"],
   Screens = new Screen[] {
     new Screen() {ColourDepth = 32, ScalingFactor=1, Size = new Size(1920,1080) }
   },

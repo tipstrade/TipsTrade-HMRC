@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Web;
 
-namespace TipsTrade.HMRC.AntiFraud {
-  /// <summary>Represents an object that contains multi-factor authentication information.</summary>
-  public class MultiFactor : IAntiFraudValue {
+namespace TipsTrade.HMRC.FraudPrevention.Headers {
+  /// <summary>
+  /// Represents a single multi-factor authentication factor used in the Gov-Multi-Factor header.
+  /// </summary>
+  public class MultiFactor : IFraudPreventionValue {
     /// <summary>Gets or sets the <see cref="MFAMethod"/> being used.</summary>
     public MFAMethod Method { get; set; }
 
@@ -18,7 +20,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     /// </summary>
     public string UniqueReference { get; set; } = "";
 
-    /// <summary>Retuns a string that contains the anti fraud header value.</summary>
+    /// <summary>Returns a string that contains the fraud-prevention header value.</summary>
     public string GetHeaderValue() {
       if (string.IsNullOrEmpty(UniqueReference)) throw new InvalidOperationException($"{nameof(UniqueReference)} cannot be empty.");
 

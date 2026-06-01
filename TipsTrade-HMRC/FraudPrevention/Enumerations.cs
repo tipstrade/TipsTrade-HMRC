@@ -1,4 +1,4 @@
-﻿namespace TipsTrade.HMRC.AntiFraud {
+﻿namespace TipsTrade.HMRC.FraudPrevention {
   /// <summary>The valid application connection methods.</summary>
   public enum ConnectionMethod {
     /// <summary>Installed mobile application connecting directly to HMRC.</summary>

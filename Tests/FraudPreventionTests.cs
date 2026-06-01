@@ -3,6 +3,8 @@ using System;
 using TipsTrade.HMRC.Api.TestFraudPrevention;
 using TipsTrade.HMRC.Api.TestFraudPrevention.Model;
 using NUnit.Framework;
+using TipsTrade.HMRC.FraudPrevention.Headers;
+using TipsTrade.HMRC.FraudPrevention.ConnectionMethods;
 
 namespace TipsTrade.HMRC.Tests {
   public class FraudPreventionTests : TestBase {
@@ -48,7 +50,7 @@ namespace TipsTrade.HMRC.Tests {
       Assume.That(implemented, Is.True, $"API for service '{service}' is not implemented in the sandbox.");
 
       var svc = GetService<TestFraudPreventionService>();
-      var response = svc.GetFeedback(service, AntiFraud.ConnectionMethod.BATCH_PROCESS_DIRECT);
+      var response = svc.GetFeedback(service, FraudPrevention.ConnectionMethod.BATCH_PROCESS_DIRECT);
 
       Assert.That(response, Is.Not.Null);
       Assert.That(response.Requests, Is.Not.Null);
@@ -71,7 +73,7 @@ namespace TipsTrade.HMRC.Tests {
 
     [Test]
     public void PopulateLocalIPs_Predicate_Is_Called() {
-      var antiFraud = BuildAntiFraud();
+      var headers = BuildFraudPrevention<BatchProcessDirect>();
 
       bool isCalled = false;
       Func<System.Net.IPAddress, bool> func = (ip) => {
@@ -79,7 +81,7 @@ namespace TipsTrade.HMRC.Tests {
         return true;
       };
 
-      antiFraud.PopulateLocalIPs(func);
+      headers.PopulateLocalIps(func);
 
       Assert.That(isCalled, Is.True);
     }

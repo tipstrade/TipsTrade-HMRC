@@ -4,13 +4,13 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Api.Vat.Model;
+using TipsTrade.HMRC.FraudPrevention;
 
 namespace TipsTrade.HMRC.Api.Vat {
   /// <summary>Service that exposes VAT functions, supporting dependency injection.</summary>
-  public class VatService : HmrcServiceBase, IRequiresAntiFraud {
+  public class VatService : HmrcServiceBase, IRequiresFraudPrevention {
     /// <inheritdoc/>
     public override string Description => "An API for providing VAT data.";
 

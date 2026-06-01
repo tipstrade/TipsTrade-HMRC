@@ -7,8 +7,8 @@ namespace TipsTrade.HMRC {
     /// <summary>The location of the sandbox API.</summary>
     public const string SandboxUrl = "https://test-api.service.hmrc.gov.uk";
 
-    /// <summary>Gets or sets the information used to generate the anti-fraud headers.</summary>
-    public AntiFraud.AntiFraud? AntiFraud { get; set; }
+    /// <summary>Configuration options for the fraud prevention service.</summary>
+    public FraudPrevention.IFraudPrevention? FraudPreventionConfig { get; set; }
 
     /// <summary>Gets the base URL used for all requests, based on the current environment.</summary>
     public string BaseUrl => IsSandbox ? SandboxUrl : ProductionUrl;

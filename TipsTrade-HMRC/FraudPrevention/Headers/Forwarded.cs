@@ -2,9 +2,9 @@
 using System.Net;
 using System.Web;
 
-namespace TipsTrade.HMRC.AntiFraud {
+namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// <summary>Represents an object that contains information on hops over the internet that terminate TLS.</summary>
-  public class Forwarded : IAntiFraudValue {
+  public class Forwarded : IFraudPreventionValue   {
     /// <summary>Gets or sets the server’s public IP address where it received the request.</summary>
     public IPAddress By { get; set; }
 
@@ -17,17 +17,23 @@ namespace TipsTrade.HMRC.AntiFraud {
     /// <param name="by">The server’s public IP address where it received the request.</param>
     /// <param name="for">The requestor’s public IP address from which the vendor received the request.</param>
     public Forwarded(IPAddress by, IPAddress @for) {
+      if (by == null) {
+        throw new ArgumentNullException(nameof(by));
+      } else if (@for == null) {
+        throw new ArgumentNullException(nameof(@for));
+      }
+
       By = by;
       For = @for;
     }
 
 
-    /// <summary>Retuns a string that contains the anti fraud header value.</summary>
+    /// <summary>Returns a string that contains the fraud prevention header value.</summary>
     public string GetHeaderValue() {
-      if (By == null) throw new InvalidOperationException($"The {nameof(By)} property cannot be null.");
-      if (For == null) throw new InvalidOperationException($"The {nameof(For)} property cannot be null.");
+      var by = HttpUtility.UrlEncode($"{By}");
+      var @for = HttpUtility.UrlEncode($"{For}");
 
-      return $"by={HttpUtility.UrlEncode(By.ToString())}&for={HttpUtility.UrlEncode(For.ToString())}";
+      return $"by={by}&for={@for}";
     }
   }
 }

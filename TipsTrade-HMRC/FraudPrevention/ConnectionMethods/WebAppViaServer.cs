@@ -1,0 +1,115 @@
+using System;
+using System.Collections.Generic;
+using System.Net;
+using TipsTrade.HMRC.FraudPrevention.Headers;
+
+namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
+  /// <summary>Fraud prevention headers for a web application connecting through intermediary servers to HMRC.</summary>
+  /// <remarks>
+  /// See <see href="https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/"/> for information
+  /// on which headers are required and recommended for this connection method, and how to obtain the relevant information for each header.
+  /// </remarks>
+  public class WebAppViaServer :
+    IFraudPrevention,
+    IBrowserJavaScriptUserAgent,
+    IBrowserDoNotTrack,
+    IBrowserPlugins,
+    IDeviceId,
+    ILocalIps,
+    IMultiFactor,
+    IPublicIp,
+    IPublicPort,
+    IScreens,
+    ITimeZone,
+    IUserIds,
+    IVendorForwarded,
+    IVendorLicenceIDs,
+    IVendorProductName,
+    IVendorPublicIP,
+    IVendorVersion,
+    IWindowSize {
+    /// <inheritdoc/>
+    public ConnectionMethod ConnectionMethod => ConnectionMethod.WEB_APP_VIA_SERVER;
+
+    /// <inheritdoc/>
+    public bool? BrowserDoNotTrack { get; set; }
+
+    /// <inheritdoc/>
+    public string? BrowserJavaScriptUserAgent { get; set; }
+
+    /// <inheritdoc/>
+    public IEnumerable<string>? BrowserPlugins { get; set; }
+
+    /// <inheritdoc/>
+    public string? DeviceId { get; set; }
+
+    /// <inheritdoc/>
+    public IEnumerable<IPAddress>? LocalIPs { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime LocalIPsTimestamp { get; set; } = DateTime.UtcNow;
+
+    /// <inheritdoc/>
+    public IEnumerable<MultiFactor>? MultiFactor { get; set; }
+
+    /// <inheritdoc/>
+    public IPAddress? PublicIp { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime PublicIpTimestamp { get; set; } = DateTime.UtcNow;
+
+    /// <inheritdoc/>
+    public int? PublicPort { get; set; }
+
+    /// <inheritdoc/>
+    public IEnumerable<Screen>? Screens { get; set; }
+
+    /// <inheritdoc/>
+    public TimeZoneInfo? TimeZone { get; set; }
+
+    /// <inheritdoc/>
+    public Dictionary<string, string>? UserIds { get; set; }
+
+    /// <inheritdoc/>
+    public IEnumerable<Forwarded>? VendorForwarded { get; set; }
+
+    /// <inheritdoc/>
+    public Dictionary<string, string>? VendorLicenceIDs { get; set; }
+
+    /// <inheritdoc/>
+    public string? VendorProductName { get; set; }
+
+    /// <inheritdoc/>
+    public IPAddress? VendorPublicIP { get; set; }
+
+    /// <inheritdoc/>
+    public Dictionary<string, string>? VendorVersion { get; set; }
+
+    /// <inheritdoc/>
+    public Size? WindowSize { get; set; }
+
+    /// <inheritdoc/>
+    public IEnumerable<FraudPreventionHeader> GetHeaders() => new[] {
+      this.GetConnectionMethodHeader(),
+      this.GetBrowserDoNotTrackHeader(),
+      this.GetBrowserJavaScriptUserAgentHeader(),
+      this.GetBrowserPluginsHeader(),
+      this.GetDeviceIdHeader(),
+      this.GetLocalIpsHeader(),
+      this.GetLocalIpsTimestampHeader(),
+      this.GetMultiFactorHeader(),
+      this.GetPublicIpHeader(),
+      this.GetPublicIpTimestampHeader(),
+      this.GetPublicPortHeader(),
+      this.GetScreensHeader(),
+      this.GetTimeZoneHeader(),
+      this.GetUserIdsHeader(),
+      this.GetVendorForwardedHeader(),
+      this.GetVendorLicenceIDsHeader(),
+      this.GetVendorProductNameHeader(),
+      this.GetVendorPublicIPHeader(),
+      this.GetVendorVersionHeader(),
+      this.GetWindowSizeHeader(),
+    };
+  }
+}

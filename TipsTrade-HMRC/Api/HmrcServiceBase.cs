@@ -8,9 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.ApiClient.Core.Logging;
 using TipsTrade.ApiClient.Core.Tenant;
-using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.OAuth;
+using TipsTrade.HMRC.FraudPrevention;
 
 namespace TipsTrade.HMRC.Api {
   /// <summary>Base class for all HMRC API services, providing shared configuration and token management.</summary>
@@ -107,9 +107,8 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="request">The request model that will populate headers, body and parameters.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
     /// <returns>A fully populated <see cref="RestRequest"/> ready for execution.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when required tokens (server or user) are missing for the requested <see cref="Authorization"/> mode,
-    /// or when anti-fraud headers are required but the client's <see cref="AntiFraud"/> instance is null.
+    /// <exception cref="ApiException">
+    /// Thrown if required configuration is missing for the request, such as credentials for authorization or fraud prevention headers.
     /// </exception>
     internal async Task<RestRequest> CreateRequestAsync(IApiRequest request, CancellationToken cancellationToken) {
       var options = this.GetOptions();
@@ -134,12 +133,12 @@ namespace TipsTrade.HMRC.Api {
         restRequest.AddHeader("Authorization", $"Bearer {accessToken}");
       }
 
-      if (this is IRequiresAntiFraud) {
-        if (options.AntiFraud == null) {
-          throw new ApiException("The request requires anti-fraud headers, but the client's AntiFraud configuration is null.");
+      if (this is IRequiresFraudPrevention) {
+        if (options.FraudPreventionConfig == null) {
+          throw new ApiException("The request requires fraud prevention headers, but the client's FraudPrevention configuration is null.");
         }
 
-        foreach (var item in options.AntiFraud.GetAntiFraudHeaders()) {
+        foreach (var item in options.FraudPreventionConfig.ToHttpHeaders()) {
           restRequest.AddHeader(item.Key, item.Value);
         }
       }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Web;
 
-namespace TipsTrade.HMRC.AntiFraud {
-  /// <summary>Represents an object that contains multi-factor authentication information.</summary>
-  public class UserAgent : IAntiFraudValue {
+namespace TipsTrade.HMRC.FraudPrevention.Headers {
+  /// <summary>Represents an object that contains user agent information.</summary>
+  public class UserAgent : IFraudPreventionValue {
     /// <summary>Gets or sets the device manufacturer.</summary>
     public string DeviceManufacturer { get; set; } = "";
 
@@ -17,7 +17,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     /// <summary>Gets or sets the operating system version.</summary>
     public string OSVersion { get; set; } = "";
 
-    /// <summary>Retuns a string that contains the anti fraud header value.</summary>
+    /// <summary>Returns a string that contains the fraud prevention header value.</summary>
     public string GetHeaderValue() {
       var dict = new Dictionary<string, string> {
         {"os-family", HttpUtility.UrlEncode(OSFamily) },

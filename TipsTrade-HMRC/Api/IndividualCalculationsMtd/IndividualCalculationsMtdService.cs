@@ -4,13 +4,13 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model;
 using TipsTrade.HMRC.Api.OAuth;
+using TipsTrade.HMRC.FraudPrevention;
 
 namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
   /// <summary>Service that exposes Individual Calculations (MTD) functions, supporting dependency injection.</summary>
-  public class IndividualCalculationsMtdService : HmrcServiceBase, IRequiresAntiFraud {
+  public class IndividualCalculationsMtdService : HmrcServiceBase, IRequiresFraudPrevention {
     /// <inheritdoc/>
     public override string Description => "Trigger, list, retrieve and submit a customer's self-assessment tax calculation.";
 
