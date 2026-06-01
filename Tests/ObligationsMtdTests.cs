@@ -7,10 +7,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class ObligationsMtdTests : TestBase {
-    public ObligationsMtdTests() {
-    }
-
-    [SetUp]
     protected override void CustomSetup() {
       SetupCredentialsForOrganisation();
     }

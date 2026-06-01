@@ -52,7 +52,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     public override string Location => $"{NiNumber}/crystallisation";
 
     /// <inheritdoc/>
-    public override void PopulateRequest(RestRequest request) {
+    public override void PopulateRequestParameters(RestRequest request) {
       if (!string.IsNullOrEmpty(TaxYear)) {
         request.AddQueryParameter("taxYear", TaxYear);
       }

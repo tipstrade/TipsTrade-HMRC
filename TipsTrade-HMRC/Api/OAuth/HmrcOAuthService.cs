@@ -3,6 +3,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -10,13 +11,26 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.OAuth {
   /// <summary>Provides OAuth 2.0 authorisation flows for the HMRC API.</summary>
-  public class HmrcOAuthService {
-    private readonly HmrcOptions _options;
+  public class HmrcOAuthService : IHmrcRestClient {
+    private HmrcOptions _options;
+    private Lazy<RestClient> _restclient;
+    #region Fields
+    #endregion
 
+    #region Lifecycle
     /// <summary>Initialises a new instance of <see cref="HmrcOAuthService"/>.</summary>
-    public HmrcOAuthService(IOptions<HmrcOptions> options) {
+    public HmrcOAuthService(IHttpClientFactory httpClientFactory, IOptions<HmrcOptions> options) {
       _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+      _restclient = this.BuildRestClient(httpClientFactory);
     }
+
+    #endregion
+
+    #region Properties
+    Lazy<RestClient> IHmrcRestClient.RestClient => _restclient;
+
+    HmrcOptions IHmrcRestClient.Options => _options;
+    #endregion
 
     /// <summary>Gets the Uri for the Authorization endpoint.</summary>
     /// <param name="state">
@@ -26,7 +40,11 @@ namespace TipsTrade.HMRC.Api.OAuth {
     /// <param name="redirectUrl">The URI that HMRC uses to send users back to your application after authorisation.</param>
     /// <param name="scopes">A list of scopes you would like to have permission to access on behalf of your user.</param>
     public string GetAuthorizationEndpoint(string state, Uri redirectUrl, IEnumerable<string> scopes) {
-      return GetAuthorizationEndpoint(state, $"{redirectUrl}", scopes?.ToArray());
+      if (scopes == null) {
+        throw new ArgumentNullException(nameof(scopes));
+      }
+
+      return GetAuthorizationEndpoint(state, $"{redirectUrl}", scopes.ToArray());
     }
 
     /// <summary>Gets the Uri for the Authorization endpoint.</summary>
@@ -50,9 +68,10 @@ namespace TipsTrade.HMRC.Api.OAuth {
         throw new ArgumentException($"{nameof(scopes)} cannot be empty.", nameof(scopes));
       }
 
-      var uri = new System.Text.StringBuilder(_options.BaseUrl);
+      var options = this.GetOptions();
+      var uri = new System.Text.StringBuilder(options.BaseUrl);
       uri.Append("/oauth/authorize?response_type=code");
-      uri.Append($"&client_id={Uri.EscapeDataString(_options.ClientID)}");
+      uri.Append($"&client_id={Uri.EscapeDataString(options.ClientID)}");
       uri.Append($"&scope={Uri.EscapeDataString(string.Join(" ", scopes))}");
       uri.Append($"&state={Uri.EscapeDataString(state)}");
       uri.Append($"&redirect_uri={Uri.EscapeDataString(redirectUrl)}");
@@ -81,9 +100,10 @@ namespace TipsTrade.HMRC.Api.OAuth {
       }
 
       if ("access_denied".Equals(qs["error"])) {
-        string errorCode = HttpUtility.UrlDecode(qs["error_code"]);
+        var errorCode = HttpUtility.UrlDecode(qs["error_code"]);
         var errorMessage = HttpUtility.UrlDecode(qs["error_description"]);
-        throw new ApiException(errorMessage) {
+
+        throw new ApiException(errorMessage ?? "OAuth2 error occurred.") {
           ApiError = new ErrorResponse() {
             Code = errorCode,
             Message = errorMessage
@@ -91,41 +111,49 @@ namespace TipsTrade.HMRC.Api.OAuth {
         };
       }
 
+      var options = this.GetOptions();
       var code = HttpUtility.UrlDecode(qs["code"]);
-
-      var restClient = new RestClient(_options.BaseUrl);
       var request = new RestRequest("oauth/token", Method.Post);
-      request.AddParameter("client_secret", _options.ClientSecret);
-      request.AddParameter("client_id", _options.ClientID);
+      request.AddParameter("client_secret", options.ClientSecret);
+      request.AddParameter("client_id", options.ClientID);
       request.AddParameter("grant_type", "authorization_code");
       request.AddParameter("redirect_uri", $"{u.Scheme}://{u.Authority}{u.AbsolutePath}");
       request.AddParameter("code", code);
 
-      var response = restClient.Execute<TokenResponse>(request);
+      var response = this.GetRestClient().Execute<TokenResponse>(request);
       response.ThrowOnError();
 
       return response.Data ?? throw new ApiException("Failed to obtain user tokens.");
     }
 
+    /// <summary>
+    /// Exchanges a refresh token for a new access token. This is used to maintain access to the HMRC API on behalf of a user after the initial access token has expired.
+    /// </summary>
+    /// <param name="refreshToken">The refresh token obtained during the initial authorization.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="TokenResponse"/> containing the new access token and optionally a new refresh token.</returns>
+    /// <exception cref="ArgumentException">Thrown when the provided refresh token is null or empty.</exception>
+    /// <exception cref="ApiException">Thrown when an error occurs while refreshing the access token.</exception>
     public async Task<TokenResponse> RefreshAccessTokenAsync(string refreshToken, CancellationToken cancellationToken) {
       if (string.IsNullOrEmpty(refreshToken)) {
         throw new ArgumentException($"{nameof(refreshToken)} cannot be empty.", nameof(refreshToken));
       }
 
-      var restClient = new RestClient(_options.BaseUrl);
+      var options = this.GetOptions();
+      var restClient = this.GetRestClient();
       var request = new RestRequest("oauth/token", Method.Post);
-      request.AddParameter("client_secret", _options.ClientSecret);
-      request.AddParameter("client_id", _options.ClientID);
+      request.AddParameter("client_secret", options.ClientSecret);
+      request.AddParameter("client_id", options.ClientID);
       request.AddParameter("grant_type", "refresh_token");
       request.AddParameter("refresh_token", refreshToken);
 
       var response = await restClient.ExecuteAsync<TokenResponse>(request, cancellationToken);
 
-      var oauthError = ErrorResponse.FromOAuth2Error(response.Content);
+      var oauthError = response.Content != null ? ErrorResponse.FromOAuth2Error(response.Content) : null;
       if (oauthError != null) {
-        throw new ApiException(oauthError.Message) {
+        throw new ApiException(oauthError?.Message ?? "OAuth2 error occurred.") {
           ApiError = oauthError,
-          Status = response.StatusCode
+          Status = response?.StatusCode
         };
       }
 

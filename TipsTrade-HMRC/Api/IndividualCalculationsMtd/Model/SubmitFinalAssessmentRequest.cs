@@ -4,7 +4,7 @@ using TipsTrade.HMRC.Api.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
   /// <summary>The parameters used to submit a final declaration for a tax year by agreeing to the HMRC's tax calculation.</summary>
-  public class SubmitFinalAssessmentRequest : IApiRequest, IGovTestScenario {
+  public class SubmitFinalAssessmentRequest : IApiRequestWithBody, IGovTestScenario {
     #region Gov-Test-Scenario constants
     /// <summary>Simulate a successful response.</summary>
     [GovTestScenario]
@@ -82,7 +82,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
 
     Authorization IApiRequest.Authorization => Authorization.User;
 
-    string IApiRequest.ContentType => "application/json";
+    string IApiRequestWithBody.ContentType => "application/json";
 
     Method IApiRequest.Method => Method.Post;
 
@@ -91,7 +91,10 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     /// <inheritdoc/>
     public string GovTestScenario { get; set; }
 
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
+    }
+
+    void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
     }
     #endregion
   }

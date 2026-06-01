@@ -30,18 +30,18 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     public CreateTestUserService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Executes a create test user request synchronously.</summary>
-    public TResult CreateUser<TResult>(ICreateTestUserRequest<TResult> request) where TResult : UserResultBase {
+    public TResult CreateUser<TResult>(ICreateTestUserRequest<TResult> request) where TResult : UserResultBase, new() {
       if (request is IApiRequest apiRequest) {
-        return this.ExecuteRequest<TResult>(apiRequest);
+        return ExecuteRequest<TResult>(apiRequest);
       }
 
       throw new ArgumentException($"The request must implement IApiRequest to be executed. Request type: {request.GetType().FullName}", nameof(request));
     }
 
     /// <summary>Executes a create test user request asynchronously.</summary>
-    public async Task<TResult> CreateUserAsync<TResult>(ICreateTestUserRequest<TResult> request, CancellationToken cancellationToken = default) where TResult : UserResultBase {
+    public async Task<TResult> CreateUserAsync<TResult>(ICreateTestUserRequest<TResult> request, CancellationToken cancellationToken = default) where TResult : UserResultBase, new() {
       if (request is IApiRequest apiRequest) {
-        return await this.ExecuteRequestAsync<TResult>(apiRequest, cancellationToken).ConfigureAwait(false);
+        return await ExecuteRequestAsync<TResult>(apiRequest, cancellationToken).ConfigureAwait(false);
       }
 
       throw new ArgumentException($"The request must implement IApiRequest to be executed. Request type: {request.GetType().FullName}", nameof(request));

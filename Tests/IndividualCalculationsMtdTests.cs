@@ -6,10 +6,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class IndividualCalculationsMtdTests : TestBase {
-    public IndividualCalculationsMtdTests() {
-    }
-
-    [SetUp]
     protected override void CustomSetup() {
       SetupCredentialsForOrganisation();
     }

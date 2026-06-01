@@ -7,10 +7,6 @@ using System.Threading;
 
 namespace TipsTrade.HMRC.Tests {
   public class HelloWorldTests : TestBase {
-    public HelloWorldTests() {
-    }
-
-    [SetUp]
     protected override void CustomSetup() {
       SetupCredentialsForOrganisation();
     }

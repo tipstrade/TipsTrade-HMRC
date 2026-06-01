@@ -87,7 +87,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     public override string Location => $"{NiNumber}/income-and-expenditure";
 
     /// <inheritdoc/>
-    public override void PopulateRequest(RestRequest request) {
+    public override void PopulateRequestParameters(RestRequest request) {
       if (!string.IsNullOrEmpty(TypeOfBusiness)) {
         request.AddQueryParameter("typeOfBusiness", TypeOfBusiness);
       }

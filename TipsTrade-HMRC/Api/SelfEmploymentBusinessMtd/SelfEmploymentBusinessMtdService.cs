@@ -30,22 +30,22 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
 
     /// <summary>Submit or amend the cumulative period income and expenses for a self-employment business.</summary>
     public AmendCumulativePeriodSummaryResponse CreateOrAmendCumulativePeriodSummary(AmendCumulativePeriodSummaryRequest request) {
-      return this.ExecuteRequest<AmendCumulativePeriodSummaryResponse>(request);
+      return ExecuteRequest<AmendCumulativePeriodSummaryResponse>(request);
     }
 
     /// <summary>Asynchronously submit or amend the cumulative period income and expenses for a self-employment business.</summary>
     public async Task<AmendCumulativePeriodSummaryResponse> CreateOrAmendCumulativePeriodSummaryAsync(AmendCumulativePeriodSummaryRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<AmendCumulativePeriodSummaryResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<AmendCumulativePeriodSummaryResponse>(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Retrieve the cumulative period income and expenses for a self-employment business.</summary>
     public GetCumulativePeriodSummaryResponse GetCumulativePeriodSummary(GetCumulativePeriodSummaryRequest request) {
-      return this.ExecuteRequest<GetCumulativePeriodSummaryResponse>(request);
+      return ExecuteRequest<GetCumulativePeriodSummaryResponse>(request);
     }
 
     /// <summary>Asynchronously retrieve the cumulative period income and expenses for a self-employment business.</summary>
     public async Task<GetCumulativePeriodSummaryResponse> GetCumulativePeriodSummaryAsync(GetCumulativePeriodSummaryRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<GetCumulativePeriodSummaryResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<GetCumulativePeriodSummaryResponse>(request, cancellationToken).ConfigureAwait(false);
     }
   }
 }

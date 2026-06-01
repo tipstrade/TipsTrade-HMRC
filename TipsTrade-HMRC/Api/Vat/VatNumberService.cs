@@ -33,13 +33,13 @@ namespace TipsTrade.HMRC.Api.Vat {
     /// <summary>Verifies the specified VAT registration number (VRN).</summary>
     public VatNumberCheckResponse CheckVrn(string vrn) {
       vrn = ValidateVrnOrThrow(vrn, nameof(vrn));
-      return this.ExecuteRequest<VatNumberCheckResponse>(new VatNumberCheckRequest { Vrn = vrn });
+      return ExecuteRequest<VatNumberCheckResponse>(new VatNumberCheckRequest { Vrn = vrn });
     }
 
     /// <summary>Asynchronously verifies the specified VAT registration number (VRN).</summary>
     public async Task<VatNumberCheckResponse> CheckVrnAsync(string vrn, CancellationToken cancellationToken = default) {
       vrn = ValidateVrnOrThrow(vrn, nameof(vrn));
-      return await this.ExecuteRequestAsync<VatNumberCheckResponse>(
+      return await ExecuteRequestAsync<VatNumberCheckResponse>(
         new VatNumberCheckRequest { Vrn = vrn },
         cancellationToken).ConfigureAwait(false);
     }
@@ -48,14 +48,14 @@ namespace TipsTrade.HMRC.Api.Vat {
     public VerifiedVatNumberCheckResponse CheckVrn(string vrn, string requesterVrn) {
       vrn = ValidateVrnOrThrow(vrn, nameof(vrn));
       requesterVrn = ValidateVrnOrThrow(requesterVrn, nameof(requesterVrn));
-      return this.ExecuteRequest<VerifiedVatNumberCheckResponse>(new VerifiedVatNumberCheckRequest { Vrn = vrn, RequesterVrn = requesterVrn });
+      return ExecuteRequest<VerifiedVatNumberCheckResponse>(new VerifiedVatNumberCheckRequest { Vrn = vrn, RequesterVrn = requesterVrn });
     }
 
     /// <summary>Asynchronously verifies the specified VAT registration number via a verified request made on behalf of a requester.</summary>
     public async Task<VerifiedVatNumberCheckResponse> CheckVrnAsync(string vrn, string requesterVrn, CancellationToken cancellationToken = default) {
       vrn = ValidateVrnOrThrow(vrn, nameof(vrn));
       requesterVrn = ValidateVrnOrThrow(requesterVrn, nameof(requesterVrn));
-      return await this.ExecuteRequestAsync<VerifiedVatNumberCheckResponse>(
+      return await ExecuteRequestAsync<VerifiedVatNumberCheckResponse>(
         new VerifiedVatNumberCheckRequest { Vrn = vrn, RequesterVrn = requesterVrn },
         cancellationToken).ConfigureAwait(false);
     }

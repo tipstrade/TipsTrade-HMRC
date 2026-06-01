@@ -7,7 +7,7 @@ using TipsTrade.HMRC.Api.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
   /// <summary>The parameters used to submit a VAT return.</summary>
-  public class SubmitRequest : IApiRequest, IVatRequest {
+  public class SubmitRequest : IApiRequestWithBody, IVatRequest {
     /// <summary>The remote endpoint has indicated that VAT has already been submitted for that period.</summary>
     [GovTestScenario]
     public const string ScenarioDuplicateSubmission = "DUPLICATE_SUBMISSION";
@@ -47,13 +47,16 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     Authorization IApiRequest.Authorization => Authorization.User;
 
-    string IApiRequest.ContentType => "application/json";
+    string IApiRequestWithBody.ContentType => "application/json";
 
     Method IApiRequest.Method => Method.Post;
 
     string IApiRequest.Location => $"{Vrn}/returns";
 
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
+    }
+
+    void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
       if (Return.Finalised == null) {
         throw new InvalidOperationException($"{nameof(Return.Finalised)} cannot be null.");
       }

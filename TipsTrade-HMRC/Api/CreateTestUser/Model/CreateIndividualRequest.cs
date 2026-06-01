@@ -7,7 +7,7 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>The parameters used to create an individual test user.</summary>
-  public class CreateIndividualRequest : IApiRequest, ICreateTestUserRequest<IndividualResult> {
+  public class CreateIndividualRequest : IApiRequestWithBody, ICreateTestUserRequest<IndividualResult> {
     /// <summary>Generates an EORI number and enrols the user for Customs Services.</summary>
     [ServiceName]
     public const string CustomsServices = "customs-services";
@@ -32,13 +32,16 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
 
     Authorization IApiRequest.Authorization => Authorization.Application;
 
-    string IApiRequest.ContentType => "application/json";
+    string IApiRequestWithBody.ContentType => "application/json";
 
     Method IApiRequest.Method => Method.Post;
 
     string IApiRequest.Location => "individuals";
 
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
+    }
+
+    void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
       request.AddJsonBody(this);
     }
   }

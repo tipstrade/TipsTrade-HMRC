@@ -33,46 +33,55 @@ namespace TipsTrade.HMRC {
     [ScopeApi(typeof(Api.Vat.VatService))]
     public const string VATWrite = "write:vat";
 
-    /// <summary>Gets all the scopes that are valid for the specified Api type.</summary>
+    /// <summary>
+    /// Gets all the scopes that are valid for the specified API type, scope value, and/or scope name.
+    /// </summary>
     /// <typeparam name="T">The type of API that the scope should apply to.</typeparam>
     /// <param name="valueFilter">Filters the scopes by value.</param>
-    /// <param name="nameFilter">Filters the scopes by name.</param>
-    public static IEnumerable<string> GetScopes<T>(Func<string, bool> valueFilter = null, Func<string, bool> nameFilter = null) {
+    /// <param name="nameFilter">Filters the scopes by the property name in this class.</param>
+    /// <returns>An enumerable of scope strings that match all of the specified filters.</returns>
+    public static IEnumerable<string> GetScopes<T>(Func<string, bool>? valueFilter = null, Func<string, bool>? nameFilter = null) {
       return GetScopes(t => t == typeof(T), valueFilter, nameFilter);
     }
 
-    /// <summary>Gets all the scopes.</summary>
+    /// <summary>
+    /// Gets all the scopes that are valid for the specified API type, scope value, and/or scope name.
+    /// </summary>
     /// <param name="typeFilter">Filters the scopes by API type.</param>
-    /// <param name="nameFilter">Filters the scopes by name.</param>
     /// <param name="valueFilter">Filters the scopes by value.</param>
-    public static IEnumerable<string> GetScopes(Func<Type, bool> typeFilter = null, Func<string, bool> valueFilter = null, Func<string, bool> nameFilter = null) {
-      var fields = typeof(Scopes)
-        .GetFields(BindingFlags.Public | BindingFlags.Static)
-        .Select(f => new {
-          Field = f,
-          Attributes = f.GetCustomAttributes<ScopeApiAttribute>()
-        })
-        .Where(f => f.Attributes.Any())
-       ;
+    /// <param name="nameFilter">Filters the scopes by the property name in this class.</param>
+    /// <returns>An enumerable of scope strings that match all of the specified filters.</returns>
+    public static IEnumerable<string> GetScopes(Func<Type, bool>? typeFilter = null, Func<string, bool>? valueFilter = null, Func<string, bool>? nameFilter = null) {
+      var seen = new HashSet<string>();
 
-      var scopes = new HashSet<string>(); 
+      var scopesFields = typeof(Scopes).GetFields(BindingFlags.Public | BindingFlags.Static);
 
-      foreach (var field in fields) {
-        foreach (var scopeAttr in field.Attributes) {
-          var value = (string)field.Field.GetValue(null);
-
-          var isMatch = (typeFilter?.Invoke(scopeAttr.Type) ?? true)
-            && (valueFilter?.Invoke(value) ?? true)
-            && (nameFilter?.Invoke(field.Field.Name) ?? true)
+      foreach (var field in scopesFields) {
+        // Only consider string fields that haven't been seen before (to avoid duplicates).
+        if (field.GetValue(null) is string strValue && !seen.Contains(strValue)) {
+          var isMatch = (valueFilter?.Invoke(strValue) ?? true) // Matches the scope value filter (if provided).
+            && (nameFilter?.Invoke(field.Name) ?? true) // Matches the scope name filter (if provided).
             ;
 
-          if (isMatch) {
-            scopes.Add(value);
+          // Exit early if the scope doesn't match the filters, to avoid unnecessary processing of attributes.
+          if (!isMatch) {
+            continue;
+          }
+
+          var attrs = field.GetCustomAttributes<ScopeApiAttribute>().ToArray();
+
+          // A valid scope must have at least one ScopeApiAttribute
+          if (attrs.Length == 0) {
+            continue;
+          }
+
+          isMatch = typeFilter == null || attrs.Any(a => typeFilter.Invoke(a.Type)); // Matches the API type filter (if provided).
+
+          if (isMatch && seen.Add(strValue)) {
+            yield return strValue;
           }
         }
       }
-
-      return scopes;
     }
   }
 }

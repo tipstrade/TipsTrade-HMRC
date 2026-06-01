@@ -1,9 +1,10 @@
 ﻿using RestSharp;
+using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
   /// <summary>Represents the request to submit the cumulative period income and expenses for a self-employment business that occurred between two dates.</summary>
-  public class AmendCumulativePeriodSummaryRequest : BaseRequest {
+  public class AmendCumulativePeriodSummaryRequest : BaseRequest, IApiRequestWithBody {
     #region Gov-Test-Scenario constants
     /// <summary>Simulates success response.</summary>
     [GovTestScenario]
@@ -69,13 +70,20 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
 
     #region Impementations 
     /// <inheritdoc/>
+    string IApiRequestWithBody.ContentType => "application/json";
+
+    /// <inheritdoc/>
     public override Method Method => Method.Put;
 
     /// <inheritdoc/>
     public override string Location => $"{NiNumber}/{BusinessId}/cumulative/{TaxYear}";
 
     /// <inheritdoc/>
-    public override void PopulateRequest(RestRequest request) {
+    public override void PopulateRequestParameters(RestRequest request) {
+    }
+
+    /// <inheritdoc/>
+    void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
       request.AddJsonBody(Summary);
     }
     #endregion

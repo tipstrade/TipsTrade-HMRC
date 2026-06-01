@@ -25,9 +25,6 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
     Authorization IApiRequest.Authorization => Authorization.User;
 
     /// <inheritdoc/>
-    string IApiRequest.ContentType => "application/json";
-
-    /// <inheritdoc/>
     public abstract Method Method { get; }
 
     /// <inheritdoc/>
@@ -37,7 +34,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
     public string GovTestScenario { get; set; }
 
     /// <inheritdoc/>
-    public abstract void PopulateRequest(RestRequest request);
+    public abstract void PopulateRequestParameters(RestRequest request);
     #endregion
   }
 }

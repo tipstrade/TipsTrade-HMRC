@@ -14,6 +14,9 @@ using TipsTrade.HMRC.Api.Vat;
 namespace TipsTrade.HMRC.Extensions {
   /// <summary>Extension methods for registering HMRC API services with an <see cref="IServiceCollection"/>.</summary>
   public static class ServiceCollectionExtensions {
+    /// <summary>The name used to register the named <see cref="System.Net.Http.HttpClient"/> for HMRC API calls.</summary>
+    public static readonly string HttpClientName = typeof(Api.HmrcServiceBase).FullName ?? typeof(Api.HmrcServiceBase).Name;
+
     /// <summary>
     /// Registers HMRC API services with the <see cref="IServiceCollection"/> using the specified options provider, access token provider, and tenant provider.
     /// </summary>
@@ -54,7 +57,7 @@ namespace TipsTrade.HMRC.Extensions {
       services.AddSingleton<Api.ApplicationTokenCache>();
       services.AddSingleton<IHmrcAccessTokenProvider, TAccessTokenProvider>();
 
-      services.AddHttpClient(Api.HmrcServiceBase.HttpClientName);
+      services.AddHttpClient(HttpClientName);
 
       services.AddHmrcOAuthService();
       services.AddBusinessDetailsMtdService();

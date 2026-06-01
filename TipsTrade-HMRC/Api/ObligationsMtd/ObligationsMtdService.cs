@@ -30,22 +30,22 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd {
 
     /// <summary>Retrieve obligations for a user's business income sources.</summary>
     public GetObligationsResponse GetIncomeAndExpenditureObligations(GetObligationsRequest request) {
-      return this.ExecuteRequest<GetObligationsResponse>(request);
+      return ExecuteRequest<GetObligationsResponse>(request);
     }
 
     /// <summary>Asynchronously retrieve obligations for a user's business income sources.</summary>
     public async Task<GetObligationsResponse> GetIncomeAndExpenditureObligationsAsync(GetObligationsRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<GetObligationsResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<GetObligationsResponse>(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Retrieve the final declaration obligations for a customer's Income Tax account.</summary>
     public GetFinalObligationsResponse GetFinalObligations(GetFinalObligationsRequest request) {
-      return this.ExecuteRequest<GetFinalObligationsResponse>(request);
+      return ExecuteRequest<GetFinalObligationsResponse>(request);
     }
 
     /// <summary>Asynchronously retrieve the final declaration obligations for a customer's Income Tax account.</summary>
     public async Task<GetFinalObligationsResponse> GetFinalObligationsAsync(GetFinalObligationsRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<GetFinalObligationsResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<GetFinalObligationsResponse>(request, cancellationToken).ConfigureAwait(false);
     }
   }
 }

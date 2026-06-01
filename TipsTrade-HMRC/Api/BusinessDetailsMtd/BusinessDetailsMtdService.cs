@@ -30,32 +30,32 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
 
     /// <summary>Create or amend the type of quarterly reporting period used for a business for a specific tax year.</summary>
     public AmendQuarterlyPeriodTypeResponse CreateOrAmendQuarterlyPeriodType(AmendQuarterlyPeriodTypeRequest request) {
-      return this.ExecuteRequest<AmendQuarterlyPeriodTypeResponse>(request);
+      return ExecuteRequest<AmendQuarterlyPeriodTypeResponse>(request);
     }
 
     /// <summary>Asynchronously create or amend the type of quarterly reporting period used for a business for a specific tax year.</summary>
     public async Task<AmendQuarterlyPeriodTypeResponse> CreateOrAmendQuarterlyPeriodTypeAsync(AmendQuarterlyPeriodTypeRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<AmendQuarterlyPeriodTypeResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<AmendQuarterlyPeriodTypeResponse>(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Gets additional information for a specific business income source.</summary>
     public GetBusinessDetailsResponse GetBusinessDetails(GetBusinessDetailsRequest request) {
-      return this.ExecuteRequest<GetBusinessDetailsResponse>(request);
+      return ExecuteRequest<GetBusinessDetailsResponse>(request);
     }
 
     /// <summary>Asynchronously gets additional information for a specific business income source.</summary>
     public async Task<GetBusinessDetailsResponse> GetBusinessDetailsAsync(GetBusinessDetailsRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<GetBusinessDetailsResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<GetBusinessDetailsResponse>(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Gets all details of a user's business income sources.</summary>
     public ListBusinessDetailsResponse ListBusinessDetails(ListBusinessDetailsRequest request) {
-      return this.ExecuteRequest<ListBusinessDetailsResponse>(request);
+      return ExecuteRequest<ListBusinessDetailsResponse>(request);
     }
 
     /// <summary>Asynchronously gets all details of a user's business income sources.</summary>
     public async Task<ListBusinessDetailsResponse> ListBusinessDetailsAsync(ListBusinessDetailsRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<ListBusinessDetailsResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<ListBusinessDetailsResponse>(request, cancellationToken).ConfigureAwait(false);
     }
   }
 }

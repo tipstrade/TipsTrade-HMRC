@@ -7,10 +7,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class SelfAssessmentTestSupportMtdTests : TestBase {
-    public SelfAssessmentTestSupportMtdTests() {
-    }
-
-    [SetUp]
     protected override void CustomSetup() {
       SetupCredentialsForOrganisation();
     }

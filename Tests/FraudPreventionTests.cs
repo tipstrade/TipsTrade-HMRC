@@ -6,8 +6,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class FraudPreventionTests : TestBase {
-    public FraudPreventionTests() { }
-
     /// <summary>
     /// Tests that the GetFeedback method of the TestFraudPrevention API returns a valid response for all services.
     /// </summary>
@@ -57,7 +55,7 @@ namespace TipsTrade.HMRC.Tests {
       Assert.That(response.Requests, Is.Not.Empty);
       Assert.That(response.HasErrors(), Is.False);
 
-      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+      TestContext.Out.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
     }
 
     [Test]
@@ -68,7 +66,7 @@ namespace TipsTrade.HMRC.Tests {
       Assert.That(response.Errors, Is.Empty);
       Assert.That(response.Warnings, Is.Empty); // Warnings may be present if the dev machine has a VPN or unusual network configuration.
 
-      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+      TestContext.Out.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
     }
 
     [Test]

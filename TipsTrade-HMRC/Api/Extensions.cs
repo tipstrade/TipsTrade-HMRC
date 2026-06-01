@@ -1,20 +1,15 @@
-﻿using RestSharp;
+﻿using Microsoft.Extensions.Logging;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api {
-  /// <summary>
-  /// A collection of methods extending the functionality of <see cref="IHmrcService"/> objects.
-  /// </summary>
   public static class Extensions {
     /// <summary>
     /// Add the date range parameters ("from" and "to") to the specified <see cref="RestRequest"/>.
@@ -48,155 +43,6 @@ namespace TipsTrade.HMRC.Api {
       return request;
     }
 
-    [Obsolete("Use CreateRequestAsync instead as this is likely to cause deadlocks.")]
-    internal static RestRequest CreateRequest(this HmrcServiceBase api, IApiRequest request) {
-      return api.CreateRequestAsync(request, CancellationToken.None).GetAwaiter().GetResult();
-    }
-
-    /// <summary>
-    /// Create and populate a <see cref="RestRequest"/> from a given <see cref="IApiRequest"/> using API client settings.
-    /// </summary>
-    /// <param name="api">The API instance used to determine client settings and endpoints.</param>
-    /// <param name="request">The request model that will populate headers, body and parameters.</param>
-    /// <returns>A fully populated <see cref="RestRequest"/> ready for execution.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when required tokens (server or user) are missing for the requested <see cref="Authorization"/> mode,
-    /// or when anti-fraud headers are required but the client's <see cref="AntiFraud"/> instance is null.
-    /// </exception>
-    internal async static Task<RestRequest> CreateRequestAsync(this HmrcServiceBase api, IApiRequest request, CancellationToken cancellationToken) {
-      var options = api.Options;
-
-      var restRequest = new RestRequest($"{api.Location}/{request.Location}", request.Method);
-      restRequest.AddHeader("Accept", api.GetAcceptHeader(request.AcceptType));
-
-      // Can only have a content type header if there is a body
-      var canHaveContentType = request.Method == Method.Post || request.Method == Method.Put || request.Method == Method.Patch;
-      if (!string.IsNullOrEmpty(request.ContentType) && canHaveContentType) {
-        restRequest.AddHeader("Content-Type", request.ContentType);
-      }
-
-      if (options.IsSandbox && request is IGovTestScenario govTest) {
-        restRequest.AddGovTestScenario(govTest);
-      }
-
-      if (request is IDateRange dateRange) {
-        restRequest.AddDateRangeParameters(dateRange);
-      }
-
-      if (request.Authorization == Authorization.Application) {
-        var token = await api.GetApplicationTokenAsync(cancellationToken);
-        restRequest.AddHeader("Authorization", $"Bearer {token}");
-
-      } else if (request.Authorization == Authorization.User) {
-        var accessToken = await api.GetAccessTokenAsync(cancellationToken);
-
-        restRequest.AddHeader("Authorization", $"Bearer {accessToken}");
-      }
-
-      if (api is IRequiresAntiFraud) {
-        if (options.AntiFraud == null) throw new InvalidOperationException($"The {api.Name} requires Anti Fraud headers.");
-        foreach (var item in options.AntiFraud.GetAntiFraudHeaders()) {
-          restRequest.AddHeader(item.Key, item.Value);
-        }
-      }
-
-      request.PopulateRequest(restRequest);
-
-      return restRequest;
-    }
-
-    /// <summary>
-    /// Create a <see cref="RestRequest"/> from the supplied <see cref="IApiRequest"/> and execute it synchronously,
-    /// deserializing the response into <typeparamref name="T"/>.
-    /// </summary>
-    /// <typeparam name="T">The expected response model type.</typeparam>
-    /// <param name="api">The API instance used to execute the request.</param>
-    /// <param name="request">The request model used to create the HTTP request.</param>
-    /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
-    [Obsolete("Use ExecuteRequestAsync instead as this is likely to cause deadlocks.")]
-    internal static T ExecuteRequest<T>(this HmrcServiceBase api, IApiRequest request) {
-      var restRequest = api.CreateRequest(request);
-
-      return api.ExecuteRequest<T>(restRequest);
-    }
-
-    /// <summary>
-    /// Execute the specified <see cref="RestRequest"/> synchronously and handle the response.
-    /// </summary>
-    /// <typeparam name="T">The expected response model type.</typeparam>
-    /// <param name="api">The API instance used to obtain the <see cref="RestClient"/> for execution.</param>
-    /// <param name="request">The <see cref="RestRequest"/> to execute.</param>
-    /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static T ExecuteRequest<T>(this HmrcServiceBase api, RestRequest request) {
-      var client = api.GetRestClient();
-      var response = client.Execute<T>(request);
-
-      return HandleResponse(response);
-    }
-
-    /// <summary>
-    /// Create a <see cref="RestRequest"/> from the supplied <see cref="IApiRequest"/> and execute it asynchronously,
-    /// deserializing the response into <typeparamref name="T"/>.
-    /// </summary>
-    /// <typeparam name="T">The expected response model type.</typeparam>
-    /// <param name="api">The API instance used to execute the request.</param>
-    /// <param name="request">The request model used to create the HTTP request.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
-    /// <returns>A task that resolves to an instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static async Task<T> ExecuteRequestAsync<T>(this HmrcServiceBase api, IApiRequest request, CancellationToken cancellationToken) {
-      var restRequest = await api.CreateRequestAsync(request, cancellationToken).ConfigureAwait(false);
-
-      return await api.ExecuteRequestAsync<T>(restRequest, cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Execute the specified <see cref="RestRequest"/> asynchronously and handle the response.
-    /// </summary>
-    /// <typeparam name="T">The expected response model type.</typeparam>
-    /// <param name="api">The API instance used to obtain the <see cref="RestClient"/> for execution.</param>
-    /// <param name="request">The <see cref="RestRequest"/> to execute.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
-    /// <returns>A task that resolves to an instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal static async Task<T> ExecuteRequestAsync<T>(this IHmrcService api, RestRequest request, CancellationToken cancellationToken) {
-      var client = api.GetRestClient();
-      var response = await client.ExecuteAsync<T>(request, cancellationToken).ConfigureAwait(false);
-
-      return HandleResponse(response);
-    }
-
-    /// <summary>
-    /// Gets the versioned Accept header required by the HMRC API.
-    /// </summary>
-    /// <param name="api">The API for which the header should be generated.</param>
-    /// <param name="contentType">The optional content type to be accepted (usually json).</param>
-    /// <returns>A string containing a valid HTTP Accept header for the HMRC API versioning scheme.</returns>
-    /// <remarks>
-    /// See HMRC API versioning guidance: <see href="https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning" />
-    /// </remarks>
-    internal static string GetAcceptHeader(this IHmrcService api, string contentType) {
-      return $"application/vnd.hmrc.{api.Version}+{contentType}";
-    }
-
-    /// <summary>
-    /// Gets the <see cref="HmrcOptions"/> from an <see cref="IHmrcService"/> instance.
-    /// </summary>
-    internal static HmrcOptions GetOptions(this IHmrcService api) {
-      return api.Options;
-    }
-
-    /// <summary>
-    /// Gets a <see cref="RestClient"/> backed by the named <see cref="System.Net.Http.HttpClient"/> from the DI factory.
-    /// </summary>
-    /// <param name="api">The API instance used to obtain the base URL and HTTP client.</param>
-    /// <returns>A <see cref="RestClient"/> configured with the client's base URL.</returns>
-    internal static RestClient GetRestClient(this IHmrcService api) {
-      if (api is HmrcServiceBase svc) {
-        return svc.RestClient;
-      }
-
-      throw new InvalidOperationException($"{nameof(api)} does not inherit {typeof(HmrcServiceBase)}");
-    }
-
     /// <summary>
     /// Retrieves all service name constants declared on the runtime type of the supplied
     /// <see cref="ICreateTestUserRequest"/> that are decorated with <see cref="ServiceNameAttribute"/>.
@@ -216,7 +62,8 @@ namespace TipsTrade.HMRC.Api {
       return request.GetType()
         .GetFields(BindingFlags.Public | BindingFlags.Static)
         .Where(f => f.GetCustomAttribute<ServiceNameAttribute>() != null)
-        .Select(f => (string)f.GetValue(null));
+        .Select(f => f.GetValue(null))
+        .OfType<string>();
     }
 
     /// <summary>
@@ -224,39 +71,38 @@ namespace TipsTrade.HMRC.Api {
     /// </summary>
     /// <typeparam name="T">The expected response model type.</typeparam>
     /// <param name="response">The <see cref="RestResponse{T}"/> returned from the <see cref="RestClient"/> execution.</param>
+    /// <param name="logger">An optional <see cref="ILogger"/> to log any relevant information during response handling.</param>
     /// <returns>An instance of <typeparamref name="T"/> populated from the HTTP response body and selected headers.</returns>
-    private static T HandleResponse<T>(RestResponse<T> response) {
+    internal static T HandleResponse<T>(this RestResponse<T> response, ILogger? logger = null) where T : class, new() {
       response.ThrowOnError();
 
-      // Some endpoints return 204 No Content with an empty body, in which case we should return an empty instance of T instead of trying to deserialize the empty body.
-      var data = response.StatusCode == System.Net.HttpStatusCode.NoContent ?
-        Activator.CreateInstance<T>()
-        : response.Data;
+      // ThrowOnError ensures the response is successful, but the body may still be empty (e.g. 204 No Content). In that case we want to return a new instance of T rather than null.
+      var data = response.Data ?? new T();
 
-      if (data is ICorrelationId correlation) {
-        var id = response.Headers.Where(h => "X-CorrelationId".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).First().Value;
-
-        correlation.CorrelationId = Guid.Parse(id);
+      if (data is ICorrelationId correlation && response.TryGetGuidFromHeader(logger, "X-CorrelationId", out var guid)) {
+        correlation.CorrelationId = guid;
       }
 
-      if (data is IDeprecationDate deprecation) {
-        deprecation.DeprecationDate = response.Headers.Where(h => "Deprecation".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Value;
+      if (data is IDeprecationDate deprecation && response.TryGetRequiredHeaderValue(logger, "Deprecation", out var deprecationDate)) {
+        deprecation.DeprecationDate = deprecationDate;
       }
 
-      if (data is ISunsetDate sunset) {
-        sunset.SunsetDate = response.Headers.Where(h => "Sunset".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Value;
+      if (data is ISunsetDate sunset && response.TryGetRequiredHeaderValue(logger, "Sunset", out var sunsetDate)) {
+        sunset.SunsetDate = sunsetDate;
       }
 
-      if (data is IDocumentationLink documentation) {
-        documentation.DocumentationLink = response.Headers.Where(h => "Link".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Value;
+      if (data is IDocumentationLink documentation && response.TryGetRequiredHeaderValue(logger, "Link", out var documentationLink)) {
+        documentation.DocumentationLink = documentationLink;
       }
 
       if (data is IReceipt receipt) {
-        var id = response.Headers.Where(h => "Receipt-ID".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).First().Value;
-        var timestamp = response.Headers.Where(h => "Receipt-Timestamp".Equals(h.Name, StringComparison.OrdinalIgnoreCase)).First().Value;
+        if (response.TryGetRequiredHeaderValue(logger, "Receipt-ID", out var id)) {
+          receipt.ReceiptID = Guid.Parse(id);
+        }
 
-        receipt.ReceiptID = Guid.Parse(id);
-        receipt.ReceiptTimestamp = DateTime.Parse(timestamp);
+        if (response.TryGetDateTimeFromHeader(logger, "Receipt-Timestamp", out var timestamp)) {
+          receipt.ReceiptTimestamp = timestamp;
+        }
       }
 
       return data;
@@ -273,16 +119,85 @@ namespace TipsTrade.HMRC.Api {
       }
 
       int code = (int)response.StatusCode;
-      ErrorResponse error = null;
+      ErrorResponse? error = null;
 
       try {
-        error = JsonSerializer.Deserialize<ErrorResponse>(response.Content);
+        if (response.Content != null) {
+          error = JsonSerializer.Deserialize<ErrorResponse>(response.Content);
+        }
       } catch { }
 
-      throw new ApiException(error?.Message ?? response.StatusDescription, response.ErrorException) {
-        Status = response.StatusCode,
+      throw new ApiException(error?.Message ?? response?.StatusDescription ?? "", response?.ErrorException) {
+        Status = response?.StatusCode,
         ApiError = error
       };
+    }
+
+    /// <summary>
+    /// Attempts to retrieve the value of a required header from the <see cref="RestResponse"/>. Logs a warning if the header is missing.
+    /// </summary>
+    /// <param name="response">The <see cref="RestResponse"/> containing the headers.</param>
+    /// <param name="logger">The <see cref="ILogger"/> to use for logging warnings.</param>
+    /// <param name="headerName">The name of the header to retrieve.</param>
+    /// <param name="value">The retrieved header value if successful, otherwise an empty string.</param>
+    /// <returns>True if the header is present and contains a non-null value, false otherwise.</returns>
+    internal static bool TryGetRequiredHeaderValue(this RestResponse response, ILogger? logger, string headerName, out string value) {
+      var found = response.Headers?.Where(h => headerName.Equals(h.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Value;
+
+      if (found == null) {
+        logger?.LogWarning("Response is missing expected {HeaderName} header.", headerName);
+        value = string.Empty;
+        return false;
+      }
+
+      value = found;
+      return true;
+    }
+
+    /// <summary>
+    /// Attempts to parse a GUID value from the specified header in the <see cref="RestResponse"/>.
+    /// </summary>
+    /// <param name="response">The <see cref="RestResponse"/> containing the headers.</param>
+    /// <param name="logger">The <see cref="ILogger"/> to use for logging warnings.</param>
+    /// <param name="headerName">The name of the header to parse.</param>
+    /// <param name="guid">The parsed GUID value if successful, otherwise <see cref="Guid.Empty"/>.</param>
+    /// <returns>True if the header is present and contains a valid GUID, false otherwise.</returns>
+    internal static bool TryGetGuidFromHeader(this RestResponse response, ILogger? logger, string headerName, out Guid guid) {
+      guid = Guid.Empty;
+
+      if (!response.TryGetRequiredHeaderValue(logger, headerName, out var id)) {
+        return false;
+      }
+
+      if (Guid.TryParse(id, out guid)) {
+        return true;
+      }
+
+      logger?.LogWarning("Response has invalid {HeaderName} header value: {Value}", headerName, id);
+      return false;
+    }
+
+    /// <summary>
+    /// Attempts to parse a DateTime value from the specified header in the <see cref="RestResponse"/>.
+    /// </summary>
+    /// <param name="response">The <see cref="RestResponse"/> containing the headers.</param>
+    /// <param name="logger">The <see cref="ILogger"/> to use for logging warnings.</param>
+    /// <param name="headerName">The name of the header to parse.</param>
+    /// <param name="dateTime">The parsed DateTime value if successful, otherwise <see cref="DateTime.MinValue"/>.</param>
+    /// <returns>True if the header is present and contains a valid DateTime, false otherwise.</returns>
+    internal static bool TryGetDateTimeFromHeader(this RestResponse response, ILogger? logger, string headerName, out DateTime dateTime) {
+      dateTime = DateTime.MinValue;
+
+      if (!response.TryGetRequiredHeaderValue(logger, headerName, out var value)) {
+        return false;
+      }
+
+      if (DateTime.TryParse(value.ToString(), out dateTime)) {
+        return true;
+      }
+
+      logger?.LogWarning("Response has invalid {HeaderName} header value: {Value}", headerName, value);
+      return false;
     }
   }
 }

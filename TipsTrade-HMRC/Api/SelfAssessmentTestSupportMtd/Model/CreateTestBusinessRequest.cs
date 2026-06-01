@@ -3,7 +3,7 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
   /// <summary>The parameters used to create a test business for use within the Sandbox environment.</summary>
-  public class CreateTestBusinessRequest : IApiRequest {
+  public class CreateTestBusinessRequest : IApiRequestWithBody {
     #region Properties
     /// <summary>Optional National Insurance number, in the format AA999999A.</summary>
     /// <remarks>If supplied, the endpoint deletes only stateful test data stored against the vendor that is associated with the specified National Insurance number.</remarks>
@@ -21,7 +21,7 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
     Authorization IApiRequest.Authorization => Authorization.User;
 
     /// <inheritdoc/>
-    string IApiRequest.ContentType => "application/json";
+    string IApiRequestWithBody.ContentType => "application/json";
 
     /// <inheritdoc/>
     Method IApiRequest.Method => Method.Post;
@@ -30,7 +30,11 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
     string IApiRequest.Location => $"business/{NiNumber}";
 
     /// <inheritdoc/>
-    public void PopulateRequest(RestRequest request) {
+    public void PopulateRequestParameters(RestRequest request) {
+    }
+
+    /// <inheritdoc/>
+    void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
       request.AddJsonBody(BusinessDetails);
     }
     #endregion

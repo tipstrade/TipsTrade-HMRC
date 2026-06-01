@@ -27,16 +27,13 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention.Model {
     Authorization IApiRequest.Authorization => Authorization.Application;
 
     /// <inheritdoc/>
-    string IApiRequest.ContentType => null;
-
-    /// <inheritdoc/>
     Method IApiRequest.Method => Method.Get;
 
     /// <inheritdoc/>
     string IApiRequest.Location => $"{Api}/validation-feedback";
 
     /// <inheritdoc/>
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
       request.AddQueryParameter("connectionMethod", ConnectionMethod.ToString());
     }
     #endregion

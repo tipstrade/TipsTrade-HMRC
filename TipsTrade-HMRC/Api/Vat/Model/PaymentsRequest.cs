@@ -17,13 +17,11 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     Authorization IApiRequest.Authorization => Authorization.User;
 
-    string IApiRequest.ContentType => "application/json";
-
     Method IApiRequest.Method => Method.Get;
 
     string IApiRequest.Location => $"{Vrn}/payments";
 
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
     }
   }
 }

@@ -7,7 +7,7 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
   /// <summary>The parameters used to create an organisation test user.</summary>
-  public class CreateAgentRequest : IApiRequest, ICreateTestUserRequest<AgentResult> {
+  public class CreateAgentRequest : IApiRequestWithBody, ICreateTestUserRequest<AgentResult> {
     /// <summary>Generates an Account Number for Agent Services and enrols the user for Agent Services.</summary>
     [ServiceName]
     public const string AgentServices = "agent-services";
@@ -20,13 +20,16 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
 
     Authorization IApiRequest.Authorization => Authorization.Application;
 
-    string IApiRequest.ContentType => "application/json";
+    string IApiRequestWithBody.ContentType => "application/json";
 
     Method IApiRequest.Method => Method.Post;
 
     string IApiRequest.Location => "agents";
 
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
+    }
+
+    void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
       request.AddJsonBody(this);
     }
   }

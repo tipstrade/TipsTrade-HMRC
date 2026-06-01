@@ -44,8 +44,6 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
 
     Authorization IApiRequest.Authorization => Authorization.User;
 
-    string IApiRequest.ContentType => "application/json";
-
     Method IApiRequest.Method => Method.Get;
 
     string IApiRequest.Location => $"{NiNumber}/self-assessment/{TaxYear}";
@@ -53,7 +51,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     /// <inheritdoc/>
     public string GovTestScenario { get; set; }
 
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
       if (!string.IsNullOrEmpty(CalculationType)) {
         request.AddQueryParameter("calculationType", CalculationType);
       }

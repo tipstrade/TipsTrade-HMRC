@@ -37,7 +37,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
     public override string Location => $"{NiNumber}/{BusinessId}/cumulative/{TaxYear}";
 
     /// <inheritdoc/>
-    public override void PopulateRequest(RestRequest request) {
+    public override void PopulateRequestParameters(RestRequest request) {
     }
     #endregion
   }

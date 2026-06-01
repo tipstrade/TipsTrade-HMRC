@@ -52,13 +52,11 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     Authorization IApiRequest.Authorization => Authorization.User;
 
-    string IApiRequest.ContentType => "application/json";
-
     Method IApiRequest.Method => Method.Get;
 
     string IApiRequest.Location => $"{Vrn}/obligations";
 
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
       if (!string.IsNullOrEmpty(Status)) {
         request.AddParameter("status", $"{Status}"[0]);
       }

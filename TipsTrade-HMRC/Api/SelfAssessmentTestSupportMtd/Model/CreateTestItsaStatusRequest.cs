@@ -6,7 +6,7 @@ using TipsTrade.HMRC.Extensions;
 
 namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
   /// <summary>The parameters used to create and amend a test ITSA status for a specified customer for use within the sandbox environment.</summary>
-  public class CreateTestItsaStatusRequest : IApiRequest {
+  public class CreateTestItsaStatusRequest : IApiRequestWithBody {
     #region Properties
     /// <summary>National Insurance number, in the format AA999999A.</summary>
     public string NiNumber { get; set; }
@@ -26,7 +26,7 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
     Authorization IApiRequest.Authorization => Authorization.User;
 
     /// <inheritdoc/>
-    string IApiRequest.ContentType => "application/json";
+    string IApiRequestWithBody.ContentType => "application/json";
 
     /// <inheritdoc/>
     Method IApiRequest.Method => Method.Post;
@@ -35,7 +35,11 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
     string IApiRequest.Location => $"itsa-status/{NiNumber}/{TaxYear}";
 
     /// <inheritdoc/>
-    public void PopulateRequest(RestRequest request) {
+    public void PopulateRequestParameters(RestRequest request) {
+    }
+
+    /// <inheritdoc/>
+    void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
       // Submitted on in the format YYYY-MM-DDThh:mm:ss.SSSZ
       var submittedOn = DateTime.Now.GetTaxYearStart().AddMonths(1).ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 

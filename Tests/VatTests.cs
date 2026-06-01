@@ -8,10 +8,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class VatTests : TestBase {
-    public VatTests() {
-    }
-
-    [SetUp]
     protected override void CustomSetup() {
       SetupCredentialsForOrganisation();
     }
@@ -57,8 +53,8 @@ namespace TipsTrade.HMRC.Tests {
       AssertExtensions.NotDefault(resp.TotalAcquisitionsExVAT);
       AssertExtensions.NotDefault(resp.Finalised);
 
-      TestContext.Progress.WriteLine("VAT Retrieved return:");
-      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Out.WriteLine("VAT Retrieved return:");
+      TestContext.Out.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
 
     [Test]
@@ -87,8 +83,8 @@ namespace TipsTrade.HMRC.Tests {
         }
       }
 
-      TestContext.Progress.WriteLine("VAT Liabilities");
-      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Out.WriteLine("VAT Liabilities");
+      TestContext.Out.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
 
     [Test]
@@ -116,8 +112,8 @@ namespace TipsTrade.HMRC.Tests {
         Assert.That(item.PeriodKey, Is.Not.Null);
       }
 
-      TestContext.Progress.WriteLine("VAT Obligations");
-      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Out.WriteLine("VAT Obligations");
+      TestContext.Out.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
 
       // Fulfulled
       obligations.Status = "F";
@@ -166,8 +162,8 @@ namespace TipsTrade.HMRC.Tests {
         }
       }
 
-      TestContext.Progress.WriteLine("VAT Payments");
-      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Out.WriteLine("VAT Payments");
+      TestContext.Out.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
 
     [Test]
@@ -242,8 +238,8 @@ namespace TipsTrade.HMRC.Tests {
 
       var resp = svc.SubmitReturn(request);
 
-      TestContext.Progress.WriteLine("VAT Submission:");
-      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
+      TestContext.Out.WriteLine("VAT Submission:");
+      TestContext.Out.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
     }
   }
 }

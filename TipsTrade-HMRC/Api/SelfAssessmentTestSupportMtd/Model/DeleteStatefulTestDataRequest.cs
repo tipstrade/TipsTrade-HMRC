@@ -18,16 +18,13 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
     Authorization IApiRequest.Authorization => Authorization.User;
 
     /// <inheritdoc/>
-    string IApiRequest.ContentType => "application/json";
-
-    /// <inheritdoc/>
     Method IApiRequest.Method => Method.Delete;
 
     /// <inheritdoc/>
     string IApiRequest.Location => "vendor-state";
 
     /// <inheritdoc/>
-    public void PopulateRequest(RestRequest request) {
+    public void PopulateRequestParameters(RestRequest request) {
       if (!string.IsNullOrEmpty(NiNumber)) {
         request.AddQueryParameter("nino", NiNumber);
       }

@@ -30,14 +30,14 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
 
     /// <summary>Says "Hello Application"</summary>
     public string SayHelloApplication() {
-      return this.ExecuteRequest<MessageResponse>(
+      return ExecuteRequest<MessageResponse>(
         new HelloRequest("application", Authorization.Application)
         ).Message;
     }
 
     /// <summary>Says "Hello Application" asynchronously.</summary>
     public async Task<string> SayHelloApplicationAsync(CancellationToken cancellationToken = default) {
-      var response = await this.ExecuteRequestAsync<MessageResponse>(
+      var response = await ExecuteRequestAsync<MessageResponse>(
         new HelloRequest("application", Authorization.Application),
         cancellationToken).ConfigureAwait(false);
 
@@ -46,14 +46,14 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
 
     /// <summary>Says "Hello User"</summary>
     public string SayHelloUser() {
-      return this.ExecuteRequest<MessageResponse>(
+      return ExecuteRequest<MessageResponse>(
         new HelloRequest("user", Authorization.User)
         ).Message;
     }
 
     /// <summary>Says "Hello User" asynchronously.</summary>
     public async Task<string> SayHelloUserAsync(CancellationToken cancellationToken = default) {
-      var response = await this.ExecuteRequestAsync<MessageResponse>(
+      var response = await ExecuteRequestAsync<MessageResponse>(
         new HelloRequest("user", Authorization.User),
         cancellationToken
         ).ConfigureAwait(false);
@@ -63,14 +63,14 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
 
     /// <summary>Says "Hello World"</summary>
     public string SayHelloWorld() {
-      return this.ExecuteRequest<MessageResponse>(
+      return ExecuteRequest<MessageResponse>(
         new HelloRequest("world", Authorization.Open)
         ).Message;
     }
 
     /// <summary>Says "Hello World" asynchronously.</summary>
     public async Task<string> SayHelloWorldAsync(CancellationToken cancellationToken = default) {
-      var response = await this.ExecuteRequestAsync<MessageResponse>(
+      var response = await ExecuteRequestAsync<MessageResponse>(
         new HelloRequest("world", Authorization.Open),
         cancellationToken
       ).ConfigureAwait(false);

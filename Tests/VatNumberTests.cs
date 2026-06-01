@@ -4,10 +4,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class VatNumberTests : TestBase {
-    public VatNumberTests() {
-    }
-
-    [Test]
     public void EmptyValidNumber() {
       var svc = GetService<VatNumberService>();
       var action = () => svc.CheckVrn("");

@@ -11,7 +11,7 @@ namespace TipsTrade.HMRC.Api {
     /// Gets the cached <see cref="TokenResponse"/> for the specified <paramref name="clientId"/>,
     /// or <c>null</c> if no valid (non-expired) token is cached.
     /// </summary>
-    public TokenResponse Get(string clientId) {
+    public TokenResponse? Get(string clientId) {
       if (_cache.TryGetValue(clientId, out var token) && !token.HasAccessTokenExpired()) {
         return token;
       }

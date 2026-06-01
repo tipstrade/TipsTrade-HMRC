@@ -5,9 +5,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class CreateUserTests : TestBase {
-    public CreateUserTests() {
-    }
-
     private void TestCreateTestUserFactory<T>(string json) where T : class, ICreateTestUserRequest {
       var request = CreateTestUserFactory.CreateTestUserFull<T>();
       Assert.That(request.ServiceNames, Is.Not.Empty);
@@ -23,7 +20,7 @@ namespace TipsTrade.HMRC.Tests {
       }
     }
 
-    private void TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest<TUser> where TUser : UserResultBase {
+    private void TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest<TUser> where TUser : UserResultBase, new() {
       var request = CreateTestUserFactory.CreateTestUserFull<TRequest>();
 
       var svc = GetService<CreateTestUserService>();
@@ -36,8 +33,8 @@ namespace TipsTrade.HMRC.Tests {
         Assert.That(value, Is.Not.Null);
       }
 
-      TestContext.Progress.WriteLine($"Created {result.GetType()}:");
-      TestContext.Progress.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
+      TestContext.Out.WriteLine($"Created {result.GetType()}:");
+      TestContext.Out.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
     }
 
     [Test]

@@ -34,7 +34,7 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
 
     /// <summary>Delete stateful test data using a request object.</summary>
     public DeleteStatefulTestDataResponse DeleteStatefulTestData(DeleteStatefulTestDataRequest request) {
-      return this.ExecuteRequest<DeleteStatefulTestDataResponse>(request);
+      return ExecuteRequest<DeleteStatefulTestDataResponse>(request);
     }
 
     /// <summary>Asynchronously delete stateful test data, optionally scoped to a National Insurance number.</summary>
@@ -44,27 +44,27 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
 
     /// <summary>Asynchronously delete stateful test data using a request object.</summary>
     public async Task<DeleteStatefulTestDataResponse> DeleteStatefulTestDataAsync(DeleteStatefulTestDataRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<DeleteStatefulTestDataResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<DeleteStatefulTestDataResponse>(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Create a test business income source for use within the sandbox environment.</summary>
     public CreateTestBusinessResponse CreateBusinessIncomeSource(CreateTestBusinessRequest request) {
-      return this.ExecuteRequest<CreateTestBusinessResponse>(request);
+      return ExecuteRequest<CreateTestBusinessResponse>(request);
     }
 
     /// <summary>Asynchronously create a test business income source for use within the sandbox environment.</summary>
     public async Task<CreateTestBusinessResponse> CreateBusinessIncomeSourceAsync(CreateTestBusinessRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<CreateTestBusinessResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<CreateTestBusinessResponse>(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Create or amend a test ITSA status for a specified customer.</summary>
     public CreateTestItsaStatusResponse CreateTestItsaStatus(CreateTestItsaStatusRequest request) {
-      return this.ExecuteRequest<CreateTestItsaStatusResponse>(request);
+      return ExecuteRequest<CreateTestItsaStatusResponse>(request);
     }
 
     /// <summary>Asynchronously create or amend a test ITSA status for a specified customer.</summary>
     public async Task<CreateTestItsaStatusResponse> CreateTestItsaStatusAsync(CreateTestItsaStatusRequest request, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<CreateTestItsaStatusResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<CreateTestItsaStatusResponse>(request, cancellationToken).ConfigureAwait(false);
     }
   }
 }

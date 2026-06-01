@@ -3,13 +3,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class ClientTests : TestBase {
-    public ClientTests() {
-    }
-
-    [SetUp]
-    protected override void CustomSetup() {
-    }
-
     [Test]
     public void Credentials() {
       var options = GetOptions();

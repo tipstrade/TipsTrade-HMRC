@@ -4,7 +4,7 @@ using TipsTrade.HMRC.Api.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
   /// <summary>The parameters used to create or amend quarterly period type for a business.</summary>
-  public class AmendQuarterlyPeriodTypeRequest : IApiRequest, IGovTestScenario {
+  public class AmendQuarterlyPeriodTypeRequest : IApiRequestWithBody, IGovTestScenario {
     #region Gov-Test-Scenario constants
     /// <summary>Simulate a successful response.</summary>
     [GovTestScenario]
@@ -49,7 +49,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
 
     Authorization IApiRequest.Authorization => Authorization.User;
 
-    string IApiRequest.ContentType => "application/json";
+    string IApiRequestWithBody.ContentType => "application/json";
 
     Method IApiRequest.Method => Method.Put;
 
@@ -58,7 +58,10 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     /// <inheritdoc/>
     public string GovTestScenario { get; set; }
 
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
+    }
+
+    void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
       request.AddJsonBody(new {
         quarterlyPeriodType = QuarterlyPeriodType
       });

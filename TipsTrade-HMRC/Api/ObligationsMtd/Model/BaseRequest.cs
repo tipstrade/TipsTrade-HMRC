@@ -17,9 +17,6 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     Authorization IApiRequest.Authorization => Authorization.User;
 
     /// <inheritdoc/>
-    string IApiRequest.ContentType => "application/json";
-
-    /// <inheritdoc/>
     Method IApiRequest.Method => Method.Get;
 
     /// <inheritdoc/>
@@ -29,7 +26,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     public string GovTestScenario { get; set; }
 
     /// <inheritdoc/>
-    public abstract void PopulateRequest(RestRequest request);
+    public abstract void PopulateRequestParameters(RestRequest request);
     #endregion
   }
 }

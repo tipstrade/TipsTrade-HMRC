@@ -8,18 +8,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.ApiClient.Core.Logging;
 using TipsTrade.ApiClient.Core.Tenant;
+using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.OAuth;
 
 namespace TipsTrade.HMRC.Api {
   /// <summary>Base class for all HMRC API services, providing shared configuration and token management.</summary>
-  public abstract class HmrcServiceBase : IHmrcService, IWithLogger {
+  public abstract class HmrcServiceBase : IHmrcRestClient, IWithLogger {
     #region Fields
-    /// <summary>The name used to register the named <see cref="HttpClient"/> for HMRC API calls.</summary>
-    internal static readonly string HttpClientName = typeof(HmrcServiceBase).FullName ?? typeof(HmrcServiceBase).Name;
-
     private static readonly AsyncKeyedLocker<string> _tokenLocks = new AsyncKeyedLocker<string>();
-
+    private HmrcOptions _options;
     private Lazy<RestClient> _restClient;
     #endregion
 
@@ -32,7 +30,9 @@ namespace TipsTrade.HMRC.Api {
       IHmrcTenantProvider? tenantProvider = null,
       ILogger? logger = null
       ) {
-      Options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+      _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+      _restClient = this.BuildRestClient(httpClientFactory);
+
       AccessTokenProvider = accessTokenProvider ?? throw new ArgumentNullException(nameof(accessTokenProvider));
       ApplicationTokenCache = applicationTokenCache ?? throw new ArgumentNullException(nameof(applicationTokenCache));
       OauthService = oauthService ?? throw new ArgumentNullException(nameof(oauthService));
@@ -40,46 +40,186 @@ namespace TipsTrade.HMRC.Api {
       // Tenant provider is optional and may not be needed for all services, so if it's not provided we use a default implementation that returns null
       TenantProvider = tenantProvider;
       Logger = logger;
-
-      _restClient = new Lazy<RestClient>(() => {
-        var httpClient = httpClientFactory.CreateClient(HttpClientName);
-        return new RestClient(httpClient, new RestClientOptions(Options.BaseUrl));
-      });
     }
     #endregion
 
     #region Properties
+    /// <summary>
+    /// An <see cref="IHmrcAccessTokenProvider"/> implementation responsible for providing user access tokens for API requests that require user-level authorization.
+    /// </summary>
     private IHmrcAccessTokenProvider AccessTokenProvider { get; }
+
+    /// <summary>
+    /// An in-memory cache for application tokens obtained via the client credentials flow.
+    /// This cache is used to store and retrieve application tokens to avoid unnecessary token requests and to handle token expiration.
+    /// </summary>
     private ApplicationTokenCache ApplicationTokenCache { get; }
-    private HmrcOAuthService OauthService { get; }
+
     /// <inheritdoc/>
     public ILogger? Logger { get; }
+
+    /// <summary>
+    /// An <see cref="HmrcOAuthService"/> instance used to perform OAuth 2.0 token refresh operations when user access tokens expire, as well as to generate authorization URLs for user consent flows.
+    /// </summary>
+    private HmrcOAuthService OauthService { get; }
+
+    /// <summary>
+    /// An optional provider for resolving the tenant context in multi-tenant applications.
+    /// If not supplied, a default implementation is used that returns a single default tenant ID, effectively treating the application as single-tenant.
+    /// </summary>
     private IHmrcTenantProvider? TenantProvider { get; }
-    /// <summary>Gets the shared <see cref="RestClient"/> backed by the named <see cref="HttpClient"/> from the factory.</summary>
-    internal RestClient RestClient => _restClient.Value;
+    #endregion
+
+    #region IHmrcRestClient implementation
+    /// <inheritdoc/>
+    HmrcOptions IHmrcRestClient.Options => _options;
+
+    /// <inheritdoc/>
+    Lazy<RestClient> IHmrcRestClient.RestClient => _restClient;
     #endregion
 
     #region IHmrcService implementation
-    /// <inheritdoc/>
-    public HmrcOptions Options { get; }
-
-    /// <inheritdoc/>
+    /// <summary>The description of the API.</summary>
     public abstract string Description { get; }
 
-    /// <inheritdoc/>
+    /// <summary>A flag indicating whether this version of the API is stable.</summary>
     public abstract bool IsStable { get; }
 
-    /// <inheritdoc/>
+    /// <summary>The relative location of the API.</summary>
     public abstract string Location { get; }
 
-    /// <inheritdoc/>
+    /// <summary>The name of the API.</summary>
     public abstract string Name { get; }
 
-    /// <inheritdoc/>
+    /// <summary>The version of the API that the client should target.</summary>
     public abstract string Version { get; }
     #endregion
 
     #region Private methods
+    [Obsolete("Use CreateRequestAsync instead as this is likely to cause deadlocks.")]
+    internal RestRequest CreateRequest(IApiRequest request) {
+      return CreateRequestAsync(request, CancellationToken.None).GetAwaiter().GetResult();
+    }
+
+    /// <summary>
+    /// Create and populate a <see cref="RestRequest"/> from a given <see cref="IApiRequest"/> using API client settings.
+    /// </summary>
+    /// <param name="request">The request model that will populate headers, body and parameters.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
+    /// <returns>A fully populated <see cref="RestRequest"/> ready for execution.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when required tokens (server or user) are missing for the requested <see cref="Authorization"/> mode,
+    /// or when anti-fraud headers are required but the client's <see cref="AntiFraud"/> instance is null.
+    /// </exception>
+    internal async Task<RestRequest> CreateRequestAsync(IApiRequest request, CancellationToken cancellationToken) {
+      var options = this.GetOptions();
+      var restRequest = new RestRequest($"{Location}/{request.Location}", request.Method);
+      restRequest.AddHeader("Accept", GetAcceptHeader(request.AcceptType));
+
+      if (options.IsSandbox && request is IGovTestScenario govTest) {
+        restRequest.AddGovTestScenario(govTest);
+      }
+
+      if (request is IDateRange dateRange) {
+        restRequest.AddDateRangeParameters(dateRange);
+      }
+
+      if (request.Authorization == Authorization.Application) {
+        var token = await GetApplicationTokenAsync(cancellationToken);
+        restRequest.AddHeader("Authorization", $"Bearer {token}");
+
+      } else if (request.Authorization == Authorization.User) {
+        var accessToken = await GetAccessTokenAsync(cancellationToken);
+
+        restRequest.AddHeader("Authorization", $"Bearer {accessToken}");
+      }
+
+      if (this is IRequiresAntiFraud) {
+        if (options.AntiFraud == null) {
+          throw new ApiException("The request requires anti-fraud headers, but the client's AntiFraud configuration is null.");
+        }
+
+        foreach (var item in options.AntiFraud.GetAntiFraudHeaders()) {
+          restRequest.AddHeader(item.Key, item.Value);
+        }
+      }
+
+      request.PopulateRequestParameters(restRequest);
+
+      if (request is IApiRequestWithBody requestWithBody) {
+        restRequest.AddHeader("Content-Type", requestWithBody.ContentType);
+        requestWithBody.PopulateRequestBody(restRequest);
+      }
+
+      return restRequest;
+    }
+
+    /// <summary>
+    /// Create a <see cref="RestRequest"/> from the supplied <see cref="IApiRequest"/> and execute it synchronously,
+    /// deserializing the response into <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The expected response model type.</typeparam>
+    /// <param name="request">The request model used to create the HTTP request.</param>
+    /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
+    [Obsolete("Use ExecuteRequestAsync instead as this is likely to cause deadlocks.")]
+    internal T ExecuteRequest<T>(IApiRequest request) where T : class, new() {
+      var restRequest = CreateRequest(request);
+
+      return ExecuteRequest<T>(restRequest);
+    }
+
+    /// <summary>
+    /// Execute the specified <see cref="RestRequest"/> synchronously and handle the response.
+    /// </summary>
+    /// <typeparam name="T">The expected response model type.</typeparam>
+    /// <param name="request">The <see cref="RestRequest"/> to execute.</param>
+    /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
+    [Obsolete("Use ExecuteRequestAsync instead as this is likely to cause deadlocks.")]
+    internal T ExecuteRequest<T>(RestRequest request) where T : class, new() {
+      var response = this.GetRestClient().Execute<T>(request);
+
+      return response.HandleResponse();
+    }
+
+    /// <summary>
+    /// Create a <see cref="RestRequest"/> from the supplied <see cref="IApiRequest"/> and execute it asynchronously,
+    /// deserializing the response into <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The expected response model type.</typeparam>
+    /// <param name="request">The request model used to create the HTTP request.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
+    /// <returns>A task that resolves to an instance of <typeparamref name="T"/> representing the API response.</returns>
+    internal async Task<T> ExecuteRequestAsync<T>(IApiRequest request, CancellationToken cancellationToken) where T : class, new() {
+      var restRequest = await CreateRequestAsync(request, cancellationToken).ConfigureAwait(false);
+
+      return await ExecuteRequestAsync<T>(restRequest, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Execute the specified <see cref="RestRequest"/> asynchronously and handle the response.
+    /// </summary>
+    /// <typeparam name="T">The expected response model type.</typeparam>
+    /// <param name="request">The <see cref="RestRequest"/> to execute.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
+    /// <returns>A task that resolves to an instance of <typeparamref name="T"/> representing the API response.</returns>
+    internal async Task<T> ExecuteRequestAsync<T>(RestRequest request, CancellationToken cancellationToken) where T : class, new() {
+      var response = await this.GetRestClient().ExecuteAsync<T>(request, cancellationToken).ConfigureAwait(false);
+
+      return response.HandleResponse();
+    }
+
+    /// <summary>
+    /// Gets the versioned Accept header required by the HMRC API.
+    /// </summary>
+    /// <param name="contentType">The optional content type to be accepted (usually json).</param>
+    /// <returns>A string containing a valid HTTP Accept header for the HMRC API versioning scheme.</returns>
+    /// <remarks>
+    /// See HMRC API versioning guidance: <see href="https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#versioning" />
+    /// </remarks>
+    internal string GetAcceptHeader(string contentType) {
+      return $"application/vnd.hmrc.{Version}+{contentType}";
+    }
+
     /// <summary>
     /// Gets the tenant ID for the current context using the tenant provider, or "(default)" if no tenant provider is configured.
     /// </summary>
@@ -115,38 +255,39 @@ namespace TipsTrade.HMRC.Api {
     /// The token is cached in memory and reused until it expires.
     /// </summary>
     internal async Task<string> GetApplicationTokenAsync(CancellationToken cancellationToken) {
+      var options = this.GetOptions();
       // Short circuit if we have a valid cached token to avoid unnecessary locking and HTTP calls
-      var cached = ApplicationTokenCache.Get(Options.ClientID);
+      var cached = ApplicationTokenCache.Get(options.ClientID);
       if (cached != null) {
         return cached.AccessToken;
       }
 
-      using (await _tokenLocks.LockAsync(Options.ClientID, cancellationToken)) {
+      using (await _tokenLocks.LockAsync(options.ClientID, cancellationToken)) {
         // Check the cache again inside the lock in case another thread already refreshed the token while we were waiting
-        cached = ApplicationTokenCache.Get(Options.ClientID);
+        cached = ApplicationTokenCache.Get(options.ClientID);
         if (cached != null) {
           return cached.AccessToken;
         }
 
         var request = new RestRequest("oauth/token", Method.Post);
-        request.AddParameter("client_secret", Options.ClientSecret);
-        request.AddParameter("client_id", Options.ClientID);
+        request.AddParameter("client_secret", options.ClientSecret);
+        request.AddParameter("client_id", options.ClientID);
         request.AddParameter("grant_type", "client_credentials");
 
-        var response = await RestClient.ExecuteAsync<TokenResponse>(request, cancellationToken).ConfigureAwait(false);
+        var response = await this.GetRestClient().ExecuteAsync<TokenResponse>(request, cancellationToken).ConfigureAwait(false);
 
-        var oauthError = ErrorResponse.FromOAuth2Error(response.Content);
+        var oauthError = response.Content != null ?  ErrorResponse.FromOAuth2Error(response.Content) : null;
         if (oauthError != null) {
-          throw new ApiException(oauthError.Message) {
+          throw new ApiException(oauthError?.Message ?? "OAuth2 error occurred.") {
             ApiError = oauthError,
-            Status = response.StatusCode
+            Status = response?.StatusCode
           };
         }
 
         response.ThrowOnError();
 
         var token = response.Data ?? throw new ApiException("Failed to obtain application token.");
-        ApplicationTokenCache.Set(Options.ClientID, token);
+        ApplicationTokenCache.Set(options.ClientID, token);
 
         return token.AccessToken;
       }

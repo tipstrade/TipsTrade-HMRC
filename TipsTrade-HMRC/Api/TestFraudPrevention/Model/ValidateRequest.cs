@@ -7,13 +7,11 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention.Model {
 
     Authorization IApiRequest.Authorization => Authorization.Application;
 
-    string IApiRequest.ContentType => null;
-
     Method IApiRequest.Method => Method.Get;
 
     string IApiRequest.Location => "validate";
 
-    void IApiRequest.PopulateRequest(RestRequest request) {
+    void IApiRequest.PopulateRequestParameters(RestRequest request) {
     }
   }
 }

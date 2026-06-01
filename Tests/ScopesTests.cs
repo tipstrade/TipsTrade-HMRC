@@ -3,9 +3,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class ScopesTests : TestBase {
-    public ScopesTests() {
-    }
-
     [Test]
     public void AllScopes() {
       var scopes = Scopes.GetScopes();

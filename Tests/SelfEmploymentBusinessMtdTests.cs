@@ -11,10 +11,6 @@ using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class SelfEmploymentBusinessMtdTests : TestBase {
-    public SelfEmploymentBusinessMtdTests() {
-    }
-
-    [SetUp]
     protected override void CustomSetup() {
       SetupCredentialsForOrganisation();
     }

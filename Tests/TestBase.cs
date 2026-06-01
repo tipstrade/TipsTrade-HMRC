@@ -20,12 +20,13 @@ namespace TipsTrade.HMRC.Tests {
   public abstract class TestBase {
     protected Mock<IHmrcAccessTokenProvider> AccessTokenProvider;
 
+    protected Mock<IOptions<HmrcOptions>> HmrcOptionsMock;
+
     protected IConfiguration Configuration { get; }
 
     private IServiceProvider ServiceProvider { get; set; }
 
     #region State properties
-    protected string State => Configuration["State"];
     #endregion
 
     #region User properties
@@ -80,13 +81,22 @@ namespace TipsTrade.HMRC.Tests {
       // Mock the access token provider.
       AccessTokenProvider = new Mock<IHmrcAccessTokenProvider>();
 
-      services.Configure((Action<HmrcOptions>)ConfigureHmrc);
+      // Mock the HMRC options.
+      HmrcOptionsMock = new Mock<IOptions<HmrcOptions>>();
+      var hmrcOptions = new global::TipsTrade.HMRC.HmrcOptions {
+        AntiFraud = BuildAntiFraud(),
+        ClientID = ClientId,
+        ClientSecret = ClientSecret,
+        IsSandbox = IsSandbox
+      };
+      HmrcOptionsMock.Setup(x => x.Value).Returns(hmrcOptions);
+      services.AddSingleton(HmrcOptionsMock.Object);
 
       services.AddSingleton<Api.ApplicationTokenCache>(); // Needed for the Application Tokens
       services.AddSingleton(AccessTokenProvider.Object); // Our mocked access token provider
 
       services.AddHmrcOAuthService();
-      services.AddHttpClient(Api.HmrcServiceBase.HttpClientName);
+      services.AddHttpClient(ServiceCollectionExtensions.HttpClientName);
 
       services.AddBusinessDetailsMtdService();
       services.AddCreateTestUserService();
@@ -108,15 +118,9 @@ namespace TipsTrade.HMRC.Tests {
       ServiceProvider = null;
     }
 
-    protected virtual void ConfigureHmrc(HmrcOptions options) {
-      var antiFraud = BuildAntiFraud();
-      options.AntiFraud = antiFraud;
-      options.ClientID = ClientId;
-      options.ClientSecret = ClientSecret;
-      options.IsSandbox = IsSandbox;
-    }
-
-    /// <summary>Builds and configures the <see cref="AntiFraud.AntiFraud"/> instance used for all requests.</summary>
+    /// <summary>
+    /// Builds an <see cref="AntiFraud.AntiFraud"/> instance with all properties populated.
+    /// </summary>
     protected AntiFraud.AntiFraud BuildAntiFraud() {
       var antiFraud = new AntiFraud.AntiFraud() {
         ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
@@ -168,7 +172,7 @@ namespace TipsTrade.HMRC.Tests {
       return ServiceProvider.GetRequiredService<T>();
     }
 
-    /// <summary>Creates an HMRC service instance using the supplied <see cref="HmrcOptions"/>.</summary>
+    /// <summary>Creates an HMRC service instance using the supplied <see cref="HmrcOptionsMock"/>.</summary>
     protected T CreateServiceWithOptions<T>(HmrcOptions options) where T : HmrcServiceBase {
       var wrappedOptions = Options.Create(options);
       var httpClientFactory = ServiceProvider.GetRequiredService<IHttpClientFactory>();
@@ -181,15 +185,8 @@ namespace TipsTrade.HMRC.Tests {
     /// <summary>Resolves the <see cref="HmrcOAuthService"/> from the DI container.</summary>
     protected HmrcOAuthService GetOAuthService() => ServiceProvider.GetRequiredService<HmrcOAuthService>();
 
-    /// <summary>Creates an <see cref="HmrcOptions"/> snapshot from the current test configuration.</summary>
-    protected HmrcOptions GetOptions() {
-      return new HmrcOptions {
-        AntiFraud = BuildAntiFraud(),
-        ClientID = ClientId,
-        ClientSecret = ClientSecret,
-        IsSandbox = IsSandbox
-      };
-    }
+    /// <summary>Gets the <see cref="HmrcOptionsMock"/> value from the mock.</summary>
+    protected HmrcOptions GetOptions() => HmrcOptionsMock.Object.Value;
 
     private void LoadUsersFromJsonFile() {
       Users = LoadFromJsonFile<HmrcUsers>("hmrc-users.json");

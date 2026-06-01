@@ -30,24 +30,24 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention {
 
     /// <summary>Submits feedback about the fraud prevention headers sent with an API request.</summary>
     public FeedbackResult GetFeedback(string api, ConnectionMethod connectionMethod) {
-      return this.ExecuteRequest<FeedbackResult>(new FeedbackRequest { Api = api, ConnectionMethod = connectionMethod });
+      return ExecuteRequest<FeedbackResult>(new FeedbackRequest { Api = api, ConnectionMethod = connectionMethod });
     }
 
     /// <summary>Asynchronously submits feedback about the fraud prevention headers sent with an API request.</summary>
     public async Task<FeedbackResult> GetFeedbackAsync(string api, ConnectionMethod connectionMethod, CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<FeedbackResult>(
+      return await ExecuteRequestAsync<FeedbackResult>(
         new FeedbackRequest { Api = api, ConnectionMethod = connectionMethod },
         cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Validates fraud prevention headers submitted with this HTTP request.</summary>
     public ValidateResult Validate() {
-      return this.ExecuteRequest<ValidateResult>(new ValidateRequest());
+      return ExecuteRequest<ValidateResult>(new ValidateRequest());
     }
 
     /// <summary>Validates fraud prevention headers submitted with this HTTP request asynchronously.</summary>
     public async Task<ValidateResult> ValidateAsync(CancellationToken cancellationToken = default) {
-      return await this.ExecuteRequestAsync<ValidateResult>(
+      return await ExecuteRequestAsync<ValidateResult>(
         new ValidateRequest(),
         cancellationToken).ConfigureAwait(false);
     }

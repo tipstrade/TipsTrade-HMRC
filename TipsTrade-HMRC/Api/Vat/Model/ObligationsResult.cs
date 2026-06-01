@@ -28,7 +28,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public bool IsOpen => Status == "O";
 
     /// <summary>Compares the current object to the specified <see cref="ObligationsResult"/>, using the <see cref="Start"/> property.</summary>
-    public int CompareTo(ObligationsResult other) {
+    public int CompareTo(ObligationsResult? other) {
       return other == null ? 1 : Start.CompareTo(other.Start);
     }
   }
