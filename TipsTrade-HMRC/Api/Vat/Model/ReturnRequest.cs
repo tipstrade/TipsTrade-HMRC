@@ -16,14 +16,14 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     /// The format is a string of four alphanumeric characters.
     /// Occasionally the format includes the “#” symbol, which must be URL-encoded.
     /// </summary>
-    public string PeriodKey { get; set; }
+    public string PeriodKey { get; set; } = "";
 
     /// <summary>The VAT registration number.</summary>
     [JsonProperty("vrn"), JsonPropertyName("vrn")]
-    public string Vrn { get; set; }
+    public string Vrn { get; set; } = "";
 
     /// <summary>The Gov-Test-Scenario, only in the sandbox environment.</summary>
-    public string GovTestScenario { get; set; }
+    public string? GovTestScenario { get; set; }
 
     string IApiRequest.AcceptType => "json";
 
@@ -32,8 +32,5 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     Method IApiRequest.Method => Method.Get;
 
     string IApiRequest.Location => $"{Vrn}/returns/{HttpUtility.UrlEncode(PeriodKey)}";
-
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
   }
 }

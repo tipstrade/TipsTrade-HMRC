@@ -11,6 +11,6 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
 
     /// <summary>A unique identifier for the business income source.</summary>
     [JsonProperty("businessId"), JsonPropertyName("businessId")]
-    public string Value { get; set; }
+      public string? Value { get; set; }
   }
 }

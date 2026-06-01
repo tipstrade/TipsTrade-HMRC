@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,17 +29,19 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
     public SelfAssessmentTestSupportMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Delete stateful test data, optionally scoped to a National Insurance number.</summary>
-    public DeleteStatefulTestDataResponse DeleteStatefulTestData(string niNumber = null) {
+    [Obsolete("Use DeleteStatefulTestDataAsync instead. Synchronous methods may cause deadlocks.")]
+    public DeleteStatefulTestDataResponse DeleteStatefulTestData(string? niNumber = null) {
       return DeleteStatefulTestData(new DeleteStatefulTestDataRequest { NiNumber = niNumber });
     }
 
     /// <summary>Delete stateful test data using a request object.</summary>
+    [Obsolete("Use DeleteStatefulTestDataAsync instead. Synchronous methods may cause deadlocks.")]
     public DeleteStatefulTestDataResponse DeleteStatefulTestData(DeleteStatefulTestDataRequest request) {
       return ExecuteRequest<DeleteStatefulTestDataResponse>(request);
     }
 
     /// <summary>Asynchronously delete stateful test data, optionally scoped to a National Insurance number.</summary>
-    public async Task<DeleteStatefulTestDataResponse> DeleteStatefulTestDataAsync(string niNumber = null, CancellationToken cancellationToken = default) {
+    public async Task<DeleteStatefulTestDataResponse> DeleteStatefulTestDataAsync(string? niNumber = null, CancellationToken cancellationToken = default) {
       return await DeleteStatefulTestDataAsync(new DeleteStatefulTestDataRequest { NiNumber = niNumber }, cancellationToken).ConfigureAwait(false);
     }
 
@@ -48,6 +51,7 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
     }
 
     /// <summary>Create a test business income source for use within the sandbox environment.</summary>
+    [Obsolete("Use CreateBusinessIncomeSourceAsync instead. Synchronous methods may cause deadlocks.")]
     public CreateTestBusinessResponse CreateBusinessIncomeSource(CreateTestBusinessRequest request) {
       return ExecuteRequest<CreateTestBusinessResponse>(request);
     }
@@ -58,6 +62,7 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
     }
 
     /// <summary>Create or amend a test ITSA status for a specified customer.</summary>
+    [Obsolete("Use CreateTestItsaStatusAsync instead. Synchronous methods may cause deadlocks.")]
     public CreateTestItsaStatusResponse CreateTestItsaStatus(CreateTestItsaStatusRequest request) {
       return ExecuteRequest<CreateTestItsaStatusResponse>(request);
     }

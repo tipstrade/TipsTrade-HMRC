@@ -3,7 +3,7 @@ using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.TestFraudPrevention.Model {
-  internal class FeedbackRequest : IApiRequest {
+  internal class FeedbackRequest : IApiRequestWithParameters {
     #region Properties
     /// <summary>
     /// The API endpoint to which the feedback is being submitted.
@@ -11,7 +11,7 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention.Model {
     /// <remarks>
     /// For the allowed values of this property, see <see href="https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/txm-fph-validator-api/1.0/oas/page#operation/GetfeedbackonrequestsmadetoanAPI"/>
     /// </remarks>
-    public string Api { get; set; }
+    public string Api { get; set; } = "";
 
     /// <summary>
     /// The method by which the application connected to HMRC for the API request being submitted for feedback.
@@ -33,7 +33,7 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention.Model {
     string IApiRequest.Location => $"{Api}/validation-feedback";
 
     /// <inheritdoc/>
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
+    void IApiRequestWithParameters.PopulateRequestParameters(RestRequest request) {
       request.AddQueryParameter("connectionMethod", ConnectionMethod.ToString());
     }
     #endregion

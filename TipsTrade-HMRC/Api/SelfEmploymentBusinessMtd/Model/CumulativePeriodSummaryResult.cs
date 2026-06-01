@@ -9,11 +9,11 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
   public class CumulativePeriodSummaryResult {
     /// <summary>The details about self-employment period dates.</summary>
     [JsonProperty("periodDates"), JsonPropertyName("periodDates")]
-    public PeriodDates PeriodDates { get; set; }
+    public PeriodDates? PeriodDates { get; set; }
 
     /// <summary>The details about self-employment income.</summary>
     [JsonProperty("periodIncome"), JsonPropertyName("periodIncome")]
-    public Income PeriodIncome { get; set; }
+    public Income? PeriodIncome { get; set; }
 
     /// <summary>The details about self-employment expenses.</summary>
     /// <remarks>
@@ -21,7 +21,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
     /// For a list of all the properties, see https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-employment-business-api/5.0/oas/page
     /// </remarks>
     [JsonProperty("periodExpenses"), JsonPropertyName("periodExpenses")]
-    public Dictionary<string, decimal> PeriodExpenses { get; set; } = null;
+    public Dictionary<string, decimal>? PeriodExpenses { get; set; }
 
     /// <summary>The details about self-employment disallowable expenses, that cannot be claimed for tax purposes.</summary>
     /// <remarks>
@@ -29,7 +29,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
     /// For a list of all the properties, see https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-employment-business-api/5.0/oas/page
     /// </remarks>
     [JsonProperty("periodDisallowableExpenses"), JsonPropertyName("periodDisallowableExpenses")]
-    public Dictionary<string, decimal> PeriodDisallowableExpenses { get; set; } = null;
+    public Dictionary<string, decimal>? PeriodDisallowableExpenses { get; set; }
   }
 
   /// <summary>Extension methods for <see cref="CumulativePeriodSummaryResult"/>.</summary>
@@ -43,7 +43,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
     /// <param name="values">The values to replace in the dictionary.</param>
     /// <returns>The updated dictionary.</returns>
     /// <exception cref="ArgumentException">Thrown when invalid keys are provided in the values dictionary.</exception>
-    private static Dictionary<T, V> ReplaceValueOrThrow<T, V>(this Dictionary<T, V> dictionary, Dictionary<T, V> values) where T : notnull {
+    private static Dictionary<T, V> ReplaceValueOrThrow<T, V>(this Dictionary<T, V> dictionary, Dictionary<T, V>? values) where T : notnull {
       if (values == null) {
         return dictionary;
       }
@@ -83,7 +83,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
     /// <param name="expenses">The detailed expenses to add. Defaults to null.</param>
     /// <param name="disallowableExpenses">The disallowable expenses to add. Defaults to null.</param>
     /// <returns>The updated <see cref="CumulativePeriodSummaryResult"/>.</returns>
-    public static CumulativePeriodSummaryResult AddDetailedExpenses(this CumulativePeriodSummaryResult result, Dictionary<string, decimal> expenses = null, Dictionary<string, decimal> disallowableExpenses = null) {
+    public static CumulativePeriodSummaryResult AddDetailedExpenses(this CumulativePeriodSummaryResult result, Dictionary<string, decimal>? expenses = null, Dictionary<string, decimal>? disallowableExpenses = null) {
       var expensesToAdd = Constants.ExpensesNames
         .Except(new string[] { "consolidatedExpenses" }) // Consolidated expenses cannot be added with detailed expenses
         .ToDictionary(x => x, x => 0M).ReplaceValueOrThrow(expenses)

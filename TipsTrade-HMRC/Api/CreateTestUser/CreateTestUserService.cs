@@ -30,6 +30,7 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     public CreateTestUserService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Executes a create test user request synchronously.</summary>
+    [Obsolete("Synchronous execution is not recommended. Use CreateUserAsync instead.")]
     public TResult CreateUser<TResult>(ICreateTestUserRequest<TResult> request) where TResult : UserResultBase, new() {
       if (request is IApiRequest apiRequest) {
         return ExecuteRequest<TResult>(apiRequest);

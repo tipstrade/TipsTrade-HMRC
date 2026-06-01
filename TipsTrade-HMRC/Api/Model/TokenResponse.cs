@@ -12,7 +12,7 @@ namespace TipsTrade.HMRC.Api.Model {
 
     /// <summary>The access token.</summary>
     [JsonProperty("access_token"), JsonPropertyName("access_token")]
-    public string AccessToken { get; set; }
+    public string AccessToken { get; set; } = "";
 
     /// <summary>
     /// The UTC date at which the access token expires.
@@ -35,15 +35,15 @@ namespace TipsTrade.HMRC.Api.Model {
 
     /// <summary>The refresh token.</summary>
     [JsonProperty("refresh_token"), JsonPropertyName("refresh_token")]
-    public string RefreshToken { get; set; }
+    public string RefreshToken { get; set; } = "";
 
     /// <summary>The scope that the tokens apply to.</summary>
     [JsonProperty("scope"), JsonPropertyName("scope")]
-    public string Scope { get; set; }
+    public string Scope { get; set; } = "";
 
     /// <summary>The type of token returned.</summary>
     [JsonProperty("token_type"), JsonPropertyName("token_type")]
-    public string TokenType { get; set; }
+    public string TokenType { get; set; } = "";
 
     /// <summary>Returns a flag indicating whether the <see cref="AccessToken"/> has expired.</summary>
     /// <param name="slewMinutes">

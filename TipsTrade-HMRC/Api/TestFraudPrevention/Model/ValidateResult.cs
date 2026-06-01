@@ -14,19 +14,19 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention.Model {
 
     /// <summary>Array of errors.</summary>
     [JsonProperty("errors"), JsonPropertyName("errors")]
-    public IEnumerable<ValidateError> Errors { get; set; } = new ValidateError[] { };
+    public IEnumerable<ValidateError>? Errors { get; set; } = [];
 
     /// <summary>The validation message.</summary>
     [JsonProperty("message"), JsonPropertyName("message")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
 
     /// <summary>The version of fraud prevention headers that request was validated against.</summary>
     [JsonProperty("specVersion"), JsonPropertyName("specVersion")]
-    public string SpecVersion { get; set; }
+    public string? SpecVersion { get; set; }
 
     /// <summary>Array of warnings.</summary>
     [JsonProperty("warnings"), JsonPropertyName("warnings")]
-    public IEnumerable<ValidateError> Warnings { get; set; } = new ValidateError[] { };
+    public IEnumerable<ValidateError>? Warnings { get; set; } = [];
 
     /// <summary>Returns a string that represents the current object.</summary>
     public override string ToString() {

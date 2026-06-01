@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
     public SelfEmploymentBusinessMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Submit or amend the cumulative period income and expenses for a self-employment business.</summary>
+    [Obsolete("Use CreateOrAmendCumulativePeriodSummaryAsync instead. Synchronous methods may cause deadlocks.")]
     public AmendCumulativePeriodSummaryResponse CreateOrAmendCumulativePeriodSummary(AmendCumulativePeriodSummaryRequest request) {
       return ExecuteRequest<AmendCumulativePeriodSummaryResponse>(request);
     }
@@ -39,6 +41,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
     }
 
     /// <summary>Retrieve the cumulative period income and expenses for a self-employment business.</summary>
+    [Obsolete("Use GetCumulativePeriodSummaryAsync instead. Synchronous methods may cause deadlocks.")]
     public GetCumulativePeriodSummaryResponse GetCumulativePeriodSummary(GetCumulativePeriodSummaryRequest request) {
       return ExecuteRequest<GetCumulativePeriodSummaryResponse>(request);
     }

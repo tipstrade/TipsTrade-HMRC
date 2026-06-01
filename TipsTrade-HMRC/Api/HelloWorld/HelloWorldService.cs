@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,14 +30,15 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
     public HelloWorldService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Says "Hello Application"</summary>
-    public string SayHelloApplication() {
+    [Obsolete("This method is deprecated and may be removed in a future version. Please use SayHelloApplicationAsync instead.")]
+    public string? SayHelloApplication() {
       return ExecuteRequest<MessageResponse>(
         new HelloRequest("application", Authorization.Application)
         ).Message;
     }
 
     /// <summary>Says "Hello Application" asynchronously.</summary>
-    public async Task<string> SayHelloApplicationAsync(CancellationToken cancellationToken = default) {
+    public async Task<string?> SayHelloApplicationAsync(CancellationToken cancellationToken = default) {
       var response = await ExecuteRequestAsync<MessageResponse>(
         new HelloRequest("application", Authorization.Application),
         cancellationToken).ConfigureAwait(false);
@@ -45,14 +47,15 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
     }
 
     /// <summary>Says "Hello User"</summary>
-    public string SayHelloUser() {
+    [Obsolete("This method is deprecated and may be removed in a future version. Please use SayHelloUserAsync instead.")]
+    public string? SayHelloUser() {
       return ExecuteRequest<MessageResponse>(
         new HelloRequest("user", Authorization.User)
         ).Message;
     }
 
     /// <summary>Says "Hello User" asynchronously.</summary>
-    public async Task<string> SayHelloUserAsync(CancellationToken cancellationToken = default) {
+    public async Task<string?> SayHelloUserAsync(CancellationToken cancellationToken = default) {
       var response = await ExecuteRequestAsync<MessageResponse>(
         new HelloRequest("user", Authorization.User),
         cancellationToken
@@ -62,14 +65,15 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
     }
 
     /// <summary>Says "Hello World"</summary>
-    public string SayHelloWorld() {
+    [Obsolete("This method is deprecated and may be removed in a future version. Please use SayHelloUser or SayHelloApplication instead.")]
+    public string? SayHelloWorld() {
       return ExecuteRequest<MessageResponse>(
         new HelloRequest("world", Authorization.Open)
         ).Message;
     }
 
     /// <summary>Says "Hello World" asynchronously.</summary>
-    public async Task<string> SayHelloWorldAsync(CancellationToken cancellationToken = default) {
+    public async Task<string?> SayHelloWorldAsync(CancellationToken cancellationToken = default) {
       var response = await ExecuteRequestAsync<MessageResponse>(
         new HelloRequest("world", Authorization.Open),
         cancellationToken

@@ -20,7 +20,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     /// <summary>The status of the obligation, one of: open or fulfilled.</summary>
     /// <remarks>Enum: "open" "fulfilled"</remarks>
     [JsonProperty("status"), JsonPropertyName("status")]
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     /// <summary>The date this obligation period was fulfilled.</summary>
     [JsonProperty("receivedDate"), JsonPropertyName("receivedDate")]
@@ -28,7 +28,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
 
     /// <inheritdoc/>
     public override string ToString() {
-      return $"{PeriodStartDate:yyyy-MM-dd} to {PeriodEndDate:yyyy-MM-dd} ({Status})";
+      return $"{PeriodStartDate:yyyy-MM-dd} to {PeriodEndDate:yyyy-MM-dd} ({Status ?? "unknown"})";
     }
   }
 }

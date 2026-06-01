@@ -7,7 +7,7 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
     #region Properties
     /// <summary>Optional National Insurance number, in the format AA999999A.</summary>
     /// <remarks>If supplied, the endpoint deletes only stateful test data stored against the vendor that is associated with the specified National Insurance number.</remarks>
-    public string NiNumber { get; set; }
+    public string? NiNumber { get; set; }
     #endregion
 
     #region Implementations

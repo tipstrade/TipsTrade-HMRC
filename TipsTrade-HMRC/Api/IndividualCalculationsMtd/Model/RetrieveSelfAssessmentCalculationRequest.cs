@@ -59,15 +59,15 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     #region Properties
     /// <summary>The National Insurance number of the individual.</summary>
     /// <remarks>Example: "AA123456A"</remarks>
-    public string NiNumber { get; set; }
+    public string NiNumber { get; set; } = "";
 
     /// <summary>The tax year for which the calculation is being retrieved.</summary>
     /// <remarks>Example: "2023-24"</remarks>
-    public string TaxYear { get; set; }
+    public string TaxYear { get; set; } = "";
 
     /// <summary>The unique calculation ID.</summary>
     /// <remarks>Example: "f2fb30e5-8e8f-4c4a-a8a4-ff978a7ee7e1"</remarks>
-    public string CalculationId { get; set; }
+    public string CalculationId { get; set; } = "";
     #endregion
 
     #region Impementations
@@ -80,10 +80,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     string IApiRequest.Location => $"{NiNumber}/self-assessment/{TaxYear}/{CalculationId}";
 
     /// <inheritdoc/>
-    public string GovTestScenario { get; set; }
-
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
+    public string? GovTestScenario { get; set; }
     #endregion
   }
 }

@@ -11,16 +11,16 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     public Guid CorrelationId { get; set; }
 
     /// <inheritdoc/>
-    public string DeprecationDate { get; set; }
+    public string? DeprecationDate { get; set; }
 
     /// <inheritdoc/>
-    public string DocumentationLink { get; set; }
+    public string? DocumentationLink { get; set; }
 
     /// <inheritdoc/>
-    public string SunsetDate { get; set; }
+    public string? SunsetDate { get; set; }
 
     /// <inheritdoc/>
     [JsonProperty("listOfBusinesses"), JsonPropertyName("listOfBusinesses")]
-    public IEnumerable<BusinessDetailsSummaryResult> Value { get; set; }
+    public IEnumerable<BusinessDetailsSummaryResult>? Value { get; set; }
   }
 }

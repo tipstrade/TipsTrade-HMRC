@@ -31,6 +31,7 @@ namespace TipsTrade.HMRC.Api.Vat {
     public VatNumberService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Verifies the specified VAT registration number (VRN).</summary>
+    [Obsolete("Use CheckVrnAsync(string vrn) instead. Synchronous methods may cause deadlocks.")]
     public VatNumberCheckResponse CheckVrn(string vrn) {
       vrn = ValidateVrnOrThrow(vrn, nameof(vrn));
       return ExecuteRequest<VatNumberCheckResponse>(new VatNumberCheckRequest { Vrn = vrn });
@@ -45,6 +46,7 @@ namespace TipsTrade.HMRC.Api.Vat {
     }
 
     /// <summary>Verifies the specified VAT registration number via a verified request made on behalf of a requester.</summary>
+    [Obsolete("Use CheckVrnAsync(string vrn, string requesterVrn) instead. Synchronous methods may cause deadlocks.")]
     public VerifiedVatNumberCheckResponse CheckVrn(string vrn, string requesterVrn) {
       vrn = ValidateVrnOrThrow(vrn, nameof(vrn));
       requesterVrn = ValidateVrnOrThrow(requesterVrn, nameof(requesterVrn));

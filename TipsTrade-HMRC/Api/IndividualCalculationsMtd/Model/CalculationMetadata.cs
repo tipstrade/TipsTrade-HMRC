@@ -10,19 +10,19 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     /// The unique identifier of the calculation.
     /// </summary>
     [JsonProperty("calculationId"), JsonPropertyName("calculationId")]
-    public string CalculationId { get; set; }
+    public string? CalculationId { get; set; }
 
     /// <summary>
     /// The tax year in which the calculation was performed.
     /// </summary>
     [JsonProperty("taxYear"), JsonPropertyName("taxYear")]
-    public string TaxYear { get; set; }
+    public string? TaxYear { get; set; }
 
     /// <summary>
     /// The requester of the calculation. Currently "customer" will be returned even in the case of an agent submission.
     /// </summary>
     [JsonProperty("requestedBy"), JsonPropertyName("requestedBy")]
-    public string RequestedBy { get; set; }
+    public string? RequestedBy { get; set; }
 
     /// <summary>
     /// The timestamp of when the calculation was requested.
@@ -34,7 +34,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     /// The reason why the calculation was triggered.
     /// </summary>
     [JsonProperty("calculationReason"), JsonPropertyName("calculationReason")]
-    public string CalculationReason { get; set; }
+    public string? CalculationReason { get; set; }  
 
     /// <summary>
     /// The timestamp of when the calculation was performed.
@@ -46,7 +46,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     /// The type of calculation performed.
     /// </summary>
     [JsonProperty("calculationType"), JsonPropertyName("calculationType")]
-    public string CalculationType { get; set; }
+    public string? CalculationType { get; set; }
 
     /// <summary>
     /// A boolean to indicate whether the calculation can be used to make a final declaration. This value must be true or false.

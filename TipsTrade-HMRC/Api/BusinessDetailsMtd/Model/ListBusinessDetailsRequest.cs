@@ -37,7 +37,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
 
     #region Properties
     /// <summary>National Insurance number, in the format AA999999A.</summary>
-    public string NiNumber { get; set; }
+    public string NiNumber { get; set; } = "";
     #endregion
 
     #region Implentations
@@ -49,10 +49,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     string IApiRequest.Location => $"{NiNumber}/list";
 
     /// <inheritdoc/>
-    public string GovTestScenario { get; set; }
-
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
+    public string? GovTestScenario { get; set; }
     #endregion
   }
 }

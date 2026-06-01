@@ -20,8 +20,5 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     Method IApiRequest.Method => Method.Get;
 
     string IApiRequest.Location => $"{Vrn}/liabilities";
-
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
   }
 }

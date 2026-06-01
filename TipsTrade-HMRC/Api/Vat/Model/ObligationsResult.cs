@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public DateTime End { get; set; }
 
     /// <summary>The ID code for the period that this obligation belongs to. The format is a string of four alphanumeric characters. Occasionally the format includes the # symbol.</summary>
-    public string PeriodKey { get; set; }
+    public string? PeriodKey { get; set; }
 
     /// <summary>The obligation received date.</summary>
     public DateTime? Received { get; set; }
@@ -19,7 +19,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public DateTime Start { get; set; }
 
     /// <summary>Which obligation statuses to return.</summary>
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     /// <summary>Indicates whether the obligation has been fulfilled.</summary>
     public bool IsFulfilled => Status == "F";

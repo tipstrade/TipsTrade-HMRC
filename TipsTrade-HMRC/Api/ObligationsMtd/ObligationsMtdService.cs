@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TipsTrade.HMRC.AntiFraud;
 using TipsTrade.HMRC.Api.ObligationsMtd.Model;
 using TipsTrade.HMRC.Api.OAuth;
+using System;
 
 namespace TipsTrade.HMRC.Api.ObligationsMtd {
   /// <summary>Service that exposes Obligations (MTD) functions, supporting dependency injection.</summary>
@@ -29,6 +30,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd {
     public ObligationsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Retrieve obligations for a user's business income sources.</summary>
+    [Obsolete("This method is deprecated. Please use GetIncomeAndExpenditureObligationsAsync instead.")]
     public GetObligationsResponse GetIncomeAndExpenditureObligations(GetObligationsRequest request) {
       return ExecuteRequest<GetObligationsResponse>(request);
     }
@@ -39,6 +41,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd {
     }
 
     /// <summary>Retrieve the final declaration obligations for a customer's Income Tax account.</summary>
+    [Obsolete("This method is deprecated. Please use GetFinalObligationsAsync instead.")]
     public GetFinalObligationsResponse GetFinalObligations(GetFinalObligationsRequest request) {
       return ExecuteRequest<GetFinalObligationsResponse>(request);
     }

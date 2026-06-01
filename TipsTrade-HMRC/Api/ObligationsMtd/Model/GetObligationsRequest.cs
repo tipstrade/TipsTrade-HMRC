@@ -64,10 +64,10 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     #region Properties
     /// <summary>The type of business whose obligations are to be returned. If the type is not specified the default is to return obligations for all businesses. The type must be provided if "businessId" is provided.</summary>
     /// <remarks>Enum: "self-employment" "uk-property" "foreign-property"</remarks>
-    public string TypeOfBusiness { get; set; }
+    public string TypeOfBusiness { get; set; } = "";
 
     /// <summary>The unique identifier for the business whose obligations are to be returned.</summary>
-    public string BusinessId { get; set; }
+    public string BusinessId { get; set; } = "";
 
     /// <summary>The start date of the range to filter obligations.</summary>
     /// <remarks>Mandatory if the “to” query parameter is supplied. If the “from” and “to” date parameters are not supplied, the date range will default to a year from today unless the status parameter is set to "open".</remarks>
@@ -79,7 +79,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
 
     /// <summary>Accepted values are ‘open’ and ‘fulfilled’.</summary>
     /// <remarks>If no status is supplied, both open and fulfilled obligations are returned.</remarks>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
     #endregion
 
     #region Overrides

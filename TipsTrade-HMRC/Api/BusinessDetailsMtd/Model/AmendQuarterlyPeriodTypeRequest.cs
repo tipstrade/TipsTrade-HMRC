@@ -30,18 +30,18 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     #region Properties
     /// <summary>A unique identifier for the business income source.</summary>
     /// <remarks>It must conform to the following regex: ^X[A-Z0-9]{1}IS[0-9]{11}$</remarks>
-    public string BusinessId { get; set; }
+    public string BusinessId { get; set; } = "";
 
     /// <summary>National Insurance number, in the format AA999999A.</summary>
-    public string NiNumber { get; set; }
+    public string NiNumber { get; set; } = "";
 
     /// <summary>The tax year for which a quarterly period type is being set.</summary>
     /// <remarks>Example: 2023-24</remarks>
-    public string TaxYear { get; set; }
+    public string TaxYear { get; set; } = "";
 
     /// <summary>The quarterly period type that is being set for the business id.</summary>
     /// <remarks>Possible values: "standard", "calendar".</remarks>
-    public string QuarterlyPeriodType { get; set; }
+    public string QuarterlyPeriodType { get; set; } = "";
     #endregion
 
     #region Impementations
@@ -56,10 +56,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     string IApiRequest.Location => $"{NiNumber}/{BusinessId}/{TaxYear}";
 
     /// <inheritdoc/>
-    public string GovTestScenario { get; set; }
-
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
+    public string? GovTestScenario { get; set; }
 
     void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
       request.AddJsonBody(new {

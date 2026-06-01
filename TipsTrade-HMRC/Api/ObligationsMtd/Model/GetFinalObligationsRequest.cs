@@ -40,11 +40,11 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     /// and no tax year is specified, all obligations from 2019-20 to 2023-24 are returned.
     /// The earliest allowable tax year is 2017-18.
     /// </remarks>
-    public string TaxYear { get; set; }
+    public string? TaxYear { get; set; }
 
     /// <summary>Accepted values are ‘open’ and ‘fulfilled’.</summary>
     /// <remarks>If no status is supplied, both open and fulfilled obligations are returned.</remarks>
-    public string Status { get; set; }
+    public string? Status { get; set; }
     #endregion
 
     #region Overrides

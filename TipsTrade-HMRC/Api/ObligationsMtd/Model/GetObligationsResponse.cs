@@ -11,16 +11,16 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     public Guid CorrelationId { get; set; }
 
     /// <inheritdoc/>
-    public string DeprecationDate { get; set; }
+    public string? DeprecationDate { get; set; }
 
     /// <inheritdoc/>
-    public string DocumentationLink { get; set; }
+    public string? DocumentationLink { get; set; }
 
     /// <inheritdoc/>
-    public string SunsetDate { get; set; }
+    public string? SunsetDate { get; set; }
 
     /// <inheritdoc/>
     [JsonProperty("obligations"), JsonPropertyName("obligations")]
-    public IEnumerable<ObligationResult> Value { get; set; }
+    public IEnumerable<ObligationResult>? Value { get; set; }
   }
 }

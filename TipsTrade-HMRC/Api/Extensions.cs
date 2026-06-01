@@ -10,6 +10,9 @@ using TipsTrade.HMRC.Api.CreateTestUser.Model.Attributes;
 using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api {
+  /// <summary>
+  /// Provides extension methods for working with HMRC API requests and responses, including adding common parameters, handling responses, and extracting information from request types.
+  /// </summary>
   public static class Extensions {
     /// <summary>
     /// Add the date range parameters ("from" and "to") to the specified <see cref="RestRequest"/>.
@@ -36,7 +39,7 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="scenario">The <see cref="IGovTestScenario"/> containing the scenario value.</param>
     /// <returns>The same <see cref="RestRequest"/> instance to allow fluent usage.</returns>
     internal static RestRequest AddGovTestScenario(this RestRequest request, IGovTestScenario scenario) {
-      if (!string.IsNullOrEmpty(scenario.GovTestScenario)) {
+      if (scenario.GovTestScenario != null && !string.IsNullOrEmpty(scenario.GovTestScenario)) {
         request.AddHeader("Gov-Test-Scenario", scenario.GovTestScenario);
       }
 

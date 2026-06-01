@@ -7,7 +7,7 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
   public class ItsaStatusDetails {
     /// <summary>The business income for 2 years prior to the specified taxYear.</summary>
     [JsonProperty("businessIncome2YearsPrior"), JsonPropertyName("businessIncome2YearsPrior")]
-    public decimal? BusinessIncome2YearsPrior { get; set; }
+    public decimal BusinessIncome2YearsPrior { get; set; } = 0;
 
     /// <summary>
     /// The ITSA status for the tax year.
@@ -17,7 +17,7 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
     /// See <see cref="ItsaStatus"/> for more details."
     /// </remarks>
     [JsonProperty("status"), JsonPropertyName("status")]
-    public string Status { get; set; }
+    public string? Status { get; set; } = "";
 
     /// <summary>
     /// The reason for the ITSA status.
@@ -27,11 +27,11 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd.Model {
     /// "Rollover" "Income Source Latency Changes" "MTD ITSA Opt-Out" "MTD ITSA Opt-In" "Digitally Exempt"
     /// See <see cref="ItsaStatusReasons"/> for more details.
     /// </remarks>
-    public string StatusReason { get; set; }
+    public string? StatusReason { get; set; } = "";
 
     /// <summary>The date the ITSA status was submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ</summary>
     [JsonProperty("submittedOn"), JsonPropertyName("submittedOn")]
-    public string SubmittedOn { get; set; }
+    public string SubmittedOn { get; set; } = "";
 
     /// <summary>The date the ITSA status was submitted.</summary>
     [Newtonsoft.Json.JsonIgnore, System.Text.Json.Serialization.JsonIgnore]

@@ -4,7 +4,7 @@ using TipsTrade.HMRC.Api.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.Vat.Model {
   /// <summary>The parameters used to retrieve the VAT obligations.</summary>
-  public class ObligationsRequest : DateRangeRequest, IApiRequest {
+  public class ObligationsRequest : DateRangeRequest, IApiRequestWithParameters {
     /// <summary>Simulates the scenario where the client has quarterly obligations and none are fulfilled.</summary>
     [GovTestScenario]
     public const string ScenarioQuarterlyMet0 = "QUARTERLY_NONE_MET";
@@ -46,7 +46,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public const string ScenarioNotFound = "NOT_FOUND";
 
     /// <summary>Which obligation statuses to return (O=Open, F=Fulfilled).</summary>
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     string IApiRequest.AcceptType => "json";
 
@@ -56,7 +56,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     string IApiRequest.Location => $"{Vrn}/obligations";
 
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
+    void IApiRequestWithParameters.PopulateRequestParameters(RestRequest request) {
       if (!string.IsNullOrEmpty(Status)) {
         request.AddParameter("status", $"{Status}"[0]);
       }

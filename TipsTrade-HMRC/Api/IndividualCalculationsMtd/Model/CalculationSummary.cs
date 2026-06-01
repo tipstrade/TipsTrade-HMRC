@@ -8,7 +8,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
   public class CalculationSummary {
     /// <summary>The unique identifier of the calculation.</summary>
     [JsonProperty("calculationId"), JsonPropertyName("calculationId")]
-    public string CalculationId { get; set; }
+    public string? CalculationId { get; set; }
 
     /// <summary>The timestamp of when the calculation was performed.</summary>
     [JsonProperty("calculationTimestamp"), JsonPropertyName("calculationTimestamp")]
@@ -17,16 +17,16 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     /// <summary>The type of calculation performed.</summary>
     /// <remarks>Enum: "in-year" "intent-to-finalise" "final-declaration" "intent-to-amend" "confirm-amendment"</remarks>
     [JsonProperty("calculationType"), JsonPropertyName("calculationType")]
-    public string CalculationType { get; set; }
+    public string? CalculationType { get; set; }
 
     /// <summary>The optional requestor of the calculation.</summary>
     /// <remarks>Enum: "customer" "hmrc" "agent"</remarks>
     [JsonProperty("requestedBy"), JsonPropertyName("requestedBy")]
-    public string RequestedBy { get; set; }
+    public string? RequestedBy { get; set; }
 
     /// <summary>The optional tax year the calculation was requested for.</summary>
     [JsonProperty("taxYear"), JsonPropertyName("taxYear")]
-    public string TaxYear { get; set; }
+    public string? TaxYear { get; set; }
 
     /// <summary>The optional total amount of Income Tax and National Insurance Contributions due</summary>
     [JsonProperty("totalIncomeTaxAndNicsDue"), JsonPropertyName("totalIncomeTaxAndNicsDue")]
@@ -46,11 +46,11 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
 
     /// <summary>The optional trigger for the calculation.</summary>
     [JsonProperty("calculationTrigger"), JsonPropertyName("calculationTrigger")]
-    public string CalculationTrigger { get; set; }
+    public string? CalculationTrigger { get; set; }
 
     /// <summary>The optional outcome of the calculation request.</summary>
     [JsonProperty("calculationOutcome"), JsonPropertyName("calculationOutcome")]
-    public string CalculationOutcome { get; set; }
+    public string? CalculationOutcome { get; set; }
 
     /// <summary>This is one of, 'totalIncomeTaxAndNicsDue' or 'totalIncomeTaxAndNicsAndCgt' if present, from the calculation output.</summary>
     [JsonProperty("liabilityAmount"), JsonPropertyName("liabilityAmount")]

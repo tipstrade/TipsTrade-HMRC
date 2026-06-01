@@ -11,16 +11,16 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     public Guid CorrelationId { get; set; }
 
     /// <inheritdoc/>
-    public string DeprecationDate { get; set; }
+    public string? DeprecationDate { get; set; }
 
     /// <inheritdoc/>
-    public string DocumentationLink { get; set; }
+    public string? DocumentationLink { get; set; }
 
     /// <inheritdoc/>
-    public string SunsetDate { get; set; }
+    public string? SunsetDate { get; set; }
 
     /// <summary>The calculation details.</summary>
     [JsonProperty("calculations"), JsonPropertyName("calculations")]
-    public IEnumerable<CalculationSummary> Value { get; set; }
+    public IEnumerable<CalculationSummary>? Value { get; set; }
   }
 }

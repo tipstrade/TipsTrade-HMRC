@@ -16,7 +16,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     /// to a TOTP secret – but not the secret itself.
     /// The intention is to recognise the same factor being used across API calls.
     /// </summary>
-    public string UniqueReference { get; set; }
+    public string UniqueReference { get; set; } = "";
 
     /// <summary>Retuns a string that contains the anti fraud header value.</summary>
     public string GetHeaderValue() {

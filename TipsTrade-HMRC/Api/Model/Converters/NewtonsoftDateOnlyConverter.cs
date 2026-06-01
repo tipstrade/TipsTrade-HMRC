@@ -22,7 +22,7 @@ namespace TipsTrade.HMRC.Api.Model.Converters {
         throw new JsonSerializationException($"Unexpected token parsing date. Expected String, got {reader.TokenType}.");
       }
 
-      var dateString = reader.Value.ToString();
+      var dateString = reader.Value?.ToString();
 
       if (DateTime.TryParseExact(dateString, DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed)) {
         return parsed;

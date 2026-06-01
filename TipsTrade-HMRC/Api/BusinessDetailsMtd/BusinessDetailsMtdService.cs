@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
     public BusinessDetailsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Create or amend the type of quarterly reporting period used for a business for a specific tax year.</summary>
+    [Obsolete("This method is deprecated, use CreateOrAmendQuarterlyPeriodTypeAsync instead.")]
     public AmendQuarterlyPeriodTypeResponse CreateOrAmendQuarterlyPeriodType(AmendQuarterlyPeriodTypeRequest request) {
       return ExecuteRequest<AmendQuarterlyPeriodTypeResponse>(request);
     }
@@ -39,6 +41,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
     }
 
     /// <summary>Gets additional information for a specific business income source.</summary>
+    [Obsolete("This method is deprecated, use GetBusinessDetailsAsync instead.")]
     public GetBusinessDetailsResponse GetBusinessDetails(GetBusinessDetailsRequest request) {
       return ExecuteRequest<GetBusinessDetailsResponse>(request);
     }
@@ -49,6 +52,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
     }
 
     /// <summary>Gets all details of a user's business income sources.</summary>
+    [Obsolete("This method is deprecated, use ListBusinessDetailsAsync instead.")]
     public ListBusinessDetailsResponse ListBusinessDetails(ListBusinessDetailsRequest request) {
       return ExecuteRequest<ListBusinessDetailsResponse>(request);
     }

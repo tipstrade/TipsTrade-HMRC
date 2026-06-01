@@ -14,7 +14,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     /// Occasionally the format includes the # symbol.
     /// </summary>
     [JsonProperty("periodKey"), JsonPropertyName("periodKey")]
-    public string PeriodKey { get; set; }
+    public string? PeriodKey { get; set; }
 
     /// <summary>
     /// VAT due on sales and other outputs.

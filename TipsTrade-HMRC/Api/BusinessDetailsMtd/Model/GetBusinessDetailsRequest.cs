@@ -67,10 +67,10 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     #region Properties
     /// <summary>A unique identifier for the business income source.</summary>
     /// <remarks>It must conform to the following regex: ^X[A-Z0-9]{1}IS[0-9]{11}$</remarks>
-    public string BusinessId { get; set; }
+    public string BusinessId { get; set; } = "";
 
     /// <summary>National Insurance number, in the format AA999999A.</summary>
-    public string NiNumber { get; set; }
+    public string NiNumber { get; set; } = "";
     #endregion
 
 
@@ -84,10 +84,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     string IApiRequest.Location => $"{NiNumber}/{BusinessId}";
 
     /// <inheritdoc/>
-    public string GovTestScenario { get; set; }
-
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
+    public string? GovTestScenario { get; set; }
     #endregion
   }
 }

@@ -24,12 +24,12 @@ namespace TipsTrade.HMRC.AntiFraud {
     /// <summary>Gets or sets the JavaScript-reported user agent string from the originating device.</summary>
     [AntiFraudHeader("Gov-Client-Browser-JS-User-Agent")]
     [ConnectionMethod(ConnectionMethod.WEB_APP_VIA_SERVER)]
-    public string BrowserJavaScriptUserAgent { get; set; }
+    public string? BrowserJavaScriptUserAgent { get; set; }
 
     /// <summary>Gets or sets the list of browser plugins on the originating device.</summary>
     [AntiFraudHeader("Gov-Client-Browser-Plugins", true)]
     [ConnectionMethod(ConnectionMethod.WEB_APP_VIA_SERVER)]
-    public IEnumerable<string> BrowserPlugins { get; set; }
+    public IEnumerable<string>? BrowserPlugins { get; set; }
 
     /// <summary>Gets or sets the connection method being used.</summary>
     [AntiFraudHeader("Gov-Client-Connection-Method")]
@@ -38,12 +38,12 @@ namespace TipsTrade.HMRC.AntiFraud {
     /// <summary>Gets or sets the identifier unique to an originating device.</summary>
     [AntiFraudHeader("Gov-Client-Device-ID", true)]
     [ConnectionMethod(true)]
-    public string DeviceID { get; set; }
+    public string? DeviceID { get; set; }
 
     /// <summary>Gets or sets the list of all the local IP addresses (IPv4 and IPv6) available to the originating device.</summary>
     [AntiFraudHeader("Gov-Client-Local-IPs", true)]
     [ConnectionMethod(true)]
-    public IEnumerable<IPAddress> LocalIPs { get; set; }
+    public IEnumerable<IPAddress>? LocalIPs { get; set; }
 
     /// <summary>Gets or sets the timestamp to show when Gov-Client-Local-IPs is collected.</summary>
     [AntiFraudHeader("Gov-Client-Local-IPs-Timestamp", true)]
@@ -59,7 +59,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     [ConnectionMethod(ConnectionMethod.BATCH_PROCESS_DIRECT)]
     [ConnectionMethod(ConnectionMethod.OTHER_DIRECT)]
     [ConnectionMethod(ConnectionMethod.OTHER_VIA_SERVER)]
-    public IEnumerable<string> MACAddresses { get; set; }
+    public IEnumerable<string>? MACAddresses { get; set; }
 
     /// <summary>
     /// Gets or sets a list of key-value data structures containing details of the multi-factor
@@ -73,7 +73,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     [ConnectionMethod(ConnectionMethod.WEB_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.OTHER_DIRECT)]
     [ConnectionMethod(ConnectionMethod.OTHER_VIA_SERVER)]
-    public IEnumerable<MultiFactor> MultiFactor { get; set; }
+    public IEnumerable<MultiFactor>? MultiFactor { get; set; }
 
     /// <summary>Gets or sets the public IP address (IPv4 or IPv6) from which the originating device makes the request.</summary>
     [AntiFraudHeader("Gov-Client-Public-IP")]
@@ -81,7 +81,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     [ConnectionMethod(ConnectionMethod.DESKTOP_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.WEB_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.OTHER_VIA_SERVER)]
-    public IPAddress PublicAddress { get; set; }
+    public IPAddress? PublicAddress { get; set; }
 
     /// <summary>Gets or sets the public TCP port that the originating device uses when initiating the request.</summary>
     [AntiFraudHeader("Gov-Client-Public-Port")]
@@ -98,12 +98,12 @@ namespace TipsTrade.HMRC.AntiFraud {
     [ConnectionMethod(ConnectionMethod.MOBILE_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.DESKTOP_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.WEB_APP_VIA_SERVER)]
-    public IEnumerable<Screen> Screens { get; set; }
+    public IEnumerable<Screen>? Screens { get; set; }
 
     /// <summary>Gets or sets the local timezone of the originating device.</summary>
     [AntiFraudHeader("Gov-Client-Timezone")]
     [ConnectionMethod(true)]
-    public TimeZoneInfo TimeZone { get; set; }
+    public TimeZoneInfo? TimeZone { get; set; }
 
     /// <summary>
     /// Gets or sets the operating system family, version, device manufacturer and model of the originating device.
@@ -117,12 +117,12 @@ namespace TipsTrade.HMRC.AntiFraud {
     [ConnectionMethod(ConnectionMethod.BATCH_PROCESS_DIRECT)]
     [ConnectionMethod(ConnectionMethod.OTHER_DIRECT)]
     [ConnectionMethod(ConnectionMethod.OTHER_VIA_SERVER)]
-    public UserAgent UserAgent { get; set; }
+    public UserAgent? UserAgent { get; set; }
 
     /// <summary>Gets or sets the accounts the user holds.</summary>
     [AntiFraudHeader("Gov-Client-User-IDs", true)]
     [ConnectionMethod(true)]
-    public Dictionary<string, string> UserIDs { get; set; }
+    public Dictionary<string, string>? UserIDs { get; set; }
 
     /// <summary>
     /// Gets or sets a list that details hops over the internet between services that terminate TLS.
@@ -132,7 +132,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     [ConnectionMethod(ConnectionMethod.DESKTOP_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.WEB_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.OTHER_VIA_SERVER)]
-    public IEnumerable<Forwarded> VendorForwarded { get; set; }
+    public IEnumerable<Forwarded>? VendorForwarded { get; set; }
 
     /// <summary>
     /// Gets or sets the hashed licence keys relating to the software vendor
@@ -140,14 +140,14 @@ namespace TipsTrade.HMRC.AntiFraud {
     /// </summary>
     [AntiFraudHeader("Gov-Vendor-License-IDs", true)]
     [ConnectionMethod(true)]
-    public Dictionary<string, string> VendorLicenceIDs { get; set; }
+    public Dictionary<string, string>? VendorLicenceIDs { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the product marketed to end users.
     /// </summary>
     [AntiFraudHeader("Gov-Vendor-Product-Name", true)]
     [ConnectionMethod(true)]
-    public string VendorProductName { get; set; }
+    public string? VendorProductName { get; set; }
 
     /// <summary>Gets or sets the public IP address (IPv4 or IPv6) from which the originating device makes the request.</summary>
     [AntiFraudHeader("Gov-Vendor-Public-IP")]
@@ -155,12 +155,12 @@ namespace TipsTrade.HMRC.AntiFraud {
     [ConnectionMethod(ConnectionMethod.DESKTOP_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.WEB_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.OTHER_VIA_SERVER)]
-    public IPAddress VendorPublicAddress { get; set; }
+    public IPAddress? VendorPublicAddress { get; set; }
 
     /// <summary>Gets or sets the list of software versions involved in handling the request.</summary>
     [AntiFraudHeader("Gov-Vendor-Version")]
     [ConnectionMethod(true)]
-    public Dictionary<string, string> VendorVersion { get; set; }
+    public Dictionary<string, string>? VendorVersion { get; set; }
 
     /// <summary>
     /// Gets or sets the number of pixels of the window on the originating device in which the
@@ -172,7 +172,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     [ConnectionMethod(ConnectionMethod.MOBILE_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.DESKTOP_APP_VIA_SERVER)]
     [ConnectionMethod(ConnectionMethod.WEB_APP_VIA_SERVER)]
-    public Size WindowSize { get; set; }
+    public Size? WindowSize { get; set; }
     #endregion
 
     #region Methods
@@ -194,8 +194,8 @@ namespace TipsTrade.HMRC.AntiFraud {
       var errors = new List<string>();
       var headers = GetAntiFraudHeaders(errors);
 
-      if (errors.Any()) {
-        throw new AntiFraudException($"{errors.Count()} validation errors were found.") {
+      if (errors.Count > 0) {
+        throw new AntiFraudException($"{errors.Count} validation errors were found.") {
           Errors = errors
         };
       }
@@ -209,7 +209,7 @@ namespace TipsTrade.HMRC.AntiFraud {
       var headers = new Dictionary<string, string>();
 
       foreach (var item in properties) {
-        var afHeader = item.GetCustomAttribute<AntiFraudHeaderAttribute>();
+        var afHeader = item.GetCustomAttribute<AntiFraudHeaderAttribute>()!; // GetPropertiesForMethod ensures this is not null
         var value = item.GetValue(this);
 
         bool isEmpty;
@@ -281,7 +281,7 @@ namespace TipsTrade.HMRC.AntiFraud {
     }
 
     /// <summary>Populates the <see cref="LocalIPs"/> property with all the local IP addresses.</summary>
-    public void PopulateLocalIPs(Func<IPAddress, bool> predicate = null) {
+    public void PopulateLocalIPs(Func<IPAddress, bool>? predicate = null) {
       var ips = NetworkInterface.GetAllNetworkInterfaces()
         .GetAllAddresses()
         .Where(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork || x.IsIPv6LinkLocal)
@@ -306,7 +306,7 @@ namespace TipsTrade.HMRC.AntiFraud {
         ;
     }
 
-#if NET452_OR_GREATER
+#if NETFRAMEWORK
     /// <summary>Populates the <see cref="Screens"/> property with all the screens in the system.</summary>
     public void PopulateScreens() {
       Screens = System.Windows.Forms.Screen.AllScreens.Select(x => (Screen)x);

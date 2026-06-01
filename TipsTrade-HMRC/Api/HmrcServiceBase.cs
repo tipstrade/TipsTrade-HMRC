@@ -96,7 +96,7 @@ namespace TipsTrade.HMRC.Api {
     #endregion
 
     #region Private methods
-    [Obsolete("Use CreateRequestAsync instead as this is likely to cause deadlocks.")]
+    [Obsolete("Use CreateRequestAsync instead. Synchronous methods may cause deadlocks.")]
     internal RestRequest CreateRequest(IApiRequest request) {
       return CreateRequestAsync(request, CancellationToken.None).GetAwaiter().GetResult();
     }
@@ -144,7 +144,9 @@ namespace TipsTrade.HMRC.Api {
         }
       }
 
-      request.PopulateRequestParameters(restRequest);
+      if (request is IApiRequestWithParameters requestWithParameters) {
+        requestWithParameters.PopulateRequestParameters(restRequest);
+      }
 
       if (request is IApiRequestWithBody requestWithBody) {
         restRequest.AddHeader("Content-Type", requestWithBody.ContentType);
@@ -161,7 +163,7 @@ namespace TipsTrade.HMRC.Api {
     /// <typeparam name="T">The expected response model type.</typeparam>
     /// <param name="request">The request model used to create the HTTP request.</param>
     /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
-    [Obsolete("Use ExecuteRequestAsync instead as this is likely to cause deadlocks.")]
+    [Obsolete("Use ExecuteRequestAsync instead. Synchronous methods may cause deadlocks.")]
     internal T ExecuteRequest<T>(IApiRequest request) where T : class, new() {
       var restRequest = CreateRequest(request);
 
@@ -174,7 +176,7 @@ namespace TipsTrade.HMRC.Api {
     /// <typeparam name="T">The expected response model type.</typeparam>
     /// <param name="request">The <see cref="RestRequest"/> to execute.</param>
     /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
-    [Obsolete("Use ExecuteRequestAsync instead as this is likely to cause deadlocks.")]
+    [Obsolete("Use ExecuteRequestAsync instead. Synchronous methods may cause deadlocks.")]
     internal T ExecuteRequest<T>(RestRequest request) where T : class, new() {
       var response = this.GetRestClient().Execute<T>(request);
 
@@ -256,27 +258,30 @@ namespace TipsTrade.HMRC.Api {
     /// </summary>
     internal async Task<string> GetApplicationTokenAsync(CancellationToken cancellationToken) {
       var options = this.GetOptions();
+      var clientId = options.ClientID ?? throw new InvalidOperationException("ClientID must be configured to obtain an application token.");
+      var clientSecret = options.ClientSecret ?? throw new InvalidOperationException("ClientSecret must be configured to obtain an application token.");
+
       // Short circuit if we have a valid cached token to avoid unnecessary locking and HTTP calls
-      var cached = ApplicationTokenCache.Get(options.ClientID);
+      var cached = ApplicationTokenCache.Get(clientId);
       if (cached != null) {
         return cached.AccessToken;
       }
 
-      using (await _tokenLocks.LockAsync(options.ClientID, cancellationToken)) {
+      using (await _tokenLocks.LockAsync(clientId, cancellationToken)) {
         // Check the cache again inside the lock in case another thread already refreshed the token while we were waiting
-        cached = ApplicationTokenCache.Get(options.ClientID);
+        cached = ApplicationTokenCache.Get(clientId);
         if (cached != null) {
           return cached.AccessToken;
         }
 
         var request = new RestRequest("oauth/token", Method.Post);
-        request.AddParameter("client_secret", options.ClientSecret);
-        request.AddParameter("client_id", options.ClientID);
+        request.AddParameter("client_secret", clientSecret);
+        request.AddParameter("client_id", clientId);
         request.AddParameter("grant_type", "client_credentials");
 
         var response = await this.GetRestClient().ExecuteAsync<TokenResponse>(request, cancellationToken).ConfigureAwait(false);
 
-        var oauthError = response.Content != null ?  ErrorResponse.FromOAuth2Error(response.Content) : null;
+        var oauthError = response.Content != null ? ErrorResponse.FromOAuth2Error(response.Content) : null;
         if (oauthError != null) {
           throw new ApiException(oauthError?.Message ?? "OAuth2 error occurred.") {
             ApiError = oauthError,
@@ -287,7 +292,7 @@ namespace TipsTrade.HMRC.Api {
         response.ThrowOnError();
 
         var token = response.Data ?? throw new ApiException("Failed to obtain application token.");
-        ApplicationTokenCache.Set(options.ClientID, token);
+        ApplicationTokenCache.Set(clientId, token);
 
         return token.AccessToken;
       }

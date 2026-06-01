@@ -20,10 +20,10 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     /// <summary>The Tax period.</summary>
     [JsonProperty("taxPeriod"), JsonPropertyName("taxPeriod")]
-    public DateRange TaxPeriod { get; set; }
+    public DateRange? TaxPeriod { get; set; }
 
     /// <summary>The charge type of this liability. Max length, 30 characters.</summary>
     [JsonProperty("type"), JsonPropertyName("type")]
-    public string Type { get; set; }
+    public string? Type { get; set; }
   }
 }

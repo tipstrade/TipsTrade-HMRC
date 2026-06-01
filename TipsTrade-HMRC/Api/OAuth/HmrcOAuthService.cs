@@ -57,21 +57,20 @@ namespace TipsTrade.HMRC.Api.OAuth {
     public string GetAuthorizationEndpoint(string state, string redirectUrl, params string[] scopes) {
       if (string.IsNullOrEmpty(state)) {
         throw new ArgumentException($"{nameof(state)} cannot be empty.", nameof(state));
-      }
-      if (string.IsNullOrEmpty(redirectUrl)) {
+      } else if (string.IsNullOrEmpty(redirectUrl)) {
         throw new ArgumentException($"{nameof(redirectUrl)} cannot be empty.", nameof(redirectUrl));
-      }
-      if (scopes == null) {
+      } else if (scopes == null) {
         throw new ArgumentNullException(nameof(scopes));
-      }
-      if (scopes.Length == 0) {
+      } else if (scopes.Length == 0) {
         throw new ArgumentException($"{nameof(scopes)} cannot be empty.", nameof(scopes));
       }
 
       var options = this.GetOptions();
+      var clientId = options.ClientID ?? throw new InvalidOperationException("ClientID must be provided in options.");
+
       var uri = new System.Text.StringBuilder(options.BaseUrl);
       uri.Append("/oauth/authorize?response_type=code");
-      uri.Append($"&client_id={Uri.EscapeDataString(options.ClientID)}");
+      uri.Append($"&client_id={Uri.EscapeDataString(clientId)}");
       uri.Append($"&scope={Uri.EscapeDataString(string.Join(" ", scopes))}");
       uri.Append($"&state={Uri.EscapeDataString(state)}");
       uri.Append($"&redirect_uri={Uri.EscapeDataString(redirectUrl)}");

@@ -3,10 +3,10 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
   /// <summary>The base parameters used to retrieve obligations.</summary>
-  public abstract class BaseRequest : IApiRequest, IGovTestScenario {
+  public abstract class BaseRequest : IApiRequestWithParameters, IGovTestScenario {
     #region Properties
     /// <summary>National Insurance number, in the format AA999999A.</summary>
-    public string NiNumber { get; set; }
+    public string NiNumber { get; set; } = "";
     #endregion
 
     #region Interface Implementation
@@ -23,7 +23,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     public abstract string Location { get; }
 
     /// <inheritdoc/>
-    public string GovTestScenario { get; set; }
+    public string? GovTestScenario { get; set; }
 
     /// <inheritdoc/>
     public abstract void PopulateRequestParameters(RestRequest request);

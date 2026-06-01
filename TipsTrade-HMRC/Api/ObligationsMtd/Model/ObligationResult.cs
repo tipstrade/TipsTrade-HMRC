@@ -8,14 +8,14 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     /// <summary>Identifies the type of business income source.</summary>
     /// <remarks>One of "self-employment", "uk-property" or "foreign-property".</remarks>
     [JsonProperty("typeOfBusiness"), JsonPropertyName("typeOfBusiness")]
-    public string TypeOfBusiness { get; set; }
+    public string? TypeOfBusiness { get; set; }
 
     /// <summary>The unique identifier for this business income source.</summary>
     [JsonProperty("businessId"), JsonPropertyName("businessId")]
-    public string BusinessId { get; set; }
+    public string? BusinessId { get; set; }
 
     /// <summary>An array holding the obligations for the business income source.</summary>
     [JsonProperty("obligationDetails"), JsonPropertyName("obligationDetails")]
-    public IEnumerable<ObligationDetail> Obligations { get; set; }
+    public IEnumerable<ObligationDetail>? Obligations { get; set; }
   }
 }

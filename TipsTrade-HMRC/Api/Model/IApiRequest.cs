@@ -27,7 +27,12 @@ namespace TipsTrade.HMRC.Api.Model {
     /// This value is combined with the API base URL to form the full request URL.
     /// </summary>
     string Location { get; }
+  }
 
+  /// <summary>
+  /// Represents an API request that includes query parameters or headers, but does not include a body payload.
+  /// </summary>
+  internal interface IApiRequestWithParameters : IApiRequest {
     /// <summary>
     /// Populates the provided <see cref="RestRequest"/> with any required query parameters or headers.
     /// Implementations should not add body content here; use <see cref="IApiRequestWithBody.PopulateRequestBody"/> for that.
@@ -36,6 +41,9 @@ namespace TipsTrade.HMRC.Api.Model {
     void PopulateRequestParameters(RestRequest request);
   }
 
+  /// <summary>
+  /// Represents an API request that includes a body payload.
+  /// </summary>
   internal interface IApiRequestWithBody : IApiRequest {
     /// <summary>
     /// Gets the MIME type used for the request body when sending data to the API.

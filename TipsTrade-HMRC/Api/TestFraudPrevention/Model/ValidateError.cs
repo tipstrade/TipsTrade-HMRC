@@ -13,11 +13,11 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention.Model {
 
     /// <summary>Array of headers the error applies to.</summary>
     [JsonProperty("headers"), JsonPropertyName("headers")]
-    public IEnumerable<string> Headers { get; set; }
+      public IEnumerable<string>? Headers { get; set; }
 
     /// <summary>The error message.</summary>
     [JsonProperty("message"), JsonPropertyName("message")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
 
     /// <summary>Returns a string that represents the current object.</summary>
     public override string ToString() {

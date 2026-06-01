@@ -35,13 +35,13 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     /// <summary>The VAT registration number.</summary>
     [JsonProperty("vrn"), JsonPropertyName("vrn")]
-    public string Vrn { get; set; }
+    public string Vrn { get; set; } = "";
 
     /// <inheritdoc/>
-    public string GovTestScenario { get; set; }
+    public string? GovTestScenario { get; set; }
 
     /// <summary>The VAT return to be submitted.</summary>
-    public VatReturn Return { get; set; }
+    public VatReturn? Return { get; set; }
 
     string IApiRequest.AcceptType => "json";
 
@@ -53,11 +53,10 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     string IApiRequest.Location => $"{Vrn}/returns";
 
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
-
     void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
-      if (Return.Finalised == null) {
+      if (Return == null) {
+        throw new InvalidOperationException($"{nameof(Return)} cannot be null.");
+      } else if (Return.Finalised == null) {
         throw new InvalidOperationException($"{nameof(Return.Finalised)} cannot be null.");
       }
 

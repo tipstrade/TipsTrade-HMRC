@@ -1,4 +1,5 @@
 ﻿using RestSharp;
+using System;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Model.Attributes;
 
@@ -65,7 +66,7 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
 
     #region Properties
     /// <summary>The request payload.</summary>
-    public CumulativePeriodSummaryResult Summary { get; set; }
+    public CumulativePeriodSummaryResult? Summary { get; set; }
     #endregion
 
     #region Impementations 
@@ -84,6 +85,10 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model {
 
     /// <inheritdoc/>
     void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
+      if (Summary == null) {
+        throw new InvalidOperationException("Cumulative period summary must be provided.");
+      }
+
       request.AddJsonBody(Summary);
     }
     #endregion

@@ -8,7 +8,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
       return $"lookup/{HttpUtility.UrlEncode(Vrn)}/{HttpUtility.UrlEncode(RequesterVrn)}";
     }
 
-    public string RequesterVrn { get; set; }
+    public string RequesterVrn { get; set; } = "";
   }
 
   internal class VatNumberCheckRequest : IApiRequest {
@@ -20,10 +20,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     string IApiRequest.Location => GetLocation();
 
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
-
-    public string Vrn { get; set; }
+    public string Vrn { get; set; } = "";
 
     protected virtual string GetLocation() {
       return $"lookup/{HttpUtility.UrlEncode(Vrn)}";

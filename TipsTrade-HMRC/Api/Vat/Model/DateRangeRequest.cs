@@ -11,7 +11,7 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
     public DateTime DateFrom { get; set; }
 
     /// <inheritdoc/>
-    public string GovTestScenario { get; set; }
+      public string? GovTestScenario { get; set; }
 
     /// <summary>Date to which to return values.</summary>
     [JsonProperty("to"), JsonPropertyName("to")]
@@ -19,6 +19,6 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
 
     /// <summary>The VAT registration number.</summary>
     [JsonProperty("vrn"), JsonPropertyName("vrn")]
-    public string Vrn { get; set; }
+    public string Vrn { get; set; } = "";
   }
 }

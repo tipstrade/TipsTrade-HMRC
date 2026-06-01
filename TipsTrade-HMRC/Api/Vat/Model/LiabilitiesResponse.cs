@@ -8,6 +8,6 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
   public class LiabilitiesResponse : ResponseBase, IApiListResponse<LiabilityResult> {
     /// <summary>The list of VAT liabilities/</summary>
     [JsonProperty("liabilities"), JsonPropertyName("liabilities")]
-    public IEnumerable<LiabilityResult> Value { get; set; }
+    public IEnumerable<LiabilityResult>? Value { get; set; }
   }
 }

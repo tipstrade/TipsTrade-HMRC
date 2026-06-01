@@ -8,15 +8,16 @@ namespace TipsTrade.HMRC.AntiFraud {
     public IEnumerable<string> Errors { get; internal set; }
 
     /// <summary>Creates an instance of the <see cref="AntiFraudException"/> class.</summary>
-    public AntiFraudException() {
+    public AntiFraudException() : this(null) {
     }
 
     /// <summary>Creates an instance of the <see cref="AntiFraudException"/> class.</summary>
-    public AntiFraudException(string message) : base(message) {
+    public AntiFraudException(string? message) : this(message, null) {
     }
 
     /// <summary>Creates an instance of the <see cref="AntiFraudException"/> class.</summary>
-    public AntiFraudException(string message, Exception innerException) : base(message, innerException) {
+    public AntiFraudException(string? message, Exception? innerException) : base(message, innerException) {
+      Errors = new List<string>();
     }
   }
 }

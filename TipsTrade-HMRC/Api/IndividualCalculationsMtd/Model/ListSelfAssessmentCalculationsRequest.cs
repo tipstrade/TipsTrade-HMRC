@@ -4,7 +4,7 @@ using TipsTrade.HMRC.Api.Model.Attributes;
 
 namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
   /// <summary>The parameters used to list Self Assessment tax calculations for a given National Insurance number and tax year.</summary>
-  public class ListSelfAssessmentCalculationsRequest : IApiRequest, IGovTestScenario {
+  public class ListSelfAssessmentCalculationsRequest : IApiRequestWithParameters, IGovTestScenario {
     #region Gov-Test-Scenario constants
     /// <summary>Simulate a successful response.</summary>
     [GovTestScenario]
@@ -29,14 +29,14 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     #region Properties
     /// <summary>The optional calculation type requested.</summary>
     /// <remarks>Possible values: "in-year", "intent-to-finalise", "intent-to-amend", "final-declaration", "confirm-amendment".</remarks>
-    public string CalculationType { get; set; }
+    public string? CalculationType { get; set; }
 
     /// <summary>National Insurance number, in the format AA999999A.</summary>
-    public string NiNumber { get; set; }
+    public string NiNumber { get; set; } = "";
 
     /// <summary>The tax year for which a quarterly period type is being set.</summary>
     /// <remarks>Example: 2023-24</remarks>
-    public string TaxYear { get; set; }
+    public string TaxYear { get; set; } = "";
     #endregion
 
     #region Impementations
@@ -49,9 +49,9 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model {
     string IApiRequest.Location => $"{NiNumber}/self-assessment/{TaxYear}";
 
     /// <inheritdoc/>
-    public string GovTestScenario { get; set; }
+    public string? GovTestScenario { get; set; }
 
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
+    void IApiRequestWithParameters.PopulateRequestParameters(RestRequest request) {
       if (!string.IsNullOrEmpty(CalculationType)) {
         request.AddQueryParameter("calculationType", CalculationType);
       }

@@ -14,9 +14,6 @@ namespace TipsTrade.HMRC.Api.HelloWorld.Model {
 
     string IApiRequest.Location => location;
 
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
-
     internal HelloRequest(string location, Authorization authorization) {
       this.authorization = authorization;
       this.location = location;

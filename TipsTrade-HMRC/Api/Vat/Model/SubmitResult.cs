@@ -7,18 +7,18 @@ namespace TipsTrade.HMRC.Api.Vat.Model {
   public class SubmitResult {
     /// <summary>The charge reference number is returned, only if the netVatDue value is a debit. Between 1 and 16 characters.</summary>
     [JsonProperty("chargeRefNumber"), JsonPropertyName("chargeRefNumber")]
-    public string ChargeRefNumber { get; set; }
+    public string? ChargeRefNumber { get; set; }
 
     /// <summary>Unique number that represents the form bundle. The system stores VAT Return data in forms, which are held in a unique form bundle.</summary>
     [JsonProperty("formBundleNumber"), JsonPropertyName("formBundleNumber")]
-    public string FormBundleNumber { get; set; }
+    public string? FormBundleNumber { get; set; }
 
     /// <summary>
     /// Is DD if the netVatDue value is a debit and HMRC holds a Direct Debit Instruction for the client.
     /// Is BANK if the netVatDue value is a credit and HMRC holds the client’s bank data. Otherwise not present.
     /// </summary>
     [JsonProperty("paymentIndicator"), JsonPropertyName("paymentIndicator")]
-    public string PaymentIndicator { get; set; }
+    public string? PaymentIndicator { get; set; } 
 
     /// <summary>The time that the message was processed in the system.</summary>
     [JsonProperty("processingDate"), JsonPropertyName("processingDate")]

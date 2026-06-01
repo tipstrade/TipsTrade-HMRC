@@ -38,9 +38,6 @@ namespace TipsTrade.HMRC.Api.CreateTestUser.Model {
 
     string IApiRequest.Location => "individuals";
 
-    void IApiRequest.PopulateRequestParameters(RestRequest request) {
-    }
-
     void IApiRequestWithBody.PopulateRequestBody(RestRequest request) {
       request.AddJsonBody(this);
     }

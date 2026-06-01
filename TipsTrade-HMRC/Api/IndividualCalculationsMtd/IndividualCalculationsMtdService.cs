@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
     public IndividualCalculationsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>List Self Assessment tax calculations for a given National Insurance number and tax year.</summary>
+    [Obsolete("This method is deprecated. Please use ListSelfAssessmentCalculationsAsync instead.")]
     public ListSelfAssessmentCalculationsResponse ListSelfAssessmentCalculations(ListSelfAssessmentCalculationsRequest request) {
       return ExecuteRequest<ListSelfAssessmentCalculationsResponse>(request);
     }
@@ -39,6 +41,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
     }
 
     /// <summary>Retrieve all the tax calculation data for a given National Insurance number and Calculation ID.</summary>
+    [Obsolete("This method is deprecated. Please use RetrieveSelfAssessmentCalculationAsync instead.")]
     public RetrieveSelfAssessmentCalculationResponse RetrieveSelfAssessmentCalculation(RetrieveSelfAssessmentCalculationRequest request) {
       return ExecuteRequest<RetrieveSelfAssessmentCalculationResponse>(request);
     }
@@ -49,6 +52,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
     }
 
     /// <summary>Submit a final declaration for a tax year.</summary>
+    [Obsolete("This method is deprecated. Please use SubmitFinalAssessmentAsync instead.")]
     public SubmitFinalAssessmentResponse SubmitFinalAssessment(SubmitFinalAssessmentRequest request) {
       return ExecuteRequest<SubmitFinalAssessmentResponse>(request);
     }
@@ -59,6 +63,7 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
     }
 
     /// <summary>Triggers a self assessment tax calculation for a given tax year.</summary>
+    [Obsolete("This method is deprecated. Please use TriggerCalculationAsync instead.")]
     public TriggerSelfAssessmentCalculationResponse TriggerCalculation(TriggerSelfAssessmentCalculationRequest request) {
       return ExecuteRequest<TriggerSelfAssessmentCalculationResponse>(request);
     }

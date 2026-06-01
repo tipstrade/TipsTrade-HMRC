@@ -125,10 +125,7 @@ namespace TipsTrade.HMRC.Tests {
       var antiFraud = new AntiFraud.AntiFraud() {
         ConnectionMethod = ConnectionMethod.BATCH_PROCESS_DIRECT,
         DeviceID = Configuration["AntiFraudDeviceID"],
-        Screens = new Screen[] {
-          new Screen() {
-            ColourDepth = 32, ScalingFactor = 1, Size = new Size(1920, 1080) }
-        },
+        Screens = [new Screen(1920, 1080, 32, 1)],
         TimeZone = TimeZoneInfo.Local,
         UserIDs = new Dictionary<string, string>() {
           { "os", System.Environment.UserName }
@@ -144,9 +141,7 @@ namespace TipsTrade.HMRC.Tests {
       antiFraud.PopulateLocalIPs();
       antiFraud.PopulateMACAddresses();
       antiFraud.PopulateUserAgent();
-      antiFraud.VendorForwarded = new Forwarded[] {
-        new Forwarded { By = System.Net.IPAddress.Parse("8.8.8.8"), For = System.Net.IPAddress.Parse("fe80::21a6:9255:4c0b:78e4%14") }
-      };
+      antiFraud.VendorForwarded = [new Forwarded(System.Net.IPAddress.Parse("8.8.8.8"), System.Net.IPAddress.Parse("fe80::21a6:9255:4c0b:78e4%14"))];
 
       // Even though the documentation states that these are optional, the API returns an error
       antiFraud.UserAgent.DeviceManufacturer = "Dell";

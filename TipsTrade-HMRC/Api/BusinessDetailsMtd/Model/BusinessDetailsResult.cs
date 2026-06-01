@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
     #region Properties
     /// <summary>Year of migration.</summary>
     [JsonProperty("yearOfMigration"), JsonPropertyName("yearOfMigration")]
-    public string YearOfMigration { get; set; }
+    public string? YearOfMigration { get; set; }
 
     /// <summary>The first accounting period start date.</summary>
     /// <remarks>Accounting period start and end dates should not be displayed to users of your software.</remarks>
@@ -28,16 +28,16 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
 
     /// <summary>Income source latency details.</summary>
     [JsonProperty("latencyDetails"), JsonPropertyName("latencyDetails")]
-    public Latency LatencyDetails { get; set; }
+    public Latency? LatencyDetails { get; set; }
 
     /// <summary>Quarterly reporting period type.</summary>
     [JsonProperty("quarterlyTypeChoice"), JsonPropertyName("quarterlyTypeChoice")]
-    public QuarterlyType QuarterlyTypeChoice { get; set; }
+    public QuarterlyType? QuarterlyTypeChoice { get; set; }
 
     /// <summary>The start and end dates of the latest accounting period for the business. This array contains dates for the latest accounting period only.</summary>
     /// <remarks>Accounting period start and end dates should not be displayed to users of your software.</remarks>
     [JsonProperty("accountingPeriods"), JsonPropertyName("accountingPeriods")]
-    public IEnumerable<AccountingPeriod> AccountingPeriods { get; set; }
+    public IEnumerable<AccountingPeriod>? AccountingPeriods { get; set; }
 
     /// <summary>Business start date, must be in the past.</summary>
     [JsonProperty("commencementDate"), JsonPropertyName("commencementDate")]
@@ -53,27 +53,27 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
 
     /// <summary>First line of the business address.</summary>
     [JsonProperty("businessAddressLineOne"), JsonPropertyName("businessAddressLineOne")]
-    public string BusinessAddressLineOne { get; set; }
+    public string? BusinessAddressLineOne { get; set; }
 
     /// <summary>Second line of the business address.</summary>
     [JsonProperty("businessAddressLineTwo"), JsonPropertyName("businessAddressLineTwo")]
-    public string BusinessAddressLineTwo { get; set; }
+    public string? BusinessAddressLineTwo { get; set; }
 
     /// <summary>Third line of the business address.</summary>
     [JsonProperty("businessAddressLineThree"), JsonPropertyName("businessAddressLineThree")]
-    public string BusinessAddressLineThree { get; set; }
+    public string? BusinessAddressLineThree { get; set; }
 
     /// <summary>Fourth line of the business address.</summary>
     [JsonProperty("businessAddressLineFour"), JsonPropertyName("businessAddressLineFour")]
-    public string BusinessAddressLineFour { get; set; }
+    public string? BusinessAddressLineFour { get; set; }
 
     /// <summary>Business code.</summary>
     [JsonProperty("businessAddressPostcode"), JsonPropertyName("businessAddressPostcode")]
-    public string BusinessAddressPostcode { get; set; }
+    public string? BusinessAddressPostcode { get; set; }
 
     /// <summary>ISO country code for the business if it is in a non-GB country. The two-letter code for a country must adhere to ISO 3166.</summary>
     [JsonProperty("businessAddressCountryCode"), JsonPropertyName("businessAddressCountryCode")]
-    public string BusinessAddressCountryCode { get; set; }
+    public string? BusinessAddressCountryCode { get; set; }
     #endregion
 
     #region Inner classes
@@ -108,21 +108,21 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
 
       /// <summary>First tax year for the income source.</summary>
       [JsonProperty("taxYear1"), JsonPropertyName("taxYear1")]
-      public string TaxYear1 { get; set; }
+      public string? TaxYear1 { get; set; }
 
       /// <summary>Self-assessment submission frequency for the first tax year.</summary>
       /// <remarks>Possible values: "A" (Annually), "Q" (Quarterly).</remarks>
       [JsonProperty("latencyIndicator1"), JsonPropertyName("latencyIndicator1")]
-      public string LatencyIndicator1 { get; set; }
+      public string? LatencyIndicator1 { get; set; }
 
       /// <summary>Second tax year for the income source.</summary>
       [JsonProperty("taxYear2"), JsonPropertyName("taxYear2")]
-      public string TaxYear2 { get; set; }
+      public string? TaxYear2 { get; set; }
 
       /// <summary>Self-assessment submission frequency for the second tax year.</summary>
       /// <remarks>Possible values: "A" (Annually), "Q" (Quarterly).</remarks>
       [JsonProperty("latencyIndicator2"), JsonPropertyName("latencyIndicator2")]
-      public string LatencyIndicator2 { get; set; }
+      public string? LatencyIndicator2 { get; set; }
     }
 
     /// <summary>Represents Quarterly reporting period type.</summary>
@@ -130,12 +130,12 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd.Model {
       /// <summary>The quarterly period type that is being chosen for the business ID.</summary>
       /// <remarks>Possible values: "standard", "calendar".</remarks>
       [JsonProperty("quarterlyPeriodType"), JsonPropertyName("quarterlyPeriodType")]
-      public string QuarterlyPeriodType { get; set; }
+      public string? QuarterlyPeriodType { get; set; }
 
       /// <summary>The tax year for which the quarterly period type was chosen.</summary>
       /// <remarks>^2[0-9]{3}-[0-9]{2}$</remarks>
       [JsonProperty("taxYearOfChoice"), JsonPropertyName("taxYearOfChoice")]
-      public string TaxYearOfChoice { get; set; }
+      public string? TaxYearOfChoice { get; set; }
     }
     #endregion
   }

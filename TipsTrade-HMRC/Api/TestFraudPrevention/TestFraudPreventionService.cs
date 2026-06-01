@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention {
     public TestFraudPreventionService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Submits feedback about the fraud prevention headers sent with an API request.</summary>
+    [Obsolete("Use GetFeedbackAsync instead. Synchronous methods may cause deadlocks.")]
     public FeedbackResult GetFeedback(string api, ConnectionMethod connectionMethod) {
       return ExecuteRequest<FeedbackResult>(new FeedbackRequest { Api = api, ConnectionMethod = connectionMethod });
     }
@@ -41,6 +43,7 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention {
     }
 
     /// <summary>Validates fraud prevention headers submitted with this HTTP request.</summary>
+    [Obsolete("Use ValidateAsync instead. Synchronous methods may cause deadlocks.")]
     public ValidateResult Validate() {
       return ExecuteRequest<ValidateResult>(new ValidateRequest());
     }
