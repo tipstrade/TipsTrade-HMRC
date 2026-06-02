@@ -15,7 +15,6 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
     ILocalIps,
     IMacAddresses,
     IMultiFactor,
-    IScreens,
     ITimeZone,
     IUserAgent,
     IUserIds,
@@ -39,9 +38,6 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
 
     /// <inheritdoc/>
     public IEnumerable<MultiFactor>? MultiFactor { get; set; }
-
-    /// <inheritdoc/>
-    public IEnumerable<Screen>? Screens { get; set; }
 
     /// <inheritdoc/>
     public TimeZoneInfo? TimeZone { get; set; }
@@ -69,7 +65,6 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
       yield return this.GetLocalIpsTimestamp();
       yield return this.GetMacAddresses();
       yield return this.GetMultiFactor();
-      yield return this.GetScreens();
       yield return this.GetTimeZone();
       yield return this.GetUserAgent();
       yield return this.GetUserIds();

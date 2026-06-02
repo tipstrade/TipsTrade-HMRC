@@ -13,7 +13,6 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
     IFraudPrevention,
     IBrowserJavaScriptUserAgent,
     IDeviceId,
-    ILocalIps,
     IMultiFactor,
     IPublicIp,
     IPublicPort,
@@ -34,12 +33,6 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
 
     /// <inheritdoc/>
     public Guid? DeviceId { get; set; }
-
-    /// <inheritdoc/>
-    public IEnumerable<IPAddress>? LocalIPs { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime LocalIPsTimestamp { get; set; } = DateTime.UtcNow;
 
     /// <inheritdoc/>
     public IEnumerable<MultiFactor>? MultiFactor { get; set; }
@@ -85,8 +78,6 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
       yield return this.GetConnectionMethod();
       yield return this.GetBrowserJavaScriptUserAgent();
       yield return this.GetDeviceId();
-      yield return this.GetLocalIps();
-      yield return this.GetLocalIpsTimestamp();
       yield return this.GetMultiFactor();
       yield return this.GetPublicIp();
       yield return this.GetPublicIpTimestamp();
