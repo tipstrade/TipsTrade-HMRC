@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -44,12 +45,19 @@ namespace TipsTrade.HMRC.Tests {
       TestContext.Out.WriteLine(actualUrl);
     }
 
-    [TestCaseSource(nameof(GetAuthorizationEndpoint_throws_for_Cases))]
-    public void GetAuthorizationEndpoint_throws_for(string state, string redirectUrl, string[] scopes, string expectedParamName, Type expectedExceptionType) {
+    [TestCase(null, "https://example.com/callback", "hello,read:vat,write:vat", "state", typeof(ArgumentException))]
+    [TestCase("", "https://example.com/callback", "hello,read:vat,write:vat", "state", typeof(ArgumentException))]
+    [TestCase("valid-state", null, "hello,read:vat,write:vat", "redirectUrl", typeof(ArgumentException))]
+    [TestCase("valid-state", "", "hello,read:vat,write:vat", "redirectUrl", typeof(ArgumentException))]
+    [TestCase("valid-state", "https://example.com/callback", null, "scopes", typeof(ArgumentNullException))]
+    [TestCase("valid-state", "https://example.com/callback", "", "scopes", typeof(ArgumentException))]
+    public void GetAuthorizationEndpoint_throws_for(string? state, string? redirectUrl, string? scopes, string expectedParamName, Type expectedExceptionType) {
+      var scopesArray = scopes?.Split(",").Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
       var oAuth = GetOAuthService();
 
-      Action action = () => oAuth.GetAuthorizationEndpoint(state, redirectUrl, scopes);
-      var ex = (ArgumentException?)Assert.Throws(expectedExceptionType, action);
+      Action action = () => oAuth.GetAuthorizationEndpoint(state!, redirectUrl!, scopesArray!);
+      var ex = Assert.Throws(expectedExceptionType, action) as ArgumentException;
 
       Assert.That(ex, Is.Not.Null);
       Assert.That(ex.ParamName, Is.EqualTo(expectedParamName));
@@ -169,30 +177,6 @@ namespace TipsTrade.HMRC.Tests {
         Assert.That(tokens.Scope, Is.Not.Null);
         Assert.That(tokens.TokenType, Is.Not.Null);
       }
-    }
-
-    private static IEnumerable<TestCaseData> GetAuthorizationEndpoint_throws_for_Cases() {
-      var validScopes = new string[] { "hello", "read:vat", "write:vat" };
-      var validState = "valid-state";
-      var validRedirectUrl = "https://example.com/callback";
-
-      yield return new TestCaseData(null, validRedirectUrl, validScopes, "state", typeof(ArgumentException))
-        .SetName("GetAuthorizationEndpoint_throws_for => state=null");
-
-      yield return new TestCaseData(string.Empty, validRedirectUrl, validScopes, "state", typeof(ArgumentException))
-        .SetName("GetAuthorizationEndpoint_throws_for => state=empty");
-
-      yield return new TestCaseData(validState, null, validScopes, "redirectUrl", typeof(ArgumentException))
-        .SetName("GetAuthorizationEndpoint_throws_for => redirectUrl=null");
-
-      yield return new TestCaseData(validState, string.Empty, validScopes, "redirectUrl", typeof(ArgumentException))
-        .SetName("GetAuthorizationEndpoint_throws_for => redirectUrl=empty");
-
-      yield return new TestCaseData(validState, validRedirectUrl, null, "scopes", typeof(ArgumentNullException))
-        .SetName("GetAuthorizationEndpoint_throws_for => scopes=null");
-
-      yield return new TestCaseData(validState, validRedirectUrl, new string[0], "scopes", typeof(ArgumentException))
-        .SetName("GetAuthorizationEndpoint_throws_for => scopes=empty");
     }
   }
 }
