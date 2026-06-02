@@ -25,7 +25,7 @@
       ScalingFactor = scalingFactor;
     }
 
-    /// <summary>Returns a string that contains the fraud prevention header value.</summary>
+    /// <inheritdoc/>
     public string GetHeaderValue() {
       // Ensure the scaling factor is formatted with a dot as the decimal separator, regardless of the current culture.
       var scalingText = ScalingFactor.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);

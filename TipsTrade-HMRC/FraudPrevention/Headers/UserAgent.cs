@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// <summary>Represents an object that contains user agent information.</summary>
@@ -17,16 +15,17 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
     /// <summary>Gets or sets the operating system version.</summary>
     public string OSVersion { get; set; } = "";
 
-    /// <summary>Returns a string that contains the fraud prevention header value.</summary>
+    /// <inheritdoc/>
     public string GetHeaderValue() {
       var dict = new Dictionary<string, string> {
-        {"os-family", HttpUtility.UrlEncode(OSFamily) },
-        {"os-version", HttpUtility.UrlEncode(OSVersion) },
-        {"device-manufacturer", HttpUtility.UrlEncode(DeviceManufacturer) },
-        {"device-model", HttpUtility.UrlEncode(DeviceModel) }
+        {"os-family", OSFamily },
+        {"os-version", OSVersion },
+        {"device-manufacturer", DeviceManufacturer },
+        {"device-model", DeviceModel }
       };
 
-      return dict.GetHeaderValue();
+      // As per documentation, both the key and value of the dictionary should be URL encoded.
+      return dict.EncodeDictionary(true);
     }
   }
 }

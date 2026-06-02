@@ -6,7 +6,8 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class PublicPortExtensions {
-    internal static FraudPreventionHeader GetPublicPortHeader(this IPublicPort source) =>
-      new FraudPreventionHeader("Gov-Client-Public-Port", false, source.PublicPort);
+    internal static (string Name, string Value) GetPublicPort(this IPublicPort source) {
+      return ("Gov-Client-Public-Port", $"{source.PublicPort}");
+    }
   }
 }

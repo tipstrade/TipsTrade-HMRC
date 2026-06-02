@@ -6,7 +6,8 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class ConnectionMethodExtensions {
-    internal static FraudPreventionHeader GetConnectionMethodHeader(this IConnectionMethod source) =>
-      new FraudPreventionHeader("Gov-Client-Connection-Method", false, source.ConnectionMethod);
+    internal static (string Name, string Value) GetConnectionMethod(this IConnectionMethod source) {
+      return ("Gov-Client-Connection-Method", $"{source.ConnectionMethod}");
+    }
   }
 }

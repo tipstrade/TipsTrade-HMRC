@@ -18,11 +18,13 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// Extension methods for <see cref="ILocalIps"/> to populate the local IPs and generate the corresponding headers.
   /// </summary>
   public static class LocalIpsExtensions {
-    internal static FraudPreventionHeader GetLocalIpsHeader(this ILocalIps source) =>
-      new FraudPreventionHeader("Gov-Client-Local-IPs", true, source.LocalIPs);
+    internal static (string Name, string Value) GetLocalIps(this ILocalIps source) {
+      return ("Gov-Client-Local-IPs", source.LocalIPs.EncodeIpAddresses());
+    }
 
-    internal static FraudPreventionHeader GetLocalIpsTimestampHeader(this ILocalIps source) =>
-      new FraudPreventionHeader("Gov-Client-Local-IPs-Timestamp", true, source.LocalIPsTimestamp);
+    internal static (string Name, string Value) GetLocalIpsTimestamp(this ILocalIps source) {
+      return ("Gov-Client-Local-IPs-Timestamp", source.LocalIPsTimestamp.EncodeTimestamp());
+    }
 
     /// <summary>Populates <see cref="ILocalIps.LocalIPs"/> with all local IP addresses.</summary>
     public static void PopulateLocalIps(this ILocalIps source, Func<IPAddress, bool>? predicate = null) {

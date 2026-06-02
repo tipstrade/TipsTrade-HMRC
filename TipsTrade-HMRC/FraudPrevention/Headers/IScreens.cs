@@ -12,8 +12,11 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// Extension methods for <see cref="IScreens"/> to populate the screens and generate the corresponding header.
   /// </summary>
   public static class ScreensExtensions {
-    internal static FraudPreventionHeader GetScreensHeader(this IScreens source) =>
-      new FraudPreventionHeader("Gov-Client-Screens", false, source.Screens);
+    internal static (string Name, string Value) GetScreens(this IScreens source) {
+      var value = source.Screens == null ? "" : string.Join(",", source.Screens.Select(x => x.GetHeaderValue()));
+
+      return ("Gov-Client-Screens", value);
+    }
 
 #if NETFRAMEWORK
     /// <summary>Populates <see cref="IScreens.Screens"/> with all screens in the system.</summary>

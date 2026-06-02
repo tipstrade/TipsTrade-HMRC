@@ -13,8 +13,9 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// Provides extension methods for the <see cref="IMacAddresses"/> interface.
   /// </summary>
   public static class MacAddressesExtensions {
-    internal static FraudPreventionHeader GetMacAddressesHeader(this IMacAddresses source) =>
-      new FraudPreventionHeader("Gov-Client-MAC-Addresses", true, source.MacAddresses);
+    internal static (string Name, string Value) GetMacAddresses(this IMacAddresses source) {
+      return ("Gov-Client-MAC-Addresses", source.MacAddresses.EncodeMacAddresses());
+    }
 
     /// <summary>Populates <see cref="IMacAddresses.MacAddresses"/> with all local MAC addresses.</summary>
     public static void PopulateMacAddresses(this IMacAddresses macAddresses) {

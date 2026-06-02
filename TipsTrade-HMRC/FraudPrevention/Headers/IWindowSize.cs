@@ -6,7 +6,10 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class WindowSizeExtensions {
-    internal static FraudPreventionHeader GetWindowSizeHeader(this IWindowSize source) =>
-      new FraudPreventionHeader("Gov-Client-Window-Size", true, source.WindowSize);
+    internal static (string Name, string Value) GetWindowSize(this IWindowSize source) {
+      var value = source.WindowSize == null ? "" : source.WindowSize.GetHeaderValue();
+
+      return ("Gov-Client-Window-Size", value);
+    }
   }
 }

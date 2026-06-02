@@ -13,8 +13,9 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// Extension methods for IUserAgent.
   /// </summary>
   public static class UserAgentExtensions {
-    internal static FraudPreventionHeader GetUserAgentHeader(this IUserAgent source) =>
-      new FraudPreventionHeader("Gov-Client-User-Agent", false, source.UserAgent);
+    internal static (string Name, string Value) GetUserAgent(this IUserAgent source) {
+      return ("Gov-Client-User-Agent", source.UserAgent?.GetHeaderValue() ?? "");
+    }
 
     /// <summary>
     /// Populates the UserAgent properties with the operating system family and version of the originating device.

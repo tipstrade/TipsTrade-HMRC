@@ -12,8 +12,6 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
   public class WebAppViaServer :
     IFraudPrevention,
     IBrowserJavaScriptUserAgent,
-    IBrowserDoNotTrack,
-    IBrowserPlugins,
     IDeviceId,
     ILocalIps,
     IMultiFactor,
@@ -32,16 +30,10 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
     public ConnectionMethod ConnectionMethod => ConnectionMethod.WEB_APP_VIA_SERVER;
 
     /// <inheritdoc/>
-    public bool? BrowserDoNotTrack { get; set; }
-
-    /// <inheritdoc/>
     public string? BrowserJavaScriptUserAgent { get; set; }
 
     /// <inheritdoc/>
-    public IEnumerable<string>? BrowserPlugins { get; set; }
-
-    /// <inheritdoc/>
-    public string? DeviceId { get; set; }
+    public Guid? DeviceId { get; set; }
 
     /// <inheritdoc/>
     public IEnumerable<IPAddress>? LocalIPs { get; set; }
@@ -89,27 +81,25 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
     public Size? WindowSize { get; set; }
 
     /// <inheritdoc/>
-    public IEnumerable<FraudPreventionHeader> GetHeaders() => new[] {
-      this.GetConnectionMethodHeader(),
-      this.GetBrowserDoNotTrackHeader(),
-      this.GetBrowserJavaScriptUserAgentHeader(),
-      this.GetBrowserPluginsHeader(),
-      this.GetDeviceIdHeader(),
-      this.GetLocalIpsHeader(),
-      this.GetLocalIpsTimestampHeader(),
-      this.GetMultiFactorHeader(),
-      this.GetPublicIpHeader(),
-      this.GetPublicIpTimestampHeader(),
-      this.GetPublicPortHeader(),
-      this.GetScreensHeader(),
-      this.GetTimeZoneHeader(),
-      this.GetUserIdsHeader(),
-      this.GetVendorForwardedHeader(),
-      this.GetVendorLicenceIDsHeader(),
-      this.GetVendorProductNameHeader(),
-      this.GetVendorPublicIPHeader(),
-      this.GetVendorVersionHeader(),
-      this.GetWindowSizeHeader(),
-    };
+    public IEnumerable<(string Name, string Value)> GetHeaders()  {
+      yield return this.GetConnectionMethod();
+      yield return this.GetBrowserJavaScriptUserAgent();
+      yield return this.GetDeviceId();
+      yield return this.GetLocalIps();
+      yield return this.GetLocalIpsTimestamp();
+      yield return this.GetMultiFactor();
+      yield return this.GetPublicIp();
+      yield return this.GetPublicIpTimestamp();
+      yield return this.GetPublicPort();
+      yield return this.GetScreens();
+      yield return this.GetTimeZone();
+      yield return this.GetUserIds();
+      yield return this.GetVendorForwarded();
+      yield return this.GetVendorLicenceIDs();
+      yield return this.GetVendorProductName();
+      yield return this.GetVendorPublicIP();
+      yield return this.GetVendorVersion();
+      yield return this.GetWindowSize();
+    }
   }
 }

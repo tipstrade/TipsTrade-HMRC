@@ -6,7 +6,8 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class BrowserJavaScriptUserAgentExtensions {
-    internal static FraudPreventionHeader GetBrowserJavaScriptUserAgentHeader(this IBrowserJavaScriptUserAgent source) =>
-      new FraudPreventionHeader("Gov-Client-Browser-JS-User-Agent", false, source.BrowserJavaScriptUserAgent);
+    internal static (string Name, string Value) GetBrowserJavaScriptUserAgent(this IBrowserJavaScriptUserAgent source) {
+      return ("Gov-Client-Browser-JS-User-Agent", source.BrowserJavaScriptUserAgent ?? string.Empty);
+    }
   }
 }

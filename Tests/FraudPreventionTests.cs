@@ -5,6 +5,10 @@ using TipsTrade.HMRC.Api.TestFraudPrevention.Model;
 using NUnit.Framework;
 using TipsTrade.HMRC.FraudPrevention.Headers;
 using TipsTrade.HMRC.FraudPrevention.ConnectionMethods;
+using System.Threading.Tasks;
+using Moq;
+using TipsTrade.HMRC.FraudPrevention;
+using System.Linq;
 
 namespace TipsTrade.HMRC.Tests {
   public class FraudPreventionTests : TestBase {
@@ -60,15 +64,51 @@ namespace TipsTrade.HMRC.Tests {
       TestContext.Out.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
     }
 
+
     [Test]
-    public void Validate() {
+    [TestCase(typeof(BatchProcessDirect))]
+    [TestCase(typeof(DesktopAppDirect))]
+    [TestCase(typeof(DesktopAppViaServer))]
+    [TestCase(typeof(MobileAppDirect))]
+    [TestCase(typeof(MobileAppViaServer))]
+    [TestCase(typeof(OtherDirect))]
+    [TestCase(typeof(OtherViaServer))]
+    [TestCase(typeof(WebAppViaServer))]
+    public async Task Validate(Type headersType) {
+      // Build the headers for the test case type and populate
+      IFraudPrevention value = (IFraudPrevention)Activator.CreateInstance(headersType);
+      PopulateFraudPrevention(value);
+
+      var headers = value.GetHeaders().ToArray();
+      var headerKeys = headers.Select(h => h.Name).Distinct().ToArray();
+
+      // Ensure that no headers are duplicated and that the keys are all valid non-empty strings.
+      Assert.That(headerKeys, Has.Length.EqualTo(headers.Length), "Duplicate headers found.");
+      Assert.That(headerKeys.Any(string.IsNullOrEmpty), Is.False, "Header keys contain null or empty strings.");
+
+      // Inject the headers in the HmrcOptionsMock
+      HmrcOptionsMock.Reset();
+      HmrcOptionsMock.Setup(x => x.Value).Returns(new HmrcOptions {
+        FraudPreventionConfig = value,
+        ClientID = ClientId,
+        ClientSecret = ClientSecret,
+        IsSandbox = IsSandbox
+      });
+
+      TestContext.Out.WriteLine($"Testing {headersType.Name} headers:");
+      TestContext.Out.WriteLine(JsonConvert.SerializeObject(value.GetHeaders().ToDictionary(x => x.Name, x => x.Value), Formatting.Indented));
+
       var svc = GetService<TestFraudPreventionService>();
-      var response = svc.Validate();
+      var response = await svc.ValidateAsync();
 
-      Assert.That(response.Errors, Is.Empty);
-      Assert.That(response.Warnings, Is.Empty); // Warnings may be present if the dev machine has a VPN or unusual network configuration.
-
+      TestContext.Out.WriteLine();
+      TestContext.Out.WriteLine("Response from ValidateAsync:");
       TestContext.Out.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(response.Errors, Is.Empty);
+        Assert.That(response.Warnings, Is.Empty); // Warnings may be present if the dev machine has a VPN or unusual network configuration.
+      }
     }
 
     [Test]

@@ -1,3 +1,5 @@
+using System;
+
 namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// <summary>Provides the Gov-Vendor-Product-Name header.</summary>
   public interface IVendorProductName {
@@ -6,7 +8,10 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class VendorProductNameExtensions {
-    internal static FraudPreventionHeader GetVendorProductNameHeader(this IVendorProductName source) =>
-      new FraudPreventionHeader("Gov-Vendor-Product-Name", true, source.VendorProductName);
+    internal static (string Name, string Value) GetVendorProductName(this IVendorProductName source) {
+      var value = source.VendorProductName == null ? "" : Uri.UnescapeDataString(source.VendorProductName);
+
+      return ("Gov-Vendor-Product-Name", value);
+    }
   }
 }

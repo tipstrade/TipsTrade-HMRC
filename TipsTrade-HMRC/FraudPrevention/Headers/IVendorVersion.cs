@@ -8,7 +8,11 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class VendorVersionExtensions {
-    internal static FraudPreventionHeader GetVendorVersionHeader(this IVendorVersion source) =>
-      new FraudPreventionHeader("Gov-Vendor-Version", false, source.VendorVersion);
+    internal static (string Name, string Value) GetVendorVersion(this IVendorVersion source) {
+      // As per documentation, both the key and value of the dictionary should be URL encoded.
+      var value = source.VendorVersion == null ? "" : source.VendorVersion.EncodeDictionary(true);
+
+      return ("Gov-Vendor-Version", value);
+    }
   }
 }

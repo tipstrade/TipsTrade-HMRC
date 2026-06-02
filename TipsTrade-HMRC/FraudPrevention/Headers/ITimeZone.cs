@@ -8,7 +8,8 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class TimeZoneExtensions {
-    internal static FraudPreventionHeader GetTimeZoneHeader(this ITimeZone source) =>
-      new FraudPreventionHeader("Gov-Client-Timezone", false, source.TimeZone);
+    internal static (string Name, string Value) GetTimeZone(this ITimeZone source) {
+      return ("Gov-Client-Timezone", source.TimeZone.EncodeTimezone());
+    }
   }
 }

@@ -8,7 +8,11 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class VendorLicenceIDsExtensions {
-    internal static FraudPreventionHeader GetVendorLicenceIDsHeader(this IVendorLicenceIDs source) =>
-      new FraudPreventionHeader("Gov-Vendor-License-IDs", true, source.VendorLicenceIDs);
+    internal static (string Name, string Value) GetVendorLicenceIDs(this IVendorLicenceIDs source) {
+      // As per documentation, both the key and value of the dictionary should be URL encoded.
+      var value = source.VendorLicenceIDs == null ? "" : source.VendorLicenceIDs.EncodeDictionary(true);
+
+      return ("Gov-Vendor-License-IDs", value);
+    }
   }
 }

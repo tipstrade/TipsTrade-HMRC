@@ -29,7 +29,7 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
     public ConnectionMethod ConnectionMethod => ConnectionMethod.OTHER_VIA_SERVER;
 
     /// <inheritdoc/>
-    public string? DeviceId { get; set; }
+    public Guid? DeviceId { get; set; }
 
     /// <inheritdoc/>
     public IEnumerable<IPAddress>? LocalIPs { get; set; }
@@ -77,24 +77,24 @@ namespace TipsTrade.HMRC.FraudPrevention.ConnectionMethods {
     public Dictionary<string, string>? VendorVersion { get; set; }
 
     /// <inheritdoc/>
-    public IEnumerable<FraudPreventionHeader> GetHeaders() => new[] {
-      this.GetConnectionMethodHeader(),
-      this.GetDeviceIdHeader(),
-      this.GetLocalIpsHeader(),
-      this.GetLocalIpsTimestampHeader(),
-      this.GetMacAddressesHeader(),
-      this.GetMultiFactorHeader(),
-      this.GetPublicIpHeader(),
-      this.GetPublicIpTimestampHeader(),
-      this.GetPublicPortHeader(),
-      this.GetTimeZoneHeader(),
-      this.GetUserAgentHeader(),
-      this.GetUserIdsHeader(),
-      this.GetVendorForwardedHeader(),
-      this.GetVendorLicenceIDsHeader(),
-      this.GetVendorProductNameHeader(),
-      this.GetVendorPublicIPHeader(),
-      this.GetVendorVersionHeader(),
-    };
+    public IEnumerable<(string Name, string Value)> GetHeaders()  {
+      yield return this.GetConnectionMethod();
+      yield return this.GetDeviceId();
+      yield return this.GetLocalIps();
+      yield return this.GetLocalIpsTimestamp();
+      yield return this.GetMacAddresses();
+      yield return this.GetMultiFactor();
+      yield return this.GetPublicIp();
+      yield return this.GetPublicIpTimestamp();
+      yield return this.GetPublicPort();
+      yield return this.GetTimeZone();
+      yield return this.GetUserAgent();
+      yield return this.GetUserIds();
+      yield return this.GetVendorForwarded();
+      yield return this.GetVendorLicenceIDs();
+      yield return this.GetVendorProductName();
+      yield return this.GetVendorPublicIP();
+      yield return this.GetVendorVersion();
+    }
   }
 }

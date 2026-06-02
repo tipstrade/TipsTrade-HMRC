@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 
 namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// <summary>
@@ -20,12 +19,10 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
     /// </summary>
     public string UniqueReference { get; set; } = "";
 
-    /// <summary>Returns a string that contains the fraud-prevention header value.</summary>
+    /// <inheritdoc/>
     public string GetHeaderValue() {
-      if (string.IsNullOrEmpty(UniqueReference)) throw new InvalidOperationException($"{nameof(UniqueReference)} cannot be empty.");
-
-      var timeEncoded = HttpUtility.UrlEncode($"{TimeStamp.ToUniversalTime():s}Z"); // 2017-04-21T13:23:42Z
-      var refEncoded = HttpUtility.UrlEncode(UniqueReference);
+      var timeEncoded = Uri.EscapeDataString(TimeStamp.EncodeTimestamp());
+      var refEncoded = Uri.EscapeDataString(UniqueReference ?? "");
 
       return $"type={Method}&timestamp={timeEncoded}&unique-reference={refEncoded}";
     }

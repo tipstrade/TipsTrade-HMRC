@@ -8,7 +8,8 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class VendorPublicIPExtensions {
-    internal static FraudPreventionHeader GetVendorPublicIPHeader(this IVendorPublicIP source) =>
-      new FraudPreventionHeader("Gov-Vendor-Public-IP", false, source.VendorPublicIP);
+    internal static (string Name, string Value) GetVendorPublicIP(this IVendorPublicIP source) {
+      return ("Gov-Vendor-Public-IP", source.VendorPublicIP.EncodeIpAddress());
+    }
   }
 }

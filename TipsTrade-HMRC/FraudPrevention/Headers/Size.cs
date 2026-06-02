@@ -9,7 +9,7 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
     /// <summary>Gets or sets the width of the screen.</summary>
     public int Width { get; set; }
 
-    /// <summary>Returns a string that contains the fraud-prevention header value.</summary>
+    /// <inheritdoc/>
     public string GetHeaderValue() {
       return $"width={Width}&height={Height}";
     }

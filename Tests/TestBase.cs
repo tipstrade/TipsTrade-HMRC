@@ -43,7 +43,7 @@ namespace TipsTrade.HMRC.Tests {
 
     private string Environment => IsSandbox ? "Sandbox" : "Production";
 
-    protected string FraudPreventionDeviceId => Configuration["FraudPreventionDeviceId"] ?? throw new InvalidOperationException("FraudPreventionDeviceId is not configured.");
+    protected Guid FraudPreventionDeviceId => Guid.Parse(Configuration["FraudPreventionDeviceId"] ?? throw new InvalidOperationException("FraudPreventionDeviceId is not configured."));
 
     protected bool IsSandbox => true;
 
@@ -129,16 +129,15 @@ namespace TipsTrade.HMRC.Tests {
     protected T BuildFraudPrevention<T>() where T : IFraudPrevention, new() {
       var headers = new T();
 
-      if (headers is IBrowserDoNotTrack doNotTrack) {
-        doNotTrack.BrowserDoNotTrack = true;
-      }
+      return PopulateFraudPrevention(headers);
+    }
 
+    /// <summary>
+    /// Populates the supplied fraud prevention headers with values for all properties defined by the various header interfaces.
+    /// </summary>
+    protected T PopulateFraudPrevention<T>(T headers) where T : IFraudPrevention {
       if (headers is IBrowserJavaScriptUserAgent browserUserAgent) {
-        browserUserAgent.BrowserJavaScriptUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome";
-      }
-
-      if (headers is IBrowserPlugins browserPlugins) {
-        browserPlugins.BrowserPlugins = new List<string>() { "Plugin 1", "Plugin 2" };
+        browserUserAgent.BrowserJavaScriptUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36";
       }
 
       if (headers is IDeviceId deviceId) {
@@ -185,13 +184,22 @@ namespace TipsTrade.HMRC.Tests {
       }
 
       if (headers is IUserIds userIds) {
-        userIds.UserIds = new Dictionary<string, string>() {
-          { "os", System.Environment.UserName }
-        };
+        var dictionary = new Dictionary<string, string>();
+
+        switch (headers.ConnectionMethod) {
+          case ConnectionMethod.WEB_APP_VIA_SERVER:
+            dictionary.Add("account", $"{Guid.NewGuid()}@example.com");
+            break;
+          default:
+            dictionary.Add("os", System.Environment.UserName);
+            break;
+        }
+
+        userIds.UserIds = dictionary;
       }
 
       if (headers is IVendorForwarded vendorForwarded) {
-        vendorForwarded.VendorForwarded = [new Forwarded(IPAddress.Parse("1.1.1.1"), IPAddress.Parse("2.2.2.2"))];
+        vendorForwarded.VendorForwarded = [new Forwarded(IPAddress.Parse("2.2.2.2"), IPAddress.Parse("1.1.1.1"))];
       }
 
       if (headers is IVendorLicenceIDs vendorLicenceIDs) {
@@ -205,7 +213,7 @@ namespace TipsTrade.HMRC.Tests {
       }
 
       if (headers is IVendorPublicIP vendorPublicIP) {
-        vendorPublicIP.VendorPublicIP = IPAddress.Parse("8.8.8.8");
+        vendorPublicIP.VendorPublicIP = IPAddress.Parse("2.2.2.2");
       }
 
       if (headers is IVendorVersion vendorVersion) {

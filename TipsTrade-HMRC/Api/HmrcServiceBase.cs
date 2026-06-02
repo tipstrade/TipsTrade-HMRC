@@ -138,9 +138,7 @@ namespace TipsTrade.HMRC.Api {
           throw new ApiException("The request requires fraud prevention headers, but the client's FraudPrevention configuration is null.");
         }
 
-        foreach (var item in options.FraudPreventionConfig.ToHttpHeaders()) {
-          restRequest.AddHeader(item.Key, item.Value);
-        }
+        options.FraudPreventionConfig.AddHeadersToRequest(restRequest);
       }
 
       if (request is IApiRequestWithParameters requestWithParameters) {

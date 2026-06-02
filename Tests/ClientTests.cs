@@ -1,5 +1,4 @@
-﻿using TipsTrade.HMRC.Api.OAuth;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace TipsTrade.HMRC.Tests {
   public class ClientTests : TestBase {

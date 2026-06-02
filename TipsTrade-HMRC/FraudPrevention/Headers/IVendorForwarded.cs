@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// <summary>Provides the Gov-Vendor-Forwarded header.</summary>
@@ -8,7 +9,10 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class VendorForwardedExtensions {
-    internal static FraudPreventionHeader GetVendorForwardedHeader(this IVendorForwarded source) =>
-      new FraudPreventionHeader("Gov-Vendor-Forwarded", false, source.VendorForwarded);
+    internal static (string Name, string Value) GetVendorForwarded(this IVendorForwarded source) {
+      var value = source.VendorForwarded == null ? "" : string.Join(",", source.VendorForwarded.Select(x => x.GetHeaderValue()));
+
+      return ("Gov-Vendor-Forwarded", value);
+    }
   }
 }

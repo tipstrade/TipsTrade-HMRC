@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Net;
-using System.Web;
 
 namespace TipsTrade.HMRC.FraudPrevention.Headers {
   /// <summary>Represents an object that contains information on hops over the internet that terminate TLS.</summary>
-  public class Forwarded : IFraudPreventionValue   {
+  public class Forwarded : IFraudPreventionValue {
     /// <summary>Gets or sets the server’s public IP address where it received the request.</summary>
     public IPAddress By { get; set; }
 
@@ -27,13 +26,9 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
       For = @for;
     }
 
-
-    /// <summary>Returns a string that contains the fraud prevention header value.</summary>
+    /// <inheritdoc/>
     public string GetHeaderValue() {
-      var by = HttpUtility.UrlEncode($"{By}");
-      var @for = HttpUtility.UrlEncode($"{For}");
-
-      return $"by={by}&for={@for}";
+      return $"by={By.EncodeIpAddress()}&for={For.EncodeIpAddress()}";
     }
   }
 }

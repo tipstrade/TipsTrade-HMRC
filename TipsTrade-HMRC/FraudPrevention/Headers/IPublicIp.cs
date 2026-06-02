@@ -12,10 +12,12 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   }
 
   internal static class PublicIpExtensions {
-    internal static FraudPreventionHeader GetPublicIpHeader(this IPublicIp source) =>
-      new FraudPreventionHeader("Gov-Client-Public-IP", false, source.PublicIp);
+    internal static (string Name, string Value) GetPublicIp(this IPublicIp source) {
+      return ("Gov-Client-Public-IP", source.PublicIp.EncodeIpAddress());
+    }
 
-    internal static FraudPreventionHeader GetPublicIpTimestampHeader(this IPublicIp source) =>
-      new FraudPreventionHeader("Gov-Client-Public-IP-Timestamp", true, source.PublicIpTimestamp);
+    internal static (string Name, string Value) GetPublicIpTimestamp(this IPublicIp source) {
+      return ("Gov-Client-Public-IP-Timestamp", source.PublicIpTimestamp.EncodeTimestamp());
+    }
   }
 }

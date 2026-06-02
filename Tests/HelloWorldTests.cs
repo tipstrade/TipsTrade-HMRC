@@ -1,9 +1,5 @@
-﻿using System;
-using TipsTrade.HMRC.Api;
-using TipsTrade.HMRC.Api.HelloWorld;
+﻿using TipsTrade.HMRC.Api.HelloWorld;
 using NUnit.Framework;
-using Moq;
-using System.Threading;
 
 namespace TipsTrade.HMRC.Tests {
   public class HelloWorldTests : TestBase {
