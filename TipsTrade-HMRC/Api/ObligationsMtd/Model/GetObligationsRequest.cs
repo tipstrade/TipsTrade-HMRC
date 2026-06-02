@@ -30,7 +30,7 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd.Model {
     /// For a response with a foreign property business, use businessId: XFIS12345678902.
     /// </remarks>
     [GovTestScenario]
-    public const string ScenarioFulfilled = "Fulfilled";
+    public const string ScenarioFulfilled = "FULFILLED";
 
     /// <summary>Simulates a scenario where the remote endpoint indicates that the trader is insolvent.</summary>
     [GovTestScenario]
