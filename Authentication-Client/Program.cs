@@ -55,7 +55,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       var services = new ServiceCollection();
       services.AddHmrc<AccessTokenProvider>(options => {
-        options.ClientID = ClientId;
+        options.ClientId = ClientId;
         options.ClientSecret = ClientSecret;
         options.IsSandbox = IsSandbox;
       });

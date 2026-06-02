@@ -5,7 +5,7 @@ namespace TipsTrade.HMRC.Tests {
     [Test]
     public void Credentials() {
       var options = GetOptions();
-      Assert.That(options.ClientID, Is.EqualTo(ClientId));
+      Assert.That(options.ClientId, Is.EqualTo(ClientId));
       Assert.That(options.ClientSecret, Is.EqualTo(ClientSecret));
       Assert.That(options.IsSandbox, Is.EqualTo(IsSandbox));
     }

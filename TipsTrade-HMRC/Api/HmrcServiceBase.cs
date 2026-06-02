@@ -255,8 +255,8 @@ namespace TipsTrade.HMRC.Api {
     /// </summary>
     internal async Task<string> GetApplicationTokenAsync(CancellationToken cancellationToken) {
       var options = this.GetOptions();
-      var clientId = options.ClientID ?? throw new InvalidOperationException("ClientID must be configured to obtain an application token.");
-      var clientSecret = options.ClientSecret ?? throw new InvalidOperationException("ClientSecret must be configured to obtain an application token.");
+      var clientId = options.ClientId ?? throw new InvalidOperationException($"{nameof(options.ClientId)} must be configured to obtain an application token.");
+      var clientSecret = options.ClientSecret ?? throw new InvalidOperationException($"{nameof(options.ClientSecret)} must be configured to obtain an application token.");
 
       // Short circuit if we have a valid cached token to avoid unnecessary locking and HTTP calls
       var cached = ApplicationTokenCache.Get(clientId);

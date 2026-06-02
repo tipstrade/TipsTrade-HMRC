@@ -97,7 +97,7 @@ namespace TipsTrade.HMRC.Tests {
       HmrcOptionsMock.Reset();
       HmrcOptionsMock.Setup(x => x.Value).Returns(new HmrcOptions {
         FraudPreventionConfig = value,
-        ClientID = ClientId,
+        ClientId = ClientId,
         ClientSecret = ClientSecret,
         IsSandbox = IsSandbox
       });

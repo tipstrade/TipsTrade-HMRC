@@ -36,7 +36,7 @@ namespace TipsTrade.HMRC.Tests {
     #endregion
 
     #region Client properties
-    protected string ClientId => Configuration.GetSection(Environment)["ClientID"] ?? throw new InvalidOperationException("ClientID is not configured.");
+    protected string ClientId => Configuration.GetSection(Environment)["ClientId"] ?? throw new InvalidOperationException("ClientId is not configured.");
 
     protected string ClientSecret => Configuration.GetSection(Environment)["ClientSecret"] ?? throw new InvalidOperationException("ClientSecret is not configured.");
 
@@ -100,7 +100,9 @@ namespace TipsTrade.HMRC.Tests {
       services.AddSingleton(AccessTokenProvider.Object); // Our mocked access token provider
 
       services.AddHmrcOAuthService();
-      services.AddHttpClient(ServiceCollectionExtensions.HttpClientName);
+      services.AddHmrcHttpClient((opts) => {
+        opts.Timeout = TimeSpan.FromSeconds(5);
+      });
 
       services.AddBusinessDetailsMtdService();
       services.AddCreateTestUserService();
@@ -124,7 +126,7 @@ namespace TipsTrade.HMRC.Tests {
     protected HmrcOptions BuildDefaultOptions() {
       return new HmrcOptions {
         FraudPreventionConfig = BuildFraudPrevention<BatchProcessDirect>(),
-        ClientID = ClientId,
+        ClientId = ClientId,
         ClientSecret = ClientSecret,
         IsSandbox = IsSandbox
       };

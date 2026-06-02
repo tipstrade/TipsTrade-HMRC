@@ -66,7 +66,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
       }
 
       var options = this.GetOptions();
-      var clientId = options.ClientID ?? throw new InvalidOperationException("ClientID must be provided in options.");
+      var clientId = options.ClientId ?? throw new InvalidOperationException($"{nameof(options.ClientId)} must be provided in options.");
 
       var uri = new System.Text.StringBuilder(options.BaseUrl);
       uri.Append("/oauth/authorize?response_type=code");
@@ -115,7 +115,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
       var code = HttpUtility.UrlDecode(qs["code"]);
       var request = new RestRequest("oauth/token", Method.Post);
       request.AddParameter("client_secret", options.ClientSecret);
-      request.AddParameter("client_id", options.ClientID);
+      request.AddParameter("client_id", options.ClientId);
       request.AddParameter("grant_type", "authorization_code");
       request.AddParameter("redirect_uri", $"{u.Scheme}://{u.Authority}{u.AbsolutePath}");
       request.AddParameter("code", code);
@@ -143,7 +143,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
       var restClient = this.GetRestClient();
       var request = new RestRequest("oauth/token", Method.Post);
       request.AddParameter("client_secret", options.ClientSecret);
-      request.AddParameter("client_id", options.ClientID);
+      request.AddParameter("client_id", options.ClientId);
       request.AddParameter("grant_type", "refresh_token");
       request.AddParameter("refresh_token", refreshToken);
 

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net.Http;
 using TipsTrade.HMRC.Api.BusinessDetailsMtd;
 using TipsTrade.HMRC.Api.OAuth;
 using TipsTrade.HMRC.Api.CreateTestUser;
@@ -44,9 +45,10 @@ namespace TipsTrade.HMRC.Extensions {
     /// <typeparam name="TAccessTokenProvider">The type of the access token provider.</typeparam>
     /// <param name="services">The service collection to configure.</param>
     /// <param name="configureOptions">An action to configure the HMRC options.</param>
+    /// <param name="configureClient">An optional action to configure the <see cref="System.Net.Http.HttpClient"/>. If null, a default client will be registered.</param>
     /// <returns>The same <see cref="IServiceCollection"/> instance so calls can be chained.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IServiceCollection AddHmrc<TAccessTokenProvider>(this IServiceCollection services, Action<HmrcOptions> configureOptions)
+    public static IServiceCollection AddHmrc<TAccessTokenProvider>(this IServiceCollection services, Action<HmrcOptions> configureOptions, Action<HttpClient>? configureClient = null)
         where TAccessTokenProvider : class, IHmrcAccessTokenProvider {
       if (services == null) {
         throw new ArgumentNullException(nameof(services));
@@ -57,7 +59,7 @@ namespace TipsTrade.HMRC.Extensions {
       services.AddSingleton<Api.ApplicationTokenCache>();
       services.AddSingleton<IHmrcAccessTokenProvider, TAccessTokenProvider>();
 
-      services.AddHttpClient(HttpClientName);
+      services.AddHmrcHttpClient(configureClient);
 
       services.AddHmrcOAuthService();
       services.AddBusinessDetailsMtdService();
@@ -70,6 +72,25 @@ namespace TipsTrade.HMRC.Extensions {
       services.AddTestFraudPreventionService();
       services.AddVatService();
       services.AddVatNumberService();
+
+      return services;
+    }
+
+    /// <summary>
+    /// Registers a named <see cref="System.Net.Http.HttpClient"/> with the <see cref="IServiceCollection"/> for use with HMRC API calls, using the specified configuration action.
+    /// </summary>
+    /// <param name="services">The service collection to configure.</param>
+    /// <param name="configureClient">An optional action to configure the <see cref="System.Net.Http.HttpClient"/>. If null, a default client will be registered.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance so calls can be chained.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IServiceCollection AddHmrcHttpClient(this IServiceCollection services, Action<HttpClient>? configureClient = null) {
+      if (services == null) {
+        throw new ArgumentNullException(nameof(services));
+      }
+
+      configureClient ??= (_) => { };
+
+      services.AddHttpClient(HttpClientName, configureClient);
 
       return services;
     }

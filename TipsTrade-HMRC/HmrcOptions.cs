@@ -14,7 +14,7 @@ namespace TipsTrade.HMRC {
     public string BaseUrl => IsSandbox ? SandboxUrl : ProductionUrl;
 
     /// <summary>The ID used to identify your application during each step of an OAuth 2.0 journey.</summary>
-    public string? ClientID { get; set; }
+    public string? ClientId { get; set; }
 
     /// <summary>The secret passphrase used to authorise your application during each step of an OAuth 2.0 journey.</summary>
     public string? ClientSecret { get; set; }

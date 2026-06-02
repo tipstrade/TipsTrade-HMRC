@@ -36,7 +36,7 @@ namespace TipsTrade.HMRC.Tests {
 
       Assert.That($"{uri.Scheme}://{uri.Host}{uri.AbsolutePath}", Is.EqualTo($"{HmrcOptions.SandboxUrl}/oauth/authorize"));
       Assert.That(qs["response_type"], Is.EqualTo("code"));
-      Assert.That(qs["client_id"], Is.EqualTo(HmrcOptionsMock.Object.Value.ClientID));
+      Assert.That(qs["client_id"], Is.EqualTo(HmrcOptionsMock.Object.Value.ClientId));
       Assert.That(actualScopes, Is.EquivalentTo(scopes));
       Assert.That(qs["state"], Is.EqualTo(state));
       Assert.That(qs["redirect_uri"], Is.EqualTo(redirectUrl));
