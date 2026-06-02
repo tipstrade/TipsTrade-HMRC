@@ -84,7 +84,6 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
         Console.Write("");
       }
 
-
       Console.WriteLine();
       Console.Write("Press any key to continue...");
       Console.Read();
@@ -95,14 +94,14 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
     private static async Task Authenticate(HmrcOAuthService authClient) {
       var createTestUser = Services.GetRequiredService<CreateTestUserService>();
       var request = GetUserRequest(createTestUser);
-      var user = CreateUser(createTestUser, request);
+      var user = await CreateUserAsync(createTestUser, request);
 
       Console.ForegroundColor = ConsoleColor.Green;
       Console.WriteLine(JsonConvert.SerializeObject(user, Formatting.Indented));
       Console.ResetColor();
       Console.Write("");
 
-      var tokens = await GetAuthCode(authClient, user);
+      var tokens = await GetAuthCodeAsync(authClient, user);
 
       Console.WriteLine();
       Console.WriteLine("Copy these details into appsettings.tokens.json for testing:");
@@ -116,7 +115,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       Console.Write("");
     }
 
-    private static UserResultBase CreateUser(CreateTestUserService createTestUser, ICreateTestUserRequest request) {
+    private static async Task<UserResultBase> CreateUserAsync(CreateTestUserService createTestUser, ICreateTestUserRequest request) {
       request.ServiceNames.AddRange(request.GetServiceNames());
       UserResultBase result;
 
@@ -125,11 +124,11 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       // Not ideal, as it requires maintenance when new request types are added, but it allows us to avoid reflection or dynamic typing in this test client.
       if (request is ICreateTestUserRequest<AgentResult> agentRequest) {
-        result = createTestUser.CreateUser(agentRequest);
+        result = await createTestUser.CreateUserAsync(agentRequest);
       } else if (request is ICreateTestUserRequest<IndividualResult> individualRequest) {
-        result = createTestUser.CreateUser(individualRequest);
+        result = await createTestUser.CreateUserAsync(individualRequest);
       } else if (request is ICreateTestUserRequest<OrganisationResult> organisationRequest) {
-        result = createTestUser.CreateUser(organisationRequest);
+        result = await createTestUser.CreateUserAsync(organisationRequest);
       } else {
         throw new Exception($"Unsupported request type {request.GetType()}.");
       }
@@ -138,7 +137,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       return result;
     }
 
-    private static async Task<TokenResponse> GetAuthCode(HmrcOAuthService authClient, UserResultBase user) {
+    private static async Task<TokenResponse> GetAuthCodeAsync(HmrcOAuthService authClient, UserResultBase user) {
       var state = $"{Guid.NewGuid()}";
       var scopes = Scopes.GetScopes();
       var redirectUrl = new Uri(Configuration["RedirectUrl"]);
@@ -178,7 +177,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
 
       Console.WriteLine();
       Console.Write("Validating...");
-      var resp = authClient.HandleEndpointResult(redirectedTo, state);
+      var resp = await authClient.HandleEndpointResultAsync(redirectedTo, state);
       Console.WriteLine(" done");
 
       return resp;
@@ -207,7 +206,7 @@ namespace TipsTrade.HMRC.Tests.Authentication_Client {
       throw new Exception($"{resp} is not a valid user type.");
     }
 
-private static void OpenUrl(string url) {
+    private static void OpenUrl(string url) {
       // Dotnet has an issue executing URIs to launch in the default system browser.
       // See: https://github.com/dotnet/runtime/issues/17938
       try {

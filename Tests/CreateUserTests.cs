@@ -2,6 +2,7 @@
 using TipsTrade.HMRC.Api.CreateTestUser;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace TipsTrade.HMRC.Tests {
   public class CreateUserTests : TestBase {
@@ -9,7 +10,7 @@ namespace TipsTrade.HMRC.Tests {
       var request = CreateTestUserFactory.CreateTestUserFull<T>();
       Assert.That(request.ServiceNames, Is.Not.Empty);
 
-      var fromDocs = JsonConvert.DeserializeObject<T>(json);
+      var fromDocs = JsonConvert.DeserializeObject<T>(json) ?? throw new JsonSerializationException("Failed to deserialize JSON.");
 
       request.ServiceNames.Sort();
       fromDocs.ServiceNames.Sort();
@@ -20,12 +21,11 @@ namespace TipsTrade.HMRC.Tests {
       }
     }
 
-    private void TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest<TUser> where TUser : UserResultBase, new() {
+    private async Task TestCreateUser<TRequest, TUser>() where TRequest : class, ICreateTestUserRequest<TUser> where TUser : UserResultBase, new() {
       var request = CreateTestUserFactory.CreateTestUserFull<TRequest>();
-
       var svc = GetService<CreateTestUserService>();
-
-      var result = svc.CreateUser(request);
+      var result = await svc.CreateUserAsync(request);
+    
       Assert.That(result, Is.Not.Null);
 
       foreach (var prop in result.GetType().GetProperties()) {
@@ -89,18 +89,18 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test, Ignore("Skipped so we don't keep creating new users.")]
-    public void CreateAgent() {
-      TestCreateUser<CreateAgentRequest, AgentResult>();
+    public async Task CreateAgent() {
+      await TestCreateUser<CreateAgentRequest, AgentResult>();
     }
 
     [Test, Ignore("Skipped so we don't keep creating new users.")]
-    public void CreateIndividual() {
-      TestCreateUser<CreateIndividualRequest, IndividualResult>();
+    public async Task CreateIndividual() {
+      await TestCreateUser<CreateIndividualRequest, IndividualResult>();
     }
 
     [Test, Ignore("Skipped so we don't keep creating new users.")]
-    public void CreateOrganisation() {
-      TestCreateUser<CreateOrganisationRequest, OrganisationResult>();
+    public async Task CreateOrganisation() {
+      await TestCreateUser<CreateOrganisationRequest, OrganisationResult>();
     }
   }
 }

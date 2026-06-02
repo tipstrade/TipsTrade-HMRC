@@ -5,11 +5,16 @@ using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.Vat;
 using TipsTrade.HMRC.Api.Vat.Model;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace TipsTrade.HMRC.Tests {
   public class VatTests : TestBase {
     protected override void CustomSetup() {
       SetupCredentialsForOrganisation();
+    }
+
+    private string GetVrn() {
+      return Users?.Organisation?.User?.Vrn ?? throw new InvalidOperationException("VRN is not set for the user.");
     }
 
     private void PopulateDateRange(IDateRange value) {
@@ -23,23 +28,25 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test, Ignore("Ignored as the sandbox doesn't return returns outside of 4 years.")]
-    public void GetReturn() {
+    public async Task GetReturn() {
       var obRequest = new ObligationsRequest() {
-        Vrn = Users.Organisation.User.Vrn,
+        Vrn = GetVrn(),
       };
       PopulateDateRange(obRequest);
 
       var svc = GetService<VatService>();
 
-      var obligations = svc.GetObligations(obRequest);
-      var periodKey = obligations.Value.Where(o => !o.IsOpen).LastOrDefault().PeriodKey;
+      var obligations = await svc.GetObligationsAsync(obRequest);
+      var periodKey = obligations.Value?.Where(o => !o.IsOpen).LastOrDefault()?.PeriodKey;
+      Assert.That(periodKey, Is.Not.Null, "No fulfilled obligations found to test with.");
 
       var returnRequest = new ReturnRequest() {
-        Vrn = Users.Organisation.User.Vrn,
+        Vrn = GetVrn(),
         PeriodKey = periodKey
       };
 
-      var resp = svc.GetReturn(returnRequest);
+      var resp = await svc.GetReturnAsync(returnRequest);
+
       Assert.That(resp, Is.Not.Null);
       Assert.That(resp.PeriodKey, Is.EqualTo(periodKey));
       AssertExtensions.NotDefault(resp.VatDueSales);
@@ -58,17 +65,17 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test]
-    public void Liabilities() {
+    public async Task Liabilities() {
       var request = new LiabilitiesRequest() {
         GovTestScenario = LiabilitiesRequest.ScenarioMultipleLiabilities,
         DateFrom = new DateTime(2017, 2, 27),
         DateTo = new DateTime(2017, 12, 31),
-        Vrn = Users.Organisation.User.Vrn,
+        Vrn = GetVrn(),
       };
 
       var svc = GetService<VatService>();
 
-      var resp = svc.GetLiabilities(request);
+      var resp = await svc.GetLiabilitiesAsync(request);
       Assert.That(resp, Is.Not.Null);
       Assert.That(resp.Value, Is.Not.Empty);
 
@@ -88,10 +95,10 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test]
-    public void Obligations() {
+    public async Task Obligations() {
       var obligations = new ObligationsRequest() {
         GovTestScenario = ObligationsRequest.ScenarioMonthlylyMet2,
-        Vrn = Users.Organisation.User.Vrn,
+        Vrn = GetVrn(),
       };
 
       PopulateDateRange(obligations);
@@ -101,7 +108,7 @@ namespace TipsTrade.HMRC.Tests {
       ObligationResponse resp;
 
       // All, expect only two to be fulfilled
-      resp = svc.GetObligations(obligations);
+      resp = await svc.GetObligationsAsync(obligations);
       Assert.That(resp, Is.Not.Null);
       Assert.That(resp.Value, Is.Not.Empty);
       Assert.That(resp.Value.Where(x => x.IsFulfilled).Count(), Is.EqualTo(2));
@@ -118,7 +125,7 @@ namespace TipsTrade.HMRC.Tests {
       // Fulfulled
       obligations.Status = "F";
       obligations.GovTestScenario = null;
-      resp = svc.GetObligations(obligations);
+      resp = await svc.GetObligationsAsync(obligations);
       Assert.That(resp, Is.Not.Null);
       Assert.That(resp.Value, Is.Not.Empty);
       foreach (var item in resp.Value) {
@@ -130,7 +137,7 @@ namespace TipsTrade.HMRC.Tests {
       // Open
       obligations.Status = "O";
       obligations.GovTestScenario = null;
-      resp = svc.GetObligations(obligations);
+      resp = await svc.GetObligationsAsync(obligations);
       Assert.That(resp, Is.Not.Null);
       Assert.That(resp.Value, Is.Not.Empty);
       foreach (var item in resp.Value) {
@@ -141,17 +148,17 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test]
-    public void Payments() {
+    public async Task Payments() {
       var request = new PaymentsRequest() {
         GovTestScenario = PaymentsRequest.ScenarioMultiplePayment,
         DateFrom = new DateTime(2017, 2, 27),
         DateTo = new DateTime(2017, 12, 31),
-        Vrn = Users.Organisation.User.Vrn,
+        Vrn = GetVrn(),
       };
 
       var svc = GetService<VatService>();
 
-      var resp = svc.GetPayments(request);
+      var resp = await svc.GetPaymentsAsync(request);
       Assert.That(resp, Is.Not.Null);
       Assert.That(resp.Value, Is.Not.Empty);
 
@@ -184,6 +191,7 @@ namespace TipsTrade.HMRC.Tests {
 
       var resp = JsonConvert.DeserializeObject<VatReturn>(json);
 
+      Assert.That(resp, Is.Not.Null);
       Assert.That(resp.PeriodKey, Is.EqualTo("#001"));
       Assert.That(resp.VatDueSales, Is.EqualTo(7724.92M));
       Assert.That(resp.VatDueAcquisitions, Is.EqualTo(100.00M));
@@ -197,16 +205,17 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test, Ignore("The submission can only be run once.")]
-    public void Submission() {
+    public async Task Submission() {
       var obRequest = new ObligationsRequest() {
-        Vrn = Users.Organisation.User.Vrn,
+        Vrn = GetVrn()
       };
       PopulateDateRange(obRequest);
 
       var svc = GetService<VatService>();
 
-      var obligations = svc.GetObligations(obRequest);
-      var periodKey = obligations.Value.Where(o => o.IsOpen).LastOrDefault().PeriodKey;
+      var obligations = await svc.GetObligationsAsync(obRequest);
+      var periodKey = obligations.Value?.Where(o => o.IsOpen).LastOrDefault()?.PeriodKey;
+      Assert.That(periodKey, Is.Not.Null, "No open obligations found to test with.");
 
       var request = new SubmitRequest() {
         Return = new VatReturn() {
@@ -222,12 +231,14 @@ namespace TipsTrade.HMRC.Tests {
           TotalAcquisitionsExVAT = 500,
           Finalised = true
         },
-        Vrn = Users.Organisation.User.Vrn,
+        Vrn = GetVrn(),
         GovTestScenario = SubmitRequest.ScenarioDuplicateSubmission
       };
 
-      var ex = Assert.Throws<Api.ApiException>((Action)(() => svc.SubmitReturn(request)));
+      var taskToTest = () => svc.SubmitReturnAsync(request);
+      var ex = Assert.ThrowsAsync<Api.ApiException>(taskToTest);
       Assert.That(ex.Message, Is.EqualTo("Business validation error"));
+      Assert.That(ex.ApiError, Is.Not.Null);
       Assert.That(ex.ApiError.Code, Is.EqualTo("BUSINESS_ERROR"));
       Assert.That(ex.ApiError.Message, Is.EqualTo("Business validation error"));
       Assert.That(ex.ApiError.Errors, Has.Length.EqualTo(1));
@@ -236,7 +247,7 @@ namespace TipsTrade.HMRC.Tests {
 
       request.GovTestScenario = null;
 
-      var resp = svc.SubmitReturn(request);
+      var resp = await svc.SubmitReturnAsync(request);
 
       TestContext.Out.WriteLine("VAT Submission:");
       TestContext.Out.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));

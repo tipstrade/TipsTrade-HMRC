@@ -3,6 +3,7 @@ using TipsTrade.HMRC.Api.IndividualCalculationsMtd;
 using TipsTrade.HMRC.Api.IndividualCalculationsMtd.Model;
 using TipsTrade.HMRC.Extensions;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace TipsTrade.HMRC.Tests {
   public class IndividualCalculationsMtdTests : TestBase {
@@ -10,12 +11,15 @@ namespace TipsTrade.HMRC.Tests {
       SetupCredentialsForOrganisation();
     }
 
-    [Test]
-    public void ListSelfAssessmentCalculations() {
-      var svc = GetService<IndividualCalculationsMtdService>();
+    private string GetNiNumber() {
+      return Users?.Organisation?.User?.NiNumber ?? throw new InvalidOperationException("NiNumber is not set for the user.");
+    }
 
-      var resp = svc.ListSelfAssessmentCalculations(new ListSelfAssessmentCalculationsRequest {
-        NiNumber = Users.Organisation.User.NiNumber,
+    [Test]
+    public async Task ListSelfAssessmentCalculations() {
+      var svc = GetService<IndividualCalculationsMtdService>();
+      var resp = await svc.ListSelfAssessmentCalculationsAsync(new ListSelfAssessmentCalculationsRequest {
+        NiNumber = GetNiNumber(),
         TaxYear = DateTime.Today.GetTaxYear(),
         CalculationType = CalculationType.InYear,
         GovTestScenario = ListSelfAssessmentCalculationsRequest.ScenarioDefault,
@@ -26,44 +30,45 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test]
-    public void RetrieveSelfAssessmentCalculation() {
+    public async Task RetrieveSelfAssessmentCalculation() {
       var svc = GetService<IndividualCalculationsMtdService>();
-
       var taxYear = DateTime.Today.GetTaxYear();
-
-      var resp = svc.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
-        NiNumber = Users.Organisation.User.NiNumber,
+      var resp = await svc.RetrieveSelfAssessmentCalculationAsync(new RetrieveSelfAssessmentCalculationRequest {
+        NiNumber = GetNiNumber(),
         TaxYear = taxYear,
         CalculationId = $"{Guid.NewGuid()}",
         GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioDynamic,
       });
 
-      Assert.That(resp, Is.Not.Null);
-      Assert.That(resp.Inputs, Is.Not.Null);
-      Assert.That(resp.Metadata, Is.Not.Null);
-      Assert.That(resp.Calculation, Is.Not.Null); // Valid for a processed calculation
-      Assert.That(resp.Messages, Is.Null);
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(resp, Is.Not.Null);
+        Assert.That(resp.Inputs, Is.Not.Null);
+        Assert.That(resp.Metadata, Is.Not.Null);
+        Assert.That(resp.Calculation, Is.Not.Null); // Valid for a processed calculation
+        Assert.That(resp.Messages, Is.Null);
+      }
 
-      resp = svc.RetrieveSelfAssessmentCalculation(new RetrieveSelfAssessmentCalculationRequest {
-        NiNumber = Users.Organisation.User.NiNumber,
+      resp = await svc.RetrieveSelfAssessmentCalculationAsync(new RetrieveSelfAssessmentCalculationRequest {
+        NiNumber = GetNiNumber(),
         TaxYear = taxYear,
         CalculationId = $"{Guid.NewGuid()}",
         GovTestScenario = RetrieveSelfAssessmentCalculationRequest.ScenarioErrorMessagesExist,
       });
 
-      Assert.That(resp, Is.Not.Null);
-      Assert.That(resp.Inputs, Is.Not.Null);
-      Assert.That(resp.Metadata, Is.Not.Null);
-      Assert.That(resp.Calculation, Is.Null); // Null for a processed calculation
-      Assert.That(resp.Messages, Is.Not.Null);
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(resp, Is.Not.Null);
+        Assert.That(resp.Inputs, Is.Not.Null);
+        Assert.That(resp.Metadata, Is.Not.Null);
+        Assert.That(resp.Calculation, Is.Null); // Null for a processed calculation
+        Assert.That(resp.Messages, Is.Not.Null);
+      }
     }
 
     [Test]
-    public void SubmitFinalAssessment() {
+    public async Task SubmitFinalAssessment() {
       var svc = GetService<IndividualCalculationsMtdService>();
-
-      var resp = svc.SubmitFinalAssessment(new SubmitFinalAssessmentRequest {
-        NiNumber = Users.Organisation.User.NiNumber,
+      var resp = await svc.SubmitFinalAssessmentAsync(new SubmitFinalAssessmentRequest {
+        NiNumber = GetNiNumber(),
         TaxYear = DateTime.Today.GetTaxYear(),
         CalculationId = $"{Guid.NewGuid()}",
         CalculationType = CalculationType.FinalDeclaration,
@@ -74,18 +79,19 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test]
-    public void TriggerSelfAssessmentCalculation() {
+    public async Task TriggerSelfAssessmentCalculation() {
       var svc = GetService<IndividualCalculationsMtdService>();
-
-      var resp = svc.TriggerCalculation(new TriggerSelfAssessmentCalculationRequest {
-        NiNumber = Users.Organisation.User.NiNumber,
+      var resp = await svc.TriggerCalculationAsync(new TriggerSelfAssessmentCalculationRequest {
+        NiNumber = GetNiNumber(),
         TaxYear = DateTime.Today.GetTaxYear(),
         CalculationType = CalculationType.InYear,
         GovTestScenario = TriggerSelfAssessmentCalculationRequest.ScenarioDefault,
       });
 
-      Assert.That(resp, Is.Not.Null);
-      Assert.That(resp.Value, Is.Not.Empty);
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(resp, Is.Not.Null);
+        Assert.That(resp.Value, Is.Not.Empty);
+      }
     }
   }
 }

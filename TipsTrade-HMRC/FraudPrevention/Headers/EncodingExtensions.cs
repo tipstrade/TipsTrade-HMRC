@@ -6,18 +6,18 @@ using System.Net;
 namespace TipsTrade.HMRC.FraudPrevention.Headers {
   internal static class EncodingExtensions {
     /// <summary>
-    /// Encodes a dictionary of key-value pairs into a string suitable for headers that require multiple key-value pairs, such as "key1=value1&amp;key2=value2".
+    /// Encodes a collection of key-value pairs into a URL-encoded query string format, suitable for use in HTTP headers or query parameters.
     /// </summary>
-    /// <param name="dict">The dictionary of key-value pairs to encode.</param>
+    /// <param name="values">The collection of key-value pairs to encode.</param>
     /// <param name="encodeKeys">Indicates whether the keys should be URL-encoded.</param>
     /// <param name="encodeValue">Indicates whether the values should be URL-encoded. Defaults to true.</param>
-    /// <returns>A string representation of the dictionary suitable for headers, or an empty string if the input is null.</returns>
-    internal static string EncodeDictionary(this IDictionary<string, string>? dict, bool encodeKeys, bool encodeValue = true) {
-      if (dict == null) {
+    /// <returns>A URL-encoded query string representation of the key-value pairs, or an empty string if the input is null.</returns>
+    internal static string EncodeKeyValues(this IEnumerable<KeyValuePair<string, string>>? values, bool encodeKeys, bool encodeValue = true) {
+      if (values == null) {
         return "";
       }
 
-      return string.Join("&", dict.Select(kvp => {
+      return string.Join("&", values.Select(kvp => {
         var key = encodeKeys ? Uri.EscapeDataString(kvp.Key ?? "") : kvp.Key ?? "";
         var value = encodeValue ? Uri.EscapeDataString(kvp.Value ?? "") : kvp.Value ?? "";
 

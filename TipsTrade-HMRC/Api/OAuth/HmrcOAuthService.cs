@@ -86,8 +86,9 @@ namespace TipsTrade.HMRC.Api.OAuth {
     /// The opaque state value originally passed to <see cref="GetAuthorizationEndpoint(string, string, string[])"/>.
     /// The value is validated against the state returned in the callback to prevent CSRF.
     /// </param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>The <see cref="TokenResponse"/> containing the access and refresh tokens.</returns>
-    public TokenResponse HandleEndpointResult(string uri, string state) {
+    public async Task<TokenResponse> HandleEndpointResultAsync(string uri, string state, CancellationToken cancellationToken = default) {
       var u = new Uri(uri);
       var qs = HttpUtility.ParseQueryString(u.Query);
 
@@ -119,7 +120,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
       request.AddParameter("redirect_uri", $"{u.Scheme}://{u.Authority}{u.AbsolutePath}");
       request.AddParameter("code", code);
 
-      var response = this.GetRestClient().Execute<TokenResponse>(request);
+      var response = await this.GetRestClient().ExecuteAsync<TokenResponse>(request, cancellationToken).ConfigureAwait(false);
       response.ThrowOnError();
 
       return response.Data ?? throw new ApiException("Failed to obtain user tokens.");
@@ -146,7 +147,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
       request.AddParameter("grant_type", "refresh_token");
       request.AddParameter("refresh_token", refreshToken);
 
-      var response = await restClient.ExecuteAsync<TokenResponse>(request, cancellationToken);
+      var response = await restClient.ExecuteAsync<TokenResponse>(request, cancellationToken).ConfigureAwait(false);
 
       var oauthError = response.Content != null ? ErrorResponse.FromOAuth2Error(response.Content) : null;
       if (oauthError != null) {

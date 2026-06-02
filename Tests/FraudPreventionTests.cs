@@ -19,7 +19,6 @@ namespace TipsTrade.HMRC.Tests {
     /// Many services are not implemented in the sandbox. Each InlineData now includes a boolean that indicates
     /// whether the API is implemented. Unimplemented cases will be reported as skipped in Test Explorer.
     /// </remarks>
-    [Test]
     [TestCase("business-details-mtd", true)]
     [TestCase("business-income-source-summary-mtd", false)]
     [TestCase("business-source-adjustable-summary-mtd", false)]
@@ -50,22 +49,28 @@ namespace TipsTrade.HMRC.Tests {
     [TestCase("individuals-pensions-income-mtd", false)]
     [TestCase("individuals-savings-income-mtd", false)]
     [TestCase("self-assessment-individual-details-mtd", false)]
-    public void GetFeedback(string service, bool implemented) {
+    public async Task GetFeedback(string service, bool implemented) {
       Assume.That(implemented, Is.True, $"API for service '{service}' is not implemented in the sandbox.");
 
       var svc = GetService<TestFraudPreventionService>();
-      var response = svc.GetFeedback(service, FraudPrevention.ConnectionMethod.BATCH_PROCESS_DIRECT);
+      var response = await svc.GetFeedbackAsync(service, ConnectionMethod.BATCH_PROCESS_DIRECT);
 
       Assert.That(response, Is.Not.Null);
       Assert.That(response.Requests, Is.Not.Null);
       Assert.That(response.Requests, Is.Not.Empty);
       Assert.That(response.HasErrors(), Is.False);
 
+      // Log the times each endpoint was called for the service, along with the method and path. This can help identify if certain endpoints are being called more frequently than expected.
+      var lastTimes = response.Requests.Select(x => $"{x.RequestTimestamp} {x.Method} {x.Path}");
+
+      TestContext.Out.WriteLine($"Feedback for service '{service}':");
+      TestContext.Out.WriteLine(string.Join(Environment.NewLine, lastTimes));
+
+      TestContext.Out.WriteLine();
+      TestContext.Out.WriteLine("Full response:");
       TestContext.Out.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
     }
 
-
-    [Test]
     [TestCase(typeof(BatchProcessDirect))]
     [TestCase(typeof(DesktopAppDirect))]
     [TestCase(typeof(DesktopAppViaServer))]
@@ -76,15 +81,17 @@ namespace TipsTrade.HMRC.Tests {
     [TestCase(typeof(WebAppViaServer))]
     public async Task Validate(Type headersType) {
       // Build the headers for the test case type and populate
-      IFraudPrevention value = (IFraudPrevention)Activator.CreateInstance(headersType);
+      IFraudPrevention value = (IFraudPrevention?)Activator.CreateInstance(headersType) ?? throw new InvalidOperationException($"Failed to create instance of {headersType.Name}");
       PopulateFraudPrevention(value);
 
       var headers = value.GetHeaders().ToArray();
       var headerKeys = headers.Select(h => h.Name).Distinct().ToArray();
 
       // Ensure that no headers are duplicated and that the keys are all valid non-empty strings.
-      Assert.That(headerKeys, Has.Length.EqualTo(headers.Length), "Duplicate headers found.");
-      Assert.That(headerKeys.Any(string.IsNullOrEmpty), Is.False, "Header keys contain null or empty strings.");
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(headerKeys, Has.Length.EqualTo(headers.Length), "Duplicate headers found.");
+        Assert.That(headerKeys.Any(string.IsNullOrEmpty), Is.False, "Header keys contain null or empty strings.");
+      }
 
       // Inject the headers in the HmrcOptionsMock
       HmrcOptionsMock.Reset();
@@ -124,6 +131,29 @@ namespace TipsTrade.HMRC.Tests {
       headers.PopulateLocalIps(func);
 
       Assert.That(isCalled, Is.True);
+    }
+
+    [Test]
+    public void UserAgent_Populate_Works() {
+      var headers = new DesktopAppDirect();
+
+      var nullManufacturerAction = () => headers.PopulateUserAgent(null!, "XPS");
+      var nullModelAction = () => headers.PopulateUserAgent("Dell", null!);
+      ArgumentNullException ex;
+
+      ex = Assert.Throws<ArgumentNullException>(nullManufacturerAction);
+      Assert.That(ex.ParamName, Is.EqualTo("deviceManufacturer"));
+
+      ex = Assert.Throws<ArgumentNullException>(nullModelAction);
+      Assert.That(ex.ParamName, Is.EqualTo("deviceModel"));
+
+      headers.PopulateUserAgent("Dell", "XPS");
+
+      Assert.That(headers.UserAgent, Is.Not.Null);
+      Assert.That(headers.UserAgent.OSFamily, Is.Not.Empty);
+      Assert.That(headers.UserAgent.OSVersion, Is.Not.Empty);
+      Assert.That(headers.UserAgent.DeviceManufacturer, Is.EqualTo("Dell"));
+      Assert.That(headers.UserAgent.DeviceModel, Is.EqualTo("XPS"));
     }
   }
 }

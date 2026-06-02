@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   internal static class VendorLicenceIDsExtensions {
     internal static (string Name, string Value) GetVendorLicenceIDs(this IVendorLicenceIDs source) {
       // As per documentation, both the key and value of the dictionary should be URL encoded.
-      var value = source.VendorLicenceIDs == null ? "" : source.VendorLicenceIDs.EncodeDictionary(true);
+      var value = source.VendorLicenceIDs == null ? "" : source.VendorLicenceIDs.EncodeKeyValues(true);
 
       return ("Gov-Vendor-License-IDs", value);
     }

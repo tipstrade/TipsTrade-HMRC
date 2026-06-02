@@ -22,25 +22,29 @@ namespace TipsTrade.HMRC.Tests {
         Scopes.SelfAssessmentWrite
       };
 
-      var businessDetailsMtd  = Scopes.GetScopes<Api.BusinessDetailsMtd.BusinessDetailsMtdService>();
-      Assert.That(businessDetailsMtd.Count(), Is.EqualTo(2));
-
+      var businessDetailsMtd = Scopes.GetScopes<Api.BusinessDetailsMtd.BusinessDetailsMtdService>();
       var obligationsMtd = Scopes.GetScopes<Api.ObligationsMtd.ObligationsMtdService>();
-      Assert.That(obligationsMtd.Count(), Is.EqualTo(2));
-
       var selfAssessmentTestSupportMtd = Scopes.GetScopes<Api.SelfAssessmentTestSupportMtd.SelfAssessmentTestSupportMtdService>();
-      Assert.That(selfAssessmentTestSupportMtd.Count(), Is.EqualTo(2));
-     
       var selfEmploymentBusinessMtd = Scopes.GetScopes<Api.SelfEmploymentBusinessMtd.SelfEmploymentBusinessMtdService>();
-      Assert.That(selfEmploymentBusinessMtd.Count(), Is.EqualTo(2));
+
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(businessDetailsMtd.Count(), Is.EqualTo(2));
+        Assert.That(obligationsMtd.Count(), Is.EqualTo(2));
+        Assert.That(selfAssessmentTestSupportMtd.Count(), Is.EqualTo(2));
+        Assert.That(selfEmploymentBusinessMtd.Count(), Is.EqualTo(2));
+      }
     }
+
 
     [Test]
     public void Vat() {
       var scopes = Scopes.GetScopes<Api.Vat.VatService>();
-      Assert.That(scopes.Count(), Is.EqualTo(2));
-      Assert.That(scopes, Has.Some.Matches<string>(s => Scopes.VATRead.Equals(s)));
-      Assert.That(scopes, Has.Some.Matches<string>(s => Scopes.VATWrite.Equals(s)));
+
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(scopes.Count(), Is.EqualTo(2));
+        Assert.That(scopes, Has.Some.Matches<string>(s => Scopes.VATRead.Equals(s)));
+        Assert.That(scopes, Has.Some.Matches<string>(s => Scopes.VATWrite.Equals(s)));
+      }
     }
   }
 }

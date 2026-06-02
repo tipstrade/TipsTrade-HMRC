@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.HelloWorld;
@@ -24,18 +25,20 @@ namespace TipsTrade.HMRC.Tests {
       var oAuth = GetOAuthService();
       var actualUrl = oAuth.GetAuthorizationEndpoint(state, redirectUrl, scopes);
 
-      using (Assert.EnterMultipleScope()) {
-        var uri = new Uri(actualUrl);
-        var qs = HttpUtility.ParseQueryString(uri.Query);
-        var actualScopes = qs["scope"].Split(' ');
+      var uri = new Uri(actualUrl);
+      var qs = HttpUtility.ParseQueryString(uri.Query);
 
-        Assert.That($"{uri.Scheme}://{uri.Host}{uri.AbsolutePath}", Is.EqualTo($"{HmrcOptions.SandboxUrl}/oauth/authorize"));
-        Assert.That(qs["response_type"], Is.EqualTo("code"));
-        Assert.That(qs["client_id"], Is.EqualTo(HmrcOptionsMock.Object.Value.ClientID));
-        Assert.That(actualScopes, Is.EquivalentTo(scopes));
-        Assert.That(qs["state"], Is.EqualTo(state));
-        Assert.That(qs["redirect_uri"], Is.EqualTo(redirectUrl));
-      }
+      Assert.That(qs, Is.Not.Null);
+      Assert.That(qs["scope"], Is.Not.Null);
+
+      var actualScopes = qs["scope"].Split(' ');
+
+      Assert.That($"{uri.Scheme}://{uri.Host}{uri.AbsolutePath}", Is.EqualTo($"{HmrcOptions.SandboxUrl}/oauth/authorize"));
+      Assert.That(qs["response_type"], Is.EqualTo("code"));
+      Assert.That(qs["client_id"], Is.EqualTo(HmrcOptionsMock.Object.Value.ClientID));
+      Assert.That(actualScopes, Is.EquivalentTo(scopes));
+      Assert.That(qs["state"], Is.EqualTo(state));
+      Assert.That(qs["redirect_uri"], Is.EqualTo(redirectUrl));
 
       TestContext.Out.WriteLine("Authorization Endpoint:");
       TestContext.Out.WriteLine(actualUrl);
@@ -45,26 +48,37 @@ namespace TipsTrade.HMRC.Tests {
     public void GetAuthorizationEndpoint_throws_for(string state, string redirectUrl, string[] scopes, string expectedParamName, Type expectedExceptionType) {
       var oAuth = GetOAuthService();
 
-      var ex = (ArgumentException)Assert.Throws(expectedExceptionType, (TestDelegate)(() => oAuth.GetAuthorizationEndpoint(state, redirectUrl, scopes)));
+      Action action = () => oAuth.GetAuthorizationEndpoint(state, redirectUrl, scopes);
+      var ex = (ArgumentException?)Assert.Throws(expectedExceptionType, action);
 
+      Assert.That(ex, Is.Not.Null);
       Assert.That(ex.ParamName, Is.EqualTo(expectedParamName));
     }
 
     [Test]
-    public void GetApplicationTokenThrows() {
-      // TODO: This should be improved
-      var badOptions = GetOptions();
-      badOptions.ClientSecret = "bad-secret";
-      var badSvc = CreateServiceWithOptions<HelloWorldService>(badOptions);
+    public async Task GetApplicationTokenThrows() {
+      HmrcOptionsMock.Reset();
+      HmrcOptionsMock.Setup(x => x.Value).Returns(() => {
+        var options = BuildDefaultOptions();
+        options.ClientSecret = "bad-secret";
+
+        return options;
+      });
+
+      var svc = GetService<HelloWorldService>();
 
       // GetApplicationToken is used internally, so the easiest way is to call HelloWorld which will call it if AccessToken isn't set.
-      var ex = Assert.Throws<ApiException>((Action)(() => badSvc.SayHelloApplication()));
-      Assert.That(ex.Message, Is.Not.Null);
-      Assert.That(ex.Status, Is.EqualTo(System.Net.HttpStatusCode.Unauthorized));
+      var action = () => svc.SayHelloApplicationAsync();
+      var ex = Assert.ThrowsAsync<ApiException>(action);
+
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(ex.Message, Is.Not.Null);
+        Assert.That(ex.Status, Is.EqualTo(System.Net.HttpStatusCode.Unauthorized));
+      }
     }
 
     [Test]
-    public void InvalidCredentials() {
+    public async Task InvalidCredentials() {
       // Reset and add some bad credentials to the AccessTokenProvider so we can test the handling of invalid credentials.
       AccessTokenProvider.Reset();
       AccessTokenProvider.Setup(m => m.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Api.Model.TokenResponse() {
@@ -83,9 +97,9 @@ namespace TipsTrade.HMRC.Tests {
       };
 
       var service = GetService<VatService>();
-      var action = () => service.GetObligations(request);
+      var action = () => service.GetObligationsAsync(request);
 
-      Assert.That(action, Throws.TypeOf<ApiException>());
+      await Assert.ThatAsync(action, Throws.TypeOf<ApiException>());
     }
 
     [Test]
@@ -94,57 +108,67 @@ namespace TipsTrade.HMRC.Tests {
       var uri = $"{RedirectUrl}?error=access_denied&error_description=user+denied+the+authorization&state={state}&error_code=USER_DENIED_AUTHORIZATION";
 
       var oAuth = GetOAuthService();
+      Func<Task> emptyRedirectTask = () => oAuth.HandleEndpointResultAsync(uri, "");
+      Func<Task> redirectUrlTask = () => oAuth.HandleEndpointResultAsync(uri, state);
 
-      Assert.Throws<InvalidOperationException>((Action)(() => oAuth.HandleEndpointResult(uri, "")));
-      Assert.Throws<ApiException>((Action)(() => oAuth.HandleEndpointResult(uri, state)));
+      Assert.ThrowsAsync<InvalidOperationException>(emptyRedirectTask);
+      Assert.ThrowsAsync<ApiException>(redirectUrlTask);
     }
 
     [Test, Ignore("Skipped so the code is one-use only.")]
-    public void HandleRedirectUrlSuccess() {
+    public async Task HandleRedirectUrlSuccess() {
       var state = $"{Guid.NewGuid()}";
       var uri = $"{RedirectUrl}?code=640f35efde314a91b32d696710759a5d&state={state}";
 
       var oAuth = GetOAuthService();
-
-      var tokens = oAuth.HandleEndpointResult(uri, state);
-      Assert.That(tokens.AccessToken, Is.Not.Null);
-      Assert.That(tokens.RefreshToken, Is.Not.Null);
-      Assert.That(tokens.ExpiresIn, Is.Not.EqualTo(0));
-      AssertExtensions.NotDefault(tokens.ExpiresTimestamp);
-      Assert.That(tokens.Scope, Is.Not.Null);
-      Assert.That(tokens.TokenType, Is.Not.Null);
+      var tokens = await oAuth.HandleEndpointResultAsync(uri, state);
 
       TestContext.Out.WriteLine("Token Response:");
       TestContext.Out.WriteLine(JsonConvert.SerializeObject(tokens, Formatting.Indented));
+
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(tokens.AccessToken, Is.Not.Null);
+        Assert.That(tokens.RefreshToken, Is.Not.Null);
+        Assert.That(tokens.ExpiresIn, Is.Not.EqualTo(0));
+        AssertExtensions.NotDefault(tokens.ExpiresTimestamp);
+        Assert.That(tokens.Scope, Is.Not.Null);
+        Assert.That(tokens.TokenType, Is.Not.Null);
+      }
     }
 
     [Test, Ignore("Skipped so we don't accidentally expire our RefreshToken.")]
     //[Test]
-    public void RefreshToken() {
+    public async Task RefreshToken() {
       var oAuth = GetOAuthService();
+      var refreshToken = Users?.Organisation?.Tokens?.RefreshToken ?? throw new InvalidOperationException("RefreshToken is not set for the user.");
 
       var start = DateTime.UtcNow;
       var expiresSlew = 10; // Allowed slew for the expires
-
-      var tokens = oAuth.RefreshAccessTokenAsync(Users.Organisation.Tokens.RefreshToken, default).GetAwaiter().GetResult();
-      Assert.That(tokens.AccessToken, Is.Not.Null);
-      Assert.That(tokens.RefreshToken, Is.Not.Null);
-      Assert.That(tokens.ExpiresIn, Is.Not.EqualTo(0));
-      AssertExtensions.NotDefault(tokens.ExpiresTimestamp);
-
-      Assert.That(tokens.HasAccessTokenExpired(), Is.False); // Using the default slews
-      Assert.That(tokens.HasAccessTokenExpired((int)(tokens.ExpiresIn / 60) - Api.Model.TokenResponse.DefaultSlewMinutes), Is.False); // Using 10 minutes before the expected expires
-      Assert.That(tokens.HasAccessTokenExpired((int)(tokens.ExpiresIn / 60) + Api.Model.TokenResponse.DefaultSlewMinutes), Is.True); // Using 10 minutes after the expired expires
-
-      var expiresSeconds = tokens.ExpiresTimestamp.Subtract(start).TotalSeconds;
-      var expiresDelta = Math.Abs(expiresSeconds - tokens.ExpiresIn);
-      Assert.That(expiresDelta <= expiresSlew, Is.True);
-
-      Assert.That(tokens.Scope, Is.Not.Null);
-      Assert.That(tokens.TokenType, Is.Not.Null);
+      var tokens = await oAuth.RefreshAccessTokenAsync(refreshToken, default);
 
       TestContext.Out.WriteLine("Refresh Token Response:");
       TestContext.Out.WriteLine(JsonConvert.SerializeObject(tokens, Formatting.Indented));
+
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(tokens.AccessToken, Is.Not.Null);
+        Assert.That(tokens.RefreshToken, Is.Not.Null);
+        Assert.That(tokens.ExpiresIn, Is.Not.EqualTo(0));
+        AssertExtensions.NotDefault(tokens.ExpiresTimestamp);
+
+        Assert.That(tokens.HasAccessTokenExpired(), Is.False); // Using the default slews
+        Assert.That(tokens.HasAccessTokenExpired((int)(tokens.ExpiresIn / 60) - Api.Model.TokenResponse.DefaultSlewMinutes), Is.False); // Using 10 minutes before the expected expires
+        Assert.That(tokens.HasAccessTokenExpired((int)(tokens.ExpiresIn / 60) + Api.Model.TokenResponse.DefaultSlewMinutes), Is.True); // Using 10 minutes after the expired expires
+      }
+
+      var expiresSeconds = tokens.ExpiresTimestamp.Subtract(start).TotalSeconds;
+      var expiresDelta = Math.Abs(expiresSeconds - tokens.ExpiresIn);
+
+      using (Assert.EnterMultipleScope()) {
+        Assert.That(expiresDelta <= expiresSlew, Is.True);
+
+        Assert.That(tokens.Scope, Is.Not.Null);
+        Assert.That(tokens.TokenType, Is.Not.Null);
+      }
     }
 
     private static IEnumerable<TestCaseData> GetAuthorizationEndpoint_throws_for_Cases() {

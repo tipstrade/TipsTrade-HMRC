@@ -8,11 +8,16 @@ using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd;
 using TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd.Model;
 using TipsTrade.HMRC.Extensions;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace TipsTrade.HMRC.Tests {
   public class SelfEmploymentBusinessMtdTests : TestBase {
     protected override void CustomSetup() {
       SetupCredentialsForOrganisation();
+    }
+
+    private string GetNiNumber() {
+      return Users?.Organisation?.User?.NiNumber ?? throw new InvalidOperationException("NiNumber is not set for the user.");
     }
 
     [Test]
@@ -69,13 +74,12 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test]
-    public void CreateOrAmendCumulativePeriodSummary() {
+    public async Task CreateOrAmendCumulativePeriodSummary() {
       var svc = GetService<SelfEmploymentBusinessMtdService>();
-
       var request = new AmendCumulativePeriodSummaryRequest {
         BusinessId = "XAIS12345678910",
         GovTestScenario = AmendCumulativePeriodSummaryRequest.ScenarioDefault,
-        NiNumber = Users.Organisation.User.NiNumber,
+        NiNumber = GetNiNumber(),
         TaxYear = "2025-26",
         Summary = new CumulativePeriodSummaryResult {
           PeriodDates = new PeriodDates {
@@ -86,60 +90,67 @@ namespace TipsTrade.HMRC.Tests {
           }
         }.AddConsolidatedExpenses(100)
       };
-
-      var resp = svc.CreateOrAmendCumulativePeriodSummary(request);
+      var resp = await svc.CreateOrAmendCumulativePeriodSummaryAsync(request);
 
       Assert.That(resp, Is.Not.Null);
     }
 
     [Test]
-    public void GetCumulativePeriodSummary() {
+    public async Task GetCumulativePeriodSummary() {
       var svc = GetService<SelfEmploymentBusinessMtdService>();
-
-      var resp = svc.GetCumulativePeriodSummary(new GetCumulativePeriodSummaryRequest {
+      var resp = await svc.GetCumulativePeriodSummaryAsync(new GetCumulativePeriodSummaryRequest {
         BusinessId = "XAIS12345678910",
         GovTestScenario = GetCumulativePeriodSummaryRequest.ScenarioConsolidatedExpenses,
-        NiNumber = Users.Organisation.User.NiNumber,
+        NiNumber = GetNiNumber(),
         TaxYear = "2025-26"
       });
     }
 
     [Test]
-    public void ItsaJourney() {
+    public async Task ItsaJourney() {
       var businessDetailsSvc = GetService<BusinessDetailsMtdService>();
       var obligationsSvc = GetService<ObligationsMtdService>();
       var selfEmploymentSvc = GetService<SelfEmploymentBusinessMtdService>();
-
-      var businesses = businessDetailsSvc.ListBusinessDetails(new Api.BusinessDetailsMtd.Model.ListBusinessDetailsRequest {
-        NiNumber = Users.Organisation.User.NiNumber
+      var businesses = await businessDetailsSvc.ListBusinessDetailsAsync(new Api.BusinessDetailsMtd.Model.ListBusinessDetailsRequest {
+        NiNumber = GetNiNumber()
       });
-      var businessId = businesses.Value.First().BusinessId;
 
-      var business = businessDetailsSvc.GetBusinessDetails(new Api.BusinessDetailsMtd.Model.GetBusinessDetailsRequest {
+      Assert.That(businesses.Value, Is.Not.Null);
+      Assert.That(businesses.Value, Is.Not.Empty);
+
+      var businessId = businesses.Value.First().BusinessId;
+      Assert.That(businessId, Is.Not.Null);
+
+      var business = await businessDetailsSvc.GetBusinessDetailsAsync(new Api.BusinessDetailsMtd.Model.GetBusinessDetailsRequest {
         BusinessId = businessId,
-        NiNumber = Users.Organisation.User.NiNumber
+        NiNumber = GetNiNumber()
       });
 
       var fromDate = DateTime.Today.GetTaxYearStart();
       var toDate = DateTime.Today.GetTaxYearEnd();
 
-      var obligations = obligationsSvc.GetIncomeAndExpenditureObligations(new Api.ObligationsMtd.Model.GetObligationsRequest {
+      var obligations = await obligationsSvc.GetIncomeAndExpenditureObligationsAsync(new Api.ObligationsMtd.Model.GetObligationsRequest {
         FromDate = fromDate,
         ToDate = toDate,
-        NiNumber = Users.Organisation.User.NiNumber,
+        NiNumber = GetNiNumber(),
         BusinessId = "XBIS12345678901", // Self-employment business
         TypeOfBusiness = TypeOfBusiness.SelfEmployment,
         GovTestScenario = GetObligationsRequest.ScenarioDynamic
       });
 
-      var firstOpenObligation = obligations.Value.First().Obligations
-        .Where(o => o.Status == Api.ObligationsMtd.Model.ObligationStatus.Open)
-        .OrderBy(o => o.PeriodEndDate)
-        .First();
+      Assert.That(obligations.Value, Is.Not.Null);
+      Assert.That(obligations.Value, Is.Not.Empty);
 
-      var summary = selfEmploymentSvc.GetCumulativePeriodSummary(new GetCumulativePeriodSummaryRequest {
+      var firstOpenObligation = obligations.Value.FirstOrDefault()?.Obligations?
+        .Where(o => o.Status == ObligationStatus.Open)
+        .OrderBy(o => o.PeriodEndDate)
+        .FirstOrDefault();
+
+      Assert.That(firstOpenObligation, Is.Not.Null, "No open obligations found for the business.");
+
+      var summary = await selfEmploymentSvc.GetCumulativePeriodSummaryAsync(new GetCumulativePeriodSummaryRequest {
         BusinessId = businessId,
-        NiNumber = Users.Organisation.User.NiNumber,
+        NiNumber = GetNiNumber(),
         TaxYear = firstOpenObligation.PeriodStartDate.GetTaxYear()
       });
     }

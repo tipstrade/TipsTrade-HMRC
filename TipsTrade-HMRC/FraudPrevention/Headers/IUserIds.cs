@@ -10,7 +10,7 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
   internal static class UserIdsExtensions {
     internal static (string Name, string Value) GetUserIds(this IUserIds source) {
       // As per documentation, both the key and value of the dictionary should be URL encoded.
-      var value = source.UserIds == null ? "" : source.UserIds.EncodeDictionary(true);
+      var value = source.UserIds == null ? "" : source.UserIds.EncodeKeyValues(true);
 
       return ("Gov-Client-User-IDs", value);
     }

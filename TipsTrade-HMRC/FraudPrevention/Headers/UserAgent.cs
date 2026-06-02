@@ -25,7 +25,7 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
       };
 
       // As per documentation, both the key and value of the dictionary should be URL encoded.
-      return dict.EncodeDictionary(true);
+      return dict.EncodeKeyValues(true);
     }
   }
 }

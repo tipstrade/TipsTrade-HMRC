@@ -20,12 +20,25 @@ namespace TipsTrade.HMRC.FraudPrevention.Headers {
     /// <summary>
     /// Populates the UserAgent properties with the operating system family and version of the originating device.
     /// </summary>
-    /// <param name="userAgent"></param>
-    public static void PopulateUserAgent(this IUserAgent userAgent) {
+    /// <param name="userAgent">The IUserAgent instance to populate.</param>  
+    /// <param name="deviceManufacturer">The device manufacturer.</param>
+    /// <param name="deviceModel">The device model.</param>
+    /// <exception cref="ArgumentNullException">Thrown when userAgent, deviceManufacturer, or deviceModel is null.</exception>
+    public static void PopulateUserAgent(this IUserAgent userAgent, string deviceManufacturer, string deviceModel) {
+      if (userAgent == null) {
+        throw new ArgumentNullException(nameof(userAgent));
+      } else if (deviceManufacturer == null) {
+        throw new ArgumentNullException(nameof(deviceManufacturer));
+      } else if (deviceModel == null) {
+        throw new ArgumentNullException(nameof(deviceModel));
+      }
+
       var os = Environment.OSVersion;
       userAgent.UserAgent = new UserAgent {
         OSFamily = $"{os.Platform}",
-        OSVersion = os.VersionString
+        OSVersion = os.VersionString,
+        DeviceManufacturer = deviceManufacturer,
+        DeviceModel = deviceModel
       };
     }
   }

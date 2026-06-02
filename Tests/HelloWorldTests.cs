@@ -1,5 +1,6 @@
 ﻿using TipsTrade.HMRC.Api.HelloWorld;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace TipsTrade.HMRC.Tests {
   public class HelloWorldTests : TestBase {
@@ -8,25 +9,27 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test]
-    public void Application() {
+    public async Task Application() {
       var svc = GetService<HelloWorldService>();
-      Assert.That(svc.SayHelloApplication(), Is.EqualTo("Hello Application"));
+      var resp = await svc.SayHelloApplicationAsync();
+
+      Assert.That(resp, Is.EqualTo("Hello Application"));
     }
 
     [Test]
-    public void Hello() {
+    public async Task Hello() {
       var svc = GetService<HelloWorldService>();
-      Assert.That(svc.SayHelloWorld(), Is.EqualTo("Hello World"));
+      var resp = await svc.SayHelloWorldAsync();
+
+      Assert.That(resp, Is.EqualTo("Hello World"));
     }
 
     [Test]
-    public void User() {
+    public async Task User() {
       var svc = GetService<HelloWorldService>();
-      Assert.That(svc.SayHelloUser(), Is.EqualTo("Hello User"));
+      var resp = await svc.SayHelloUserAsync();
 
-      // TODO: Fix this
-      //svc = GetService<HelloWorldService>($"{Guid.Empty}");
-      //Assert.Throws<ApiException>((Action)(() => svc.SayHelloUser()));
+      Assert.That(resp, Is.EqualTo("Hello User"));
     }
   }
 }

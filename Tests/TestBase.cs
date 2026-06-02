@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Threading;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
@@ -33,7 +32,7 @@ namespace TipsTrade.HMRC.Tests {
     #endregion
 
     #region User properties
-    protected HmrcUsers Users { get; private set; }
+    protected HmrcUsers? Users { get; private set; }
     #endregion
 
     #region Client properties
@@ -62,13 +61,20 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     protected void SetupCredentialsForOrganisation() {
-      AccessTokenProvider.Setup(x => x.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(Users.Organisation.Tokens);
+      var tokens = Users?.Organisation?.Tokens ?? throw new InvalidOperationException("Organisation tokens are not available.");
+
+      AccessTokenProvider.Setup(x => x.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(tokens);
     }
 
     protected virtual void CustomSetup() { }
 
     [SetUp]
     protected void Setup() {
+      AccessTokenProvider.Reset();
+
+      HmrcOptionsMock.Reset();
+      HmrcOptionsMock.Setup(x => x.Value).Returns(BuildDefaultOptions);
+
       CustomSetup();
     }
 
@@ -88,13 +94,6 @@ namespace TipsTrade.HMRC.Tests {
 
       // Mock the HMRC options.
       HmrcOptionsMock = new Mock<IOptions<HmrcOptions>>();
-      var hmrcOptions = new global::TipsTrade.HMRC.HmrcOptions {
-        FraudPreventionConfig = BuildFraudPrevention<BatchProcessDirect>(),
-        ClientID = ClientId,
-        ClientSecret = ClientSecret,
-        IsSandbox = IsSandbox
-      };
-      HmrcOptionsMock.Setup(x => x.Value).Returns(hmrcOptions);
       services.AddSingleton(HmrcOptionsMock.Object);
 
       services.AddSingleton<Api.ApplicationTokenCache>(); // Needed for the Application Tokens
@@ -120,7 +119,15 @@ namespace TipsTrade.HMRC.Tests {
     [OneTimeTearDown]
     protected virtual void TeardownOnce() {
       (ServiceProvider as IDisposable)?.Dispose();
-      ServiceProvider = null;
+    }
+
+    protected HmrcOptions BuildDefaultOptions() {
+      return new HmrcOptions {
+        FraudPreventionConfig = BuildFraudPrevention<BatchProcessDirect>(),
+        ClientID = ClientId,
+        ClientSecret = ClientSecret,
+        IsSandbox = IsSandbox
+      };
     }
 
     /// <summary>
@@ -176,11 +183,8 @@ namespace TipsTrade.HMRC.Tests {
       }
 
       if (headers is IUserAgent userAgent) {
-        userAgent.PopulateUserAgent();
-
         // Even though the documentation states that these are optional, the API returns an error if they are not included.
-        userAgent.UserAgent.DeviceManufacturer = "Dell";
-        userAgent.UserAgent.DeviceModel = "XPS Gaming PC";
+        userAgent.PopulateUserAgent("Dell", "XPS Gaming PC");
       }
 
       if (headers is IUserIds userIds) {
@@ -235,16 +239,6 @@ namespace TipsTrade.HMRC.Tests {
       return ServiceProvider.GetRequiredService<T>();
     }
 
-    /// <summary>Creates an HMRC service instance using the supplied <see cref="HmrcOptionsMock"/>.</summary>
-    protected T CreateServiceWithOptions<T>(HmrcOptions options) where T : HmrcServiceBase {
-      var wrappedOptions = Options.Create(options);
-      var httpClientFactory = ServiceProvider.GetRequiredService<IHttpClientFactory>();
-      var accessTokenProvider = ServiceProvider.GetRequiredService<IHmrcAccessTokenProvider>();
-      var tokenCache = ServiceProvider.GetRequiredService<ApplicationTokenCache>();
-      var oauthService = ServiceProvider.GetRequiredService<HmrcOAuthService>();
-      return (T)Activator.CreateInstance(typeof(T), wrappedOptions, httpClientFactory, accessTokenProvider, tokenCache, oauthService, null, null);
-    }
-
     /// <summary>Resolves the <see cref="HmrcOAuthService"/> from the DI container.</summary>
     protected HmrcOAuthService GetOAuthService() => ServiceProvider.GetRequiredService<HmrcOAuthService>();
 
@@ -258,24 +252,24 @@ namespace TipsTrade.HMRC.Tests {
     private T LoadFromJsonFile<T>(string fileName) {
       using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
         using (var reader = new StreamReader(fs)) {
-          return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+          return JsonConvert.DeserializeObject<T>(reader.ReadToEnd()) ?? throw new InvalidOperationException($"Failed to deserialize JSON from file '{fileName}'.");
         }
       }
     }
 
     #region Inner classes
     public class HmrcUsers {
-      public UserToken<AgentResult> Agent { get; set; }
+      public UserToken<AgentResult>? Agent { get; set; }
 
-      public UserToken<IndividualResult> Individual { get; set; }
+      public UserToken<IndividualResult>? Individual { get; set; }
 
-      public UserToken<OrganisationResult> Organisation { get; set; }
+      public UserToken<OrganisationResult>? Organisation { get; set; }
     }
 
     public class UserToken<TUser> where TUser : UserResultBase {
-      public TUser User { get; set; }
+      public TUser? User { get; set; }
 
-      public TokenResponse Tokens { get; set; }
+      public TokenResponse? Tokens { get; set; }
     }
     #endregion
   }
