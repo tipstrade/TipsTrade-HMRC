@@ -130,7 +130,7 @@ namespace TipsTrade.HMRC.Tests {
         Assert.That(tokens.AccessToken, Is.Not.Null);
         Assert.That(tokens.RefreshToken, Is.Not.Null);
         Assert.That(tokens.ExpiresIn, Is.Not.EqualTo(0));
-        AssertExtensions.NotDefault(tokens.ExpiresTimestamp);
+        Assert.That(tokens.ExpiresTimestamp, Is.Not.Default);
         Assert.That(tokens.Scope, Is.Not.Null);
         Assert.That(tokens.TokenType, Is.Not.Null);
       }
@@ -153,7 +153,7 @@ namespace TipsTrade.HMRC.Tests {
         Assert.That(tokens.AccessToken, Is.Not.Null);
         Assert.That(tokens.RefreshToken, Is.Not.Null);
         Assert.That(tokens.ExpiresIn, Is.Not.EqualTo(0));
-        AssertExtensions.NotDefault(tokens.ExpiresTimestamp);
+        Assert.That(tokens.ExpiresTimestamp, Is.Not.Default);
 
         Assert.That(tokens.HasAccessTokenExpired(), Is.False); // Using the default slews
         Assert.That(tokens.HasAccessTokenExpired((int)(tokens.ExpiresIn / 60) - Api.Model.TokenResponse.DefaultSlewMinutes), Is.False); // Using 10 minutes before the expected expires

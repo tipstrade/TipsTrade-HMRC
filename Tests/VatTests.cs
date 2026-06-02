@@ -49,16 +49,16 @@ namespace TipsTrade.HMRC.Tests {
 
       Assert.That(resp, Is.Not.Null);
       Assert.That(resp.PeriodKey, Is.EqualTo(periodKey));
-      AssertExtensions.NotDefault(resp.VatDueSales);
-      AssertExtensions.NotDefault(resp.VatDueAcquisitions);
-      AssertExtensions.NotDefault(resp.TotalVatDue);
-      AssertExtensions.NotDefault(resp.VatReclaimedCurrPeriod);
-      AssertExtensions.NotDefault(resp.NetVatDue);
-      AssertExtensions.NotDefault(resp.TotalValueSalesExVAT);
-      AssertExtensions.NotDefault(resp.TotalValuePurchasesExVAT);
-      AssertExtensions.NotDefault(resp.TotalValueGoodsSuppliedExVAT);
-      AssertExtensions.NotDefault(resp.TotalAcquisitionsExVAT);
-      AssertExtensions.NotDefault(resp.Finalised);
+      Assert.That(resp.VatDueSales, Is.Not.Default);
+      Assert.That(resp.VatDueAcquisitions, Is.Not.Default);
+      Assert.That(resp.TotalVatDue, Is.Not.Default);
+      Assert.That(resp.VatReclaimedCurrPeriod, Is.Not.Default);
+      Assert.That(resp.NetVatDue, Is.Not.Default);
+      Assert.That(resp.TotalValueSalesExVAT, Is.Not.Default);
+      Assert.That(resp.TotalValuePurchasesExVAT, Is.Not.Default);
+      Assert.That(resp.TotalValueGoodsSuppliedExVAT, Is.Not.Default);
+      Assert.That(resp.TotalAcquisitionsExVAT, Is.Not.Default);
+      Assert.That(resp.Finalised, Is.Not.Default);
 
       TestContext.Out.WriteLine("VAT Retrieved return:");
       TestContext.Out.WriteLine(JsonConvert.SerializeObject(resp, Formatting.Indented));
@@ -81,12 +81,12 @@ namespace TipsTrade.HMRC.Tests {
 
       foreach (var item in resp.Value) {
         Assert.That(item.TaxPeriod, Is.Not.Null);
-        AssertExtensions.NotDefault(item.TaxPeriod.DateFrom);
-        AssertExtensions.NotDefault(item.TaxPeriod.DateTo);
+        Assert.That(item.TaxPeriod.DateFrom, Is.Not.Default);
+        Assert.That(item.TaxPeriod.DateTo, Is.Not.Default);
         Assert.That(item.Type, Is.Not.Null);
-        AssertExtensions.NotDefault(item.OriginalAmount);
+        Assert.That(item.OriginalAmount, Is.Not.Default);
         if (item.Due != null) {
-          AssertExtensions.NotDefault(item.Due);
+          Assert.That(item.Due, Is.Not.Default);
         }
       }
 
@@ -113,9 +113,9 @@ namespace TipsTrade.HMRC.Tests {
       Assert.That(resp.Value, Is.Not.Empty);
       Assert.That(resp.Value.Where(x => x.IsFulfilled).Count(), Is.EqualTo(2));
       foreach (var item in resp.Value) {
-        AssertExtensions.NotDefault(item.Start);
-        AssertExtensions.NotDefault(item.End);
-        AssertExtensions.NotDefault(item.Due);
+        Assert.That(item.Start, Is.Not.Default);
+        Assert.That(item.End, Is.Not.Default);
+        Assert.That(item.Due, Is.Not.Default);
         Assert.That(item.PeriodKey, Is.Not.Null);
       }
 
@@ -163,9 +163,9 @@ namespace TipsTrade.HMRC.Tests {
       Assert.That(resp.Value, Is.Not.Empty);
 
       foreach (var item in resp.Value) {
-        AssertExtensions.NotDefault(item.Amount);
+        Assert.That(item.Amount, Is.Not.Default);
         if (item.Received != null) {
-          AssertExtensions.NotDefault(item.Received);
+          Assert.That(item.Received, Is.Not.Default);
         }
       }
 
