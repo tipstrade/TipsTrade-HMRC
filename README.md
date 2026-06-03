@@ -27,7 +27,7 @@ In order to keep the major version in sync with the .NET target version, this re
 * Service-based refactor (see below) which removes the old API wrapper layer and introduces service classes for each API.
 * `*Api` types have been replaced by `*Service` types (for example, `VatApi` -> `VatService`, `HelloWorldApi` -> `HelloWorldService`).
 * Internal API construction via `ApiFactory` and `IClient` has been removed.
-* Scope helper calls that referenced API types must now reference service types (for example, `Scopes.GetScopes<Api.Vat.VatService>()`).
+* Scope helper calls that referenced API types must now reference service types (for example, `Scopes.GetScopes<VatService>()`).
 * Direct integration points that depended on old internal API wrapper classes/interfaces must be updated to use service classes and `HmrcOptions`.
 * DI registration is now available via `ServiceCollection` extension methods (`AddHmrc(...)` and per-service add methods).
 * The `AntiFraud` namespace and related types have been replaced by the `FraudPrevention` namespace. Fraud prevention is now configured via `HmrcOptions.FraudPreventionConfig` using an `IFraudPrevention` implementation (e.g. `BatchProcessDirect`, `DesktopAppDirect`).
@@ -76,30 +76,30 @@ Tests require the same credentials as `Authentication-Client`. A `hmrc-users.jso
 Scopes grant access to specific HMRC APIs and are passed to `HmrcOAuthService.GetAuthorizationEndpoint`. Scopes must also be enabled for your application in the HMRC developer console.
 
 You can reference scope constants directly:
-```C#
+```csharp
 var scopes = new string[] { Scopes.Hello, Scopes.VATRead, Scopes.VATWrite };
 ```
 
 In addition, you can use the `Scopes.GetScopes` helper methods to retrieve scopes for a specific service, or to filter scopes by name or value:
-```C#
+```csharp
 // Get all the possible scopes - you probably won't want to do this in production.
 var scopes = Scopes.GetScopes();
 
 // Get all the scopes for the specified service
-var scopes = Scopes.GetScopes<Api.Vat.VatService>();
+var scopes = Scopes.GetScopes<VatService>();
 
 // All Scopes in the Scopes class that contain "VAT", e.g. "VATRead", "VATWrite"
 var scopes = Scopes.GetScopes(nameFilter: (name) => name.Contains("VAT"));
 
 // All scopes in the Scopes class that are for the VAT service, and contain "read"
-var scopes = Scopes.GetScopes<Api.Vat.VatService>(valueFilter: (value) => value.Contains("read"));
+var scopes = Scopes.GetScopes<VatService>(valueFilter: (value) => value.Contains("read"));
 ```
 
 ## Dependency Injection & Configuration
 
 Services are registered via `IServiceCollection` extension methods. Use `AddHmrc<TAccessTokenProvider>` for full registration, or register individual services with the per-service add methods.
 
-```C#
+```csharp
 var services = new ServiceCollection();
 
 // Register all HMRC services with a custom access token provider
@@ -118,7 +118,7 @@ var provider = services.BuildServiceProvider();
 ```
 
 Or register services individually:
-```C#
+```csharp
 services.AddHmrcOAuthService();
 services.AddHmrcHttpClient((client) => {
     client.Timeout = TimeSpan.FromSeconds(30);
@@ -147,7 +147,7 @@ services.AddVatNumberService();
 To authenticate a user, build the authorization URL and navigate the user to it. After the user authenticates, handle the redirect URI to obtain `TokenResponse` (access + refresh tokens). `HmrcOAuthService` exposes `GetAuthorizationEndpoint` and `HandleEndpointResultAsync` to help with this flow.
 
 Example (console-style):
-```C#
+```csharp
 private static async Task<TokenResponse> GetAuthCodeAsync(HmrcOAuthService authClient) {
   var state = $"{Guid.NewGuid()}";
   var scopes = Scopes.GetScopes();
@@ -172,7 +172,7 @@ private static async Task<TokenResponse> GetAuthCodeAsync(HmrcOAuthService authC
 ```
 
 Refreshing the access token is done via `RefreshAccessTokenAsync`:
-```C#
+```csharp
 private static async Task RefreshTokenAsync(HmrcOAuthService authClient) {
   Console.Write("Enter the refresh token: ");
   var refreshToken = Console.ReadLine();
@@ -184,7 +184,7 @@ private static async Task RefreshTokenAsync(HmrcOAuthService authClient) {
 
 ## Invoking service methods
 Services are resolved from the DI container. Both synchronous and asynchronous method variants are provided (where appropriate):
-```C#
+```csharp
 var vatService = serviceProvider.GetRequiredService<VatService>();
 
 // Synchronous
@@ -195,12 +195,13 @@ var obligations = await vatService.GetObligationsAsync(obRequest);
 ```
 
 ### Exception handling
-Service methods can throw `ApiException`. `ApiException.Message` contains the core message; `ApiException.ApiError` may contain `ErrorResponse` objects in `ApiError.Errors`.
+Service methods can throw the following exceptions:
 
-`InvalidOperationException` may be thrown if the service configuration is invalid for the request.
+* `ApiException` — the HMRC API returned an error response. `ApiException.Message` contains the core message; `ApiException.ApiError` may contain `ErrorResponse` objects in `ApiError.Errors`.
+* `InvalidOperationException` — thrown if the service configuration is invalid for the request.
 
 Example:
-```C#
+```csharp
 try {
   submitResponse = await vatService.SubmitReturnAsync(submitRequest);
 } catch (InvalidOperationException ex) {
@@ -214,7 +215,7 @@ try {
 ### CreateTestUser service
 In Sandbox you must create test users regularly (Sandbox data is cleared periodically). Use the `CreateTestUserFactory` helpers:
 
-```C#
+```csharp
 var createTestUser = serviceProvider.GetRequiredService<CreateTestUserService>();
 
 // Create a test organisation user with all the available service types
@@ -228,7 +229,7 @@ var user = await createTestUser.CreateUserAsync(orgRequest);
 
 ### HelloWorld service
 Simple echo endpoints to verify credentials:
-```C#
+```csharp
 var helloWorld = serviceProvider.GetRequiredService<HelloWorldService>();
 
 // Returns "Hello World" - no application or user credentials are required
@@ -245,7 +246,7 @@ var resp = await helloWorld.SayHelloUserAsync();
 
 #### Get obligations
 VAT returns are indexed by a "Period Key". `ObligationsResult` implements `IComparable` so results can be sorted. Note: HMRC specify that the Period Key should not be shown to end users.
-```C#
+```csharp
 var vatService = serviceProvider.GetRequiredService<VatService>();
 
 var obRequest = new ObligationsRequest() {
@@ -262,7 +263,7 @@ var periodKey = obligations.Value?.OrderByDescending(x => x).FirstOrDefault()?.P
 ```
 
 #### Get VAT return
-```C#
+```csharp
 var returnRequest = new ReturnRequest() {
   Vrn = vrn,
   PeriodKey = periodKey // As retrieved by GetObligations
@@ -273,7 +274,7 @@ var vatReturn = await vatService.GetReturnAsync(returnRequest);
 
 #### Submit VAT return
 Decimal values should have no more than two decimal places (use `Math.Round`).
-```C#
+```csharp
 var vatReturn = new VatReturn() {
   PeriodKey = periodKey,
   VatDueSales = 7724.92m,
@@ -314,19 +315,22 @@ Available connection method types:
 
 Each type implements one or more header interfaces (e.g. `IDeviceId`, `ILocalIps`, `IMacAddresses`, `IUserAgent`, `IScreens`, `ITimeZone`, `IVendorVersion`, `IWindowSize`) which expose the relevant properties. Helper extension methods are available on several interfaces:
 
-```C#
+```csharp
 // Populates with all the local IP addresses on the local system
 localIps.PopulateLocalIps();
+
+// Populates with all the local IP addresses that match a predicate
+localIps.PopulateLocalIps(ip => ip.AddressFamily == AddressFamily.InterNetwork);
 
 // Populates with all the MAC addresses on the local system
 macAddresses.PopulateMacAddresses();
 
-// Populates with the local operating system name and version
-userAgent.PopulateUserAgent("Vendor", "Product Name");
+// Populates with the local operating system name and version, and device details
+userAgent.PopulateUserAgent("Dell", "XPS");
 ```
 
 Example configuration:
-```C#
+```csharp
 options.FraudPreventionConfig = new BatchProcessDirect {
   DeviceId = Guid.Parse("your-device-guid"),
   TimeZone = TimeZoneInfo.Local,
@@ -343,7 +347,24 @@ if (options.FraudPreventionConfig is IMacAddresses macAddresses)
   macAddresses.PopulateMacAddresses();
 
 if (options.FraudPreventionConfig is IUserAgent userAgent)
-  userAgent.PopulateUserAgent("Vendor", "Product");
+  userAgent.PopulateUserAgent("MyManufacturer", "MyProduct");
+```
+
+### TestFraudPrevention service
+The `TestFraudPreventionService` can be used in Sandbox to validate your fraud prevention headers against HMRC's spec, and to retrieve per-service feedback.
+
+```csharp
+var testFraudPrevention = serviceProvider.GetRequiredService<TestFraudPreventionService>();
+
+// Validate the currently configured fraud prevention headers
+var result = await testFraudPrevention.ValidateAsync();
+
+if (result.Errors?.Any() == true) {
+  // Headers are invalid - inspect result.Errors for details
+}
+
+// Get feedback for a specific service (e.g. "vat-mtd")
+var feedback = await testFraudPrevention.GetFeedbackAsync("vat-mtd");
 ```
 
 [1]: https://developer.service.hmrc.gov.uk/developer/login
