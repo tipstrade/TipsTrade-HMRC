@@ -1,6 +1,7 @@
 # TipsTrade-HMRC
 
 [![Nuget](https://img.shields.io/nuget/v/TipsTrade-HMRC.svg)](https://www.nuget.org/packages/TipsTrade-HMRC/)
+[![Nuget (Pre-Release)](https://img.shields.io/nuget/vpre/TipsTrade-HMRC.svg)](https://www.nuget.org/packages/TipsTrade-HMRC/)
 
 A strongly typed .NET library for interacting with the HMRC APIs.
 
@@ -20,7 +21,7 @@ The following services are currently supported:
 
 ### Breaking changes
 
-### v.8.10.x
+### v.8.x.x
 
 In order to keep the major version in sync with the .NET target version, this release includes major breaking changes. The following changes were made in `8.10.0`:
 
