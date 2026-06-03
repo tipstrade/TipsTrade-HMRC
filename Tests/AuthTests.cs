@@ -3,15 +3,14 @@ using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.HelloWorld;
+using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.OAuth;
-using TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd;
 using TipsTrade.HMRC.Api.Vat;
 using TipsTrade.HMRC.Tests.Extensions;
 
@@ -96,7 +95,7 @@ namespace TipsTrade.HMRC.Tests {
         AccessToken = "expired-token",
         RefreshToken = "expired-refresh-token",
         ExpiresIn = 3600,
-        ExpiresTimestamp = DateTime.UtcNow.AddHours(-1), // Expired an hour ago
+        CreatedAt = DateTime.UtcNow.AddHours(-2), // Created 2 hours ago, so it's expired
         Scope = "hello read:vat write:vat",
         TokenType = "Bearer"
       });
@@ -145,7 +144,6 @@ namespace TipsTrade.HMRC.Tests {
         AccessToken = "test-token",
         RefreshToken = "test-refresh-token",
         ExpiresIn = 3600,
-        ExpiresTimestamp = DateTime.UtcNow.AddHours(1),
         Scope = "hello read:vat write:vat",
         TokenType = "Bearer"
       });
@@ -167,7 +165,6 @@ namespace TipsTrade.HMRC.Tests {
         AccessToken = "bad-token",
         RefreshToken = "bad-refresh-token",
         ExpiresIn = 3600,
-        ExpiresTimestamp = DateTime.UtcNow.AddHours(1),
         Scope = "hello read:vat write:vat",
         TokenType = "Bearer"
       });
@@ -212,7 +209,7 @@ namespace TipsTrade.HMRC.Tests {
         Assert.That(tokens.AccessToken, Is.Not.Null);
         Assert.That(tokens.RefreshToken, Is.Not.Null);
         Assert.That(tokens.ExpiresIn, Is.Not.EqualTo(0));
-        Assert.That(tokens.ExpiresTimestamp, Is.Not.Default);
+        Assert.That(tokens.CreatedAt, Is.Not.Default);
         Assert.That(tokens.Scope, Is.Not.Null);
         Assert.That(tokens.TokenType, Is.Not.Null);
       }
@@ -235,14 +232,14 @@ namespace TipsTrade.HMRC.Tests {
         Assert.That(tokens.AccessToken, Is.Not.Null);
         Assert.That(tokens.RefreshToken, Is.Not.Null);
         Assert.That(tokens.ExpiresIn, Is.Not.EqualTo(0));
-        Assert.That(tokens.ExpiresTimestamp, Is.Not.Default);
+        Assert.That(tokens.CreatedAt, Is.Not.Default);
 
         Assert.That(tokens.HasAccessTokenExpired(), Is.False); // Using the default slews
-        Assert.That(tokens.HasAccessTokenExpired((int)(tokens.ExpiresIn / 60) - Api.Model.TokenResponse.DefaultSlewMinutes), Is.False); // Using 10 minutes before the expected expires
-        Assert.That(tokens.HasAccessTokenExpired((int)(tokens.ExpiresIn / 60) + Api.Model.TokenResponse.DefaultSlewMinutes), Is.True); // Using 10 minutes after the expired expires
+        Assert.That(tokens.HasAccessTokenExpired((int)(tokens.ExpiresIn / 60) - TokenResponse.DefaultSlewMinutes), Is.False); // Using 10 minutes before the expected expires
+        Assert.That(tokens.HasAccessTokenExpired((int)(tokens.ExpiresIn / 60) + TokenResponse.DefaultSlewMinutes), Is.True); // Using 10 minutes after the expired expires
       }
 
-      var expiresSeconds = tokens.ExpiresTimestamp.Subtract(start).TotalSeconds;
+      var expiresSeconds = tokens.GetExpiresTimestamp().Subtract(start).TotalSeconds;
       var expiresDelta = Math.Abs(expiresSeconds - tokens.ExpiresIn);
 
       using (Assert.EnterMultipleScope()) {

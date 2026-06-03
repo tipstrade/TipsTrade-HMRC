@@ -166,7 +166,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
         if (token == null) {
           return (false, false, TimeSpan.Zero);
         } else {
-          var expiresIn = token.ExpiresTimestamp - DateTime.UtcNow;
+          var expiresIn = token.GetExpiresTimestamp() - DateTime.UtcNow;
           return (true, expiresIn > TimeSpan.Zero, expiresIn > TimeSpan.Zero ? expiresIn : TimeSpan.Zero);
         }
       } catch (InvalidOperationException ex) {
