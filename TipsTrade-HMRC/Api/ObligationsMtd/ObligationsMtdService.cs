@@ -31,13 +31,13 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd {
 
     /// <summary>Retrieve obligations for a user's business income sources.</summary>
     [Obsolete("This method is deprecated. Please use GetIncomeAndExpenditureObligationsAsync instead.")]
-    public GetObligationsResponse GetIncomeAndExpenditureObligations(GetObligationsRequest request, IFraudPrevention? fraudPrevention = null) {
-      return ExecuteRequest<GetObligationsResponse>(request, fraudPrevention);
+    public GetObligationsResponse GetIncomeAndExpenditureObligations(GetObligationsRequest request, IFraudPrevention? fraudPreventionConfig = null) {
+      return ExecuteRequest<GetObligationsResponse>(request, fraudPreventionConfig);
     }
 
     /// <summary>Asynchronously retrieve obligations for a user's business income sources.</summary>
-    public async Task<GetObligationsResponse> GetIncomeAndExpenditureObligationsAsync(GetObligationsRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<GetObligationsResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    public async Task<GetObligationsResponse> GetIncomeAndExpenditureObligationsAsync(GetObligationsRequest request, IFraudPrevention? fraudPreventionConfig, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<GetObligationsResponse>(request, fraudPreventionConfig, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Asynchronously retrieve obligations for a user's business income sources.</summary>
@@ -47,13 +47,13 @@ namespace TipsTrade.HMRC.Api.ObligationsMtd {
 
     /// <summary>Retrieve the final declaration obligations for a customer's Income Tax account.</summary>
     [Obsolete("This method is deprecated. Please use GetFinalObligationsAsync instead.")]
-    public GetFinalObligationsResponse GetFinalObligations(GetFinalObligationsRequest request, IFraudPrevention? fraudPrevention = null) {
-      return ExecuteRequest<GetFinalObligationsResponse>(request, fraudPrevention);
+    public GetFinalObligationsResponse GetFinalObligations(GetFinalObligationsRequest request, IFraudPrevention? fraudPreventionConfig = null) {
+      return ExecuteRequest<GetFinalObligationsResponse>(request, fraudPreventionConfig);
     }
 
     /// <summary>Asynchronously retrieve the final declaration obligations for a customer's Income Tax account.</summary>
-    public async Task<GetFinalObligationsResponse> GetFinalObligationsAsync(GetFinalObligationsRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<GetFinalObligationsResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    public async Task<GetFinalObligationsResponse> GetFinalObligationsAsync(GetFinalObligationsRequest request, IFraudPrevention? fraudPreventionConfig, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<GetFinalObligationsResponse>(request, fraudPreventionConfig, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Asynchronously retrieve the final declaration obligations for a customer's Income Tax account.</summary>

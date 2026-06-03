@@ -31,13 +31,13 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
 
     /// <summary>List Self Assessment tax calculations for a given National Insurance number and tax year.</summary>
     [Obsolete("This method is deprecated. Please use ListSelfAssessmentCalculationsAsync instead.")]
-    public ListSelfAssessmentCalculationsResponse ListSelfAssessmentCalculations(ListSelfAssessmentCalculationsRequest request, IFraudPrevention? fraudPrevention = null) {
-      return ExecuteRequest<ListSelfAssessmentCalculationsResponse>(request, fraudPrevention);
+    public ListSelfAssessmentCalculationsResponse ListSelfAssessmentCalculations(ListSelfAssessmentCalculationsRequest request, IFraudPrevention? fraudPreventionConfig = null) {
+      return ExecuteRequest<ListSelfAssessmentCalculationsResponse>(request, fraudPreventionConfig);
     }
 
     /// <summary>Asynchronously list Self Assessment tax calculations for a given National Insurance number and tax year.</summary>
-    public async Task<ListSelfAssessmentCalculationsResponse> ListSelfAssessmentCalculationsAsync(ListSelfAssessmentCalculationsRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<ListSelfAssessmentCalculationsResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    public async Task<ListSelfAssessmentCalculationsResponse> ListSelfAssessmentCalculationsAsync(ListSelfAssessmentCalculationsRequest request, IFraudPrevention? fraudPreventionConfig, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<ListSelfAssessmentCalculationsResponse>(request, fraudPreventionConfig , cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Asynchronously list Self Assessment tax calculations for a given National Insurance number and tax year.</summary>
@@ -47,13 +47,13 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
 
     /// <summary>Retrieve all the tax calculation data for a given National Insurance number and Calculation ID.</summary>
     [Obsolete("This method is deprecated. Please use RetrieveSelfAssessmentCalculationAsync instead.")]
-    public RetrieveSelfAssessmentCalculationResponse RetrieveSelfAssessmentCalculation(RetrieveSelfAssessmentCalculationRequest request, IFraudPrevention? fraudPrevention = null) {
-      return ExecuteRequest<RetrieveSelfAssessmentCalculationResponse>(request, fraudPrevention);
+    public RetrieveSelfAssessmentCalculationResponse RetrieveSelfAssessmentCalculation(RetrieveSelfAssessmentCalculationRequest request, IFraudPrevention? fraudPreventionConfig = null) {
+      return ExecuteRequest<RetrieveSelfAssessmentCalculationResponse>(request, fraudPreventionConfig);
     }
 
     /// <summary>Asynchronously retrieve all the tax calculation data for a given National Insurance number and Calculation ID.</summary>
-    public async Task<RetrieveSelfAssessmentCalculationResponse> RetrieveSelfAssessmentCalculationAsync(RetrieveSelfAssessmentCalculationRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<RetrieveSelfAssessmentCalculationResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    public async Task<RetrieveSelfAssessmentCalculationResponse> RetrieveSelfAssessmentCalculationAsync(RetrieveSelfAssessmentCalculationRequest request, IFraudPrevention? fraudPreventionConfig, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<RetrieveSelfAssessmentCalculationResponse>(request, fraudPreventionConfig, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Asynchronously retrieve all the tax calculation data for a given National Insurance number and Calculation ID.</summary>
@@ -63,13 +63,13 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
 
     /// <summary>Submit a final declaration for a tax year.</summary>
     [Obsolete("This method is deprecated. Please use SubmitFinalAssessmentAsync instead.")]
-    public SubmitFinalAssessmentResponse SubmitFinalAssessment(SubmitFinalAssessmentRequest request, IFraudPrevention? fraudPrevention = null) {
-      return ExecuteRequest<SubmitFinalAssessmentResponse>(request, fraudPrevention);
+    public SubmitFinalAssessmentResponse SubmitFinalAssessment(SubmitFinalAssessmentRequest request, IFraudPrevention? fraudPreventionConfig = null) {
+      return ExecuteRequest<SubmitFinalAssessmentResponse>(request, fraudPreventionConfig);
     }
 
     /// <summary>Asynchronously submit a final declaration for a tax year.</summary>
-    public async Task<SubmitFinalAssessmentResponse> SubmitFinalAssessmentAsync(SubmitFinalAssessmentRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<SubmitFinalAssessmentResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    public async Task<SubmitFinalAssessmentResponse> SubmitFinalAssessmentAsync(SubmitFinalAssessmentRequest request, IFraudPrevention? fraudPreventionConfig, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<SubmitFinalAssessmentResponse>(request, fraudPreventionConfig, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Asynchronously submit a final declaration for a tax year.</summary>
@@ -79,13 +79,13 @@ namespace TipsTrade.HMRC.Api.IndividualCalculationsMtd {
 
     /// <summary>Triggers a self assessment tax calculation for a given tax year.</summary>
     [Obsolete("This method is deprecated. Please use TriggerCalculationAsync instead.")]
-    public TriggerSelfAssessmentCalculationResponse TriggerCalculation(TriggerSelfAssessmentCalculationRequest request, IFraudPrevention? fraudPrevention = null) {
-      return ExecuteRequest<TriggerSelfAssessmentCalculationResponse>(request, fraudPrevention);
+    public TriggerSelfAssessmentCalculationResponse TriggerCalculation(TriggerSelfAssessmentCalculationRequest request, IFraudPrevention? fraudPreventionConfig = null) {
+      return ExecuteRequest<TriggerSelfAssessmentCalculationResponse>(request, fraudPreventionConfig);
     }
 
     /// <summary>Asynchronously triggers a self assessment tax calculation for a given tax year.</summary>
-    public async Task<TriggerSelfAssessmentCalculationResponse> TriggerCalculationAsync(TriggerSelfAssessmentCalculationRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<TriggerSelfAssessmentCalculationResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    public async Task<TriggerSelfAssessmentCalculationResponse> TriggerCalculationAsync(TriggerSelfAssessmentCalculationRequest request, IFraudPrevention? fraudPreventionConfig, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<TriggerSelfAssessmentCalculationResponse>(request, fraudPreventionConfig, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Asynchronously triggers a self assessment tax calculation for a given tax year.</summary>

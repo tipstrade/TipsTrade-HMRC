@@ -100,24 +100,24 @@ namespace TipsTrade.HMRC.Api {
     /// Create a <see cref="RestRequest"/> from the supplied <see cref="IApiRequest"/> and optional <see cref="IFraudPrevention"/> provider, using the client's configuration.
     /// </summary>
     /// <param name="request">The request model that will populate headers, body and parameters.</param>
-    /// <param name="fraudPrevention">An optional fraud prevention provider to add headers to the request.</param>
+    /// <param name="fraudPreventionConfig">An optional fraud prevention provider to add headers to the request.</param>
     /// <returns>A fully populated <see cref="RestRequest"/> ready for execution.</returns>
     [Obsolete("Use CreateRequestAsync instead. Synchronous methods may cause deadlocks.")]
-    internal RestRequest CreateRequest(IApiRequest request, IFraudPrevention? fraudPrevention) {
-      return CreateRequestAsync(request, fraudPrevention, CancellationToken.None).GetAwaiter().GetResult();
+    internal RestRequest CreateRequest(IApiRequest request, IFraudPrevention? fraudPreventionConfig) {
+      return CreateRequestAsync(request, fraudPreventionConfig, CancellationToken.None).GetAwaiter().GetResult();
     }
 
     /// <summary>
     /// Create and populate a <see cref="RestRequest"/> from a given <see cref="IApiRequest"/> using API client settings.
     /// </summary>
     /// <param name="request">The request model that will populate headers, body and parameters.</param>
-    /// <param name="fraudPrevention">An optional fraud prevention provider to add headers to the request.</param>
+    /// <param name="fraudPreventionConfig">An optional fraud prevention provider to add headers to the request.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
     /// <returns>A fully populated <see cref="RestRequest"/> ready for execution.</returns>
     /// <exception cref="ApiException">
     /// Thrown if required configuration is missing for the request, such as credentials for authorization or fraud prevention headers.
     /// </exception>
-    internal async Task<RestRequest> CreateRequestAsync(IApiRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken) {
+    internal async Task<RestRequest> CreateRequestAsync(IApiRequest request, IFraudPrevention? fraudPreventionConfig, CancellationToken cancellationToken) {
       var options = this.GetOptions();
       var restRequest = new RestRequest($"{Location}/{request.Location}", request.Method);
       restRequest.AddHeader("Accept", GetAcceptHeader(request.AcceptType));
@@ -142,7 +142,7 @@ namespace TipsTrade.HMRC.Api {
 
       if (this is IRequiresFraudPrevention) {
         // Prefer the optional fraud prevention provider supplied for this request, but fall back to the client's default configuration if not provided
-        var config = fraudPrevention ?? options.FraudPreventionConfig;
+        var config = fraudPreventionConfig ?? options.FraudPreventionConfig;
 
         if (config == null) {
           throw new ApiException("The request requires fraud prevention headers, but the client's FraudPrevention configuration is null and no custom fraud prevention was supplied.") {
@@ -173,11 +173,11 @@ namespace TipsTrade.HMRC.Api {
     /// </summary>
     /// <typeparam name="T">The expected response model type.</typeparam>
     /// <param name="request">The request model used to create the HTTP request.</param>
-    /// <param name="fraudPrevention">An optional fraud prevention provider to add headers to the request.</param>
+    /// <param name="fraudPreventionConfig">An optional fraud prevention provider to add headers to the request.</param>
     /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
     [Obsolete("Use ExecuteRequestAsync instead. Synchronous methods may cause deadlocks.")]
-    internal T ExecuteRequest<T>(IApiRequest request, IFraudPrevention? fraudPrevention) where T : class, new() {
-      var restRequest = CreateRequest(request, fraudPrevention);
+    internal T ExecuteRequest<T>(IApiRequest request, IFraudPrevention? fraudPreventionConfig) where T : class, new() {
+      var restRequest = CreateRequest(request, fraudPreventionConfig);
 
       return ExecuteRequest<T>(restRequest);
     }
@@ -201,11 +201,11 @@ namespace TipsTrade.HMRC.Api {
     /// </summary>
     /// <typeparam name="T">The expected response model type.</typeparam>
     /// <param name="request">The request model used to create the HTTP request.</param>
-    /// <param name="fraudPrevention">An optional fraud prevention provider to add headers to the request.</param>
+    /// <param name="fraudPreventionConfig">An optional fraud prevention provider to add headers to the request.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
     /// <returns>A task that resolves to an instance of <typeparamref name="T"/> representing the API response.</returns>
-    internal async Task<T> ExecuteRequestAsync<T>(IApiRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken) where T : class, new() {
-      var restRequest = await CreateRequestAsync(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    internal async Task<T> ExecuteRequestAsync<T>(IApiRequest request, IFraudPrevention? fraudPreventionConfig, CancellationToken cancellationToken) where T : class, new() {
+      var restRequest = await CreateRequestAsync(request, fraudPreventionConfig, cancellationToken).ConfigureAwait(false);
 
       return await ExecuteRequestAsync<T>(restRequest, cancellationToken).ConfigureAwait(false);
     }

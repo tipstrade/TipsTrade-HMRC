@@ -101,6 +101,9 @@ var scopes = Scopes.GetScopes<VatService>(valueFilter: (value) => value.Contains
 
 Services are registered via `IServiceCollection` extension methods. Use `AddHmrc<TAccessTokenProvider>` for full registration, or register individual services with the per-service add methods.
 
+Services that implement `IRequiresFraudPrevention` require fraud prevention configuration to be provided via `HmrcOptions.FraudPreventionConfig` - see the Fraud Prevention Headers section below.
+Methods in these services contain overloads that accept an optional `fraudPreventionConfig` parameter, which can be used to provide per-request fraud prevention configuration that overrides the default configuration.
+
 ```csharp
 var services = new ServiceCollection();
 
