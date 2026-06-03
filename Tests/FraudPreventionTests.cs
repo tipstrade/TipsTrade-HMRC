@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Moq;
 using TipsTrade.HMRC.FraudPrevention;
 using System.Linq;
+using System.Threading;
 
 namespace TipsTrade.HMRC.Tests {
   public class FraudPreventionTests : TestBase {
@@ -96,7 +97,7 @@ namespace TipsTrade.HMRC.Tests {
       // Do not inject the fraud prevention headers into the HmrcOptions for this test, as we want to ensure that the ValidateAsync method can
       // successfully generate the necessary headers from the IFraudPrevention instance without relying on any pre-populated configuration.
       HmrcOptionsMock.Reset();
-      HmrcOptionsMock.Setup(x => x.Value).Returns(new HmrcOptions {
+      HmrcOptionsMock.Setup(x=> x.GetOptionsAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new HmrcOptions {
         FraudPreventionConfig = null,
         ClientId = ClientId,
         ClientSecret = ClientSecret,

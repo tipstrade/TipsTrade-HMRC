@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -27,7 +26,8 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
     public override string Version => "2.0";
 
     /// <summary>Initialises a new instance using dependency-injected services.</summary>
-    public BusinessDetailsMtdService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
+    public BusinessDetailsMtdService(IHttpClientFactory httpClientFactory, IHmrcOptionsProvider hmrcOptionsProvider, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(httpClientFactory, hmrcOptionsProvider, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) {
+    }
 
     /// <summary>Create or amend the type of quarterly reporting period used for a business for a specific tax year.</summary>
     [Obsolete("This method is deprecated, use CreateOrAmendQuarterlyPeriodTypeAsync instead.")]

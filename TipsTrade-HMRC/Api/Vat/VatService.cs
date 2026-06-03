@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -27,7 +26,7 @@ namespace TipsTrade.HMRC.Api.Vat {
     public override string Version => "1.0";
 
     /// <summary>Initialises a new instance using dependency-injected services.</summary>
-    public VatService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
+    public VatService(IHttpClientFactory httpClientFactory, IHmrcOptionsProvider hmrcOptionsProvider, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(httpClientFactory, hmrcOptionsProvider, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
 
     /// <summary>Retrieve VAT liabilities.</summary>
     [Obsolete("Use GetLiabilitiesAsync instead. Synchronous methods may cause deadlocks.")]

@@ -136,6 +136,12 @@ services.AddSingleton(Options.Create(new HmrcOptions
     IsSandbox = true
 }));
 
+// Alternatively, register a custom access token provider using the extension method
+services.AddHmrcAccessTokenProvider<MyAccessTokenProvider>();
+
+// Or register a custom options provider to dynamically supply HmrcOptions
+services.AddHmrcOptionsProvider<MyOptionsProvider>();
+
 services.AddBusinessDetailsMtdService();
 services.AddCreateTestUserService();
 services.AddHelloWorldService();
@@ -147,6 +153,27 @@ services.AddTestFraudPreventionService();
 services.AddVatService();
 services.AddVatNumberService();
 ```
+
+### Custom options provider
+
+For scenarios where `HmrcOptions` must be resolved dynamically, implement `IHmrcOptionsProvider` and register it with `AddHmrcOptionsProvider<T>`:
+
+```csharp
+public class MyOptionsProvider : IHmrcOptionsProvider {
+  public Task<HmrcOptions> GetOptionsAsync(CancellationToken cancellationToken = default) {
+    // Return options resolved from your own store
+    return Task.FromResult(new HmrcOptions {
+      ClientId = "...",
+      ClientSecret = "...",
+      IsSandbox = false
+    });
+  }
+}
+
+services.AddHmrcOptionsProvider<MyOptionsProvider>();
+```
+
+The built-in `HmrcOptionsProvider` class is used by default when options are configured via `IOptions<HmrcOptions>` (e.g. via `AddHmrc`).
 
 ## OAuth
 To authenticate a user, build the authorization URL and navigate the user to it. After the user authenticates, handle the redirect URI to obtain `TokenResponse` (access + refresh tokens). `HmrcOAuthService` exposes `GetAuthorizationEndpoint` and `HandleEndpointResultAsync` to help with this flow.

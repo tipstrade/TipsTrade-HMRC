@@ -21,13 +21,13 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test]
-    public void GetAuthorizationEndpoint_Success() {
+    public async Task GetAuthorizationEndpoint_Success() {
       var scopes = new string[] { "hello", "read:vat", "write:vat" };
       var state = $"{Guid.NewGuid()}";
       var redirectUrl = "https://example.com/callback";
 
       var oAuth = GetOAuthService();
-      var actualUrl = oAuth.GetAuthorizationEndpoint(state, redirectUrl, scopes);
+      var actualUrl = await oAuth.GetAuthorizationEndpointAsync(state, redirectUrl, scopes);
 
       var uri = new Uri(actualUrl);
       var qs = HttpUtility.ParseQueryString(uri.Query);
@@ -36,10 +36,11 @@ namespace TipsTrade.HMRC.Tests {
       Assert.That(qs["scope"], Is.Not.Null);
 
       var actualScopes = qs["scope"].Split(' ');
+      var clientIdInOptions = (await GetOptionsAsync()).ClientId;
 
       Assert.That($"{uri.Scheme}://{uri.Host}{uri.AbsolutePath}", Is.EqualTo($"{HmrcOptions.SandboxUrl}/oauth/authorize"));
       Assert.That(qs["response_type"], Is.EqualTo("code"));
-      Assert.That(qs["client_id"], Is.EqualTo(HmrcOptionsMock.Object.Value.ClientId));
+      Assert.That(qs["client_id"], Is.EqualTo(clientIdInOptions));
       Assert.That(actualScopes, Is.EquivalentTo(scopes));
       Assert.That(qs["state"], Is.EqualTo(state));
       Assert.That(qs["redirect_uri"], Is.EqualTo(redirectUrl));
@@ -59,8 +60,8 @@ namespace TipsTrade.HMRC.Tests {
 
       var oAuth = GetOAuthService();
 
-      Action action = () => oAuth.GetAuthorizationEndpoint(state!, redirectUrl!, scopesArray!);
-      var ex = Assert.Throws(expectedExceptionType, action) as ArgumentException;
+      Func<Task> action = () => oAuth.GetAuthorizationEndpointAsync(state!, redirectUrl!, scopesArray!);
+      var ex = Assert.ThrowsAsync(expectedExceptionType, action) as ArgumentException;
 
       Assert.That(ex, Is.Not.Null);
       Assert.That(ex.ParamName, Is.EqualTo(expectedParamName));
@@ -69,7 +70,7 @@ namespace TipsTrade.HMRC.Tests {
     [Test]
     public async Task GetApplicationTokenThrows() {
       HmrcOptionsMock.Reset();
-      HmrcOptionsMock.Setup(x => x.Value).Returns(() => {
+      HmrcOptionsMock.Setup(x => x.GetOptionsAsync(It.IsAny<CancellationToken>())).ReturnsAsync(() => {
         var options = BuildDefaultOptions();
         options.ClientSecret = "bad-secret";
 

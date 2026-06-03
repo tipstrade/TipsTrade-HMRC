@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.CreateTestUser.Model;
 using TipsTrade.HMRC.Api.Model;
@@ -22,7 +22,7 @@ namespace TipsTrade.HMRC.Tests {
   public abstract class TestBase {
     protected Mock<IHmrcAccessTokenProvider> AccessTokenProvider;
 
-    protected Mock<IOptions<HmrcOptions>> HmrcOptionsMock;
+    protected Mock<IHmrcOptionsProvider> HmrcOptionsMock;
 
     protected IConfiguration Configuration { get; }
 
@@ -73,7 +73,7 @@ namespace TipsTrade.HMRC.Tests {
       AccessTokenProvider.Reset();
 
       HmrcOptionsMock.Reset();
-      HmrcOptionsMock.Setup(x => x.Value).Returns(BuildDefaultOptions);
+      HmrcOptionsMock.Setup(x=> x.GetOptionsAsync(It.IsAny<CancellationToken>())).ReturnsAsync(BuildDefaultOptions);
 
       CustomSetup();
     }
@@ -93,7 +93,7 @@ namespace TipsTrade.HMRC.Tests {
       AccessTokenProvider = new Mock<IHmrcAccessTokenProvider>();
 
       // Mock the HMRC options.
-      HmrcOptionsMock = new Mock<IOptions<HmrcOptions>>();
+      HmrcOptionsMock = new Mock<IHmrcOptionsProvider>();
       services.AddSingleton(HmrcOptionsMock.Object);
 
       services.AddSingleton<Api.ApplicationTokenCache>(); // Needed for the Application Tokens
@@ -249,7 +249,7 @@ namespace TipsTrade.HMRC.Tests {
     protected HmrcOAuthService GetOAuthService() => ServiceProvider.GetRequiredService<HmrcOAuthService>();
 
     /// <summary>Gets the <see cref="HmrcOptionsMock"/> value from the mock.</summary>
-    protected HmrcOptions GetOptions() => HmrcOptionsMock.Object.Value;
+    protected async Task<HmrcOptions> GetOptionsAsync() => await HmrcOptionsMock.Object.GetOptionsAsync(CancellationToken.None);
 
     private void LoadUsersFromJsonFile() {
       Users = LoadFromJsonFile<HmrcUsers>("hmrc-users.json");

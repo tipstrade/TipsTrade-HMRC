@@ -17,26 +17,49 @@ namespace TipsTrade.HMRC.Extensions {
   public static class ServiceCollectionExtensions {
     /// <summary>The name used to register the named <see cref="System.Net.Http.HttpClient"/> for HMRC API calls.</summary>
     public static readonly string HttpClientName = typeof(Api.HmrcServiceBase).FullName ?? typeof(Api.HmrcServiceBase).Name;
-
     /// <summary>
-    /// Registers HMRC API services with the <see cref="IServiceCollection"/> using the specified options provider, access token provider, and tenant provider.
+    /// Registers HMRC API services with the <see cref="IServiceCollection"/> using the specified access token provider and tenant provider.
     /// </summary>
-    /// <typeparam name="TAccessTokenProvider"></typeparam>
-    /// <typeparam name="TTenantProvider"></typeparam>
-    /// <param name="services"></param>
-    /// <param name="configureOptions"></param>
-    /// <returns></returns>
+    /// <typeparam name="TAccessTokenProvider">The type of the access token provider.</typeparam>
+    /// <typeparam name="TTenantProvider">The type of the tenant provider.</typeparam>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configureOptions">The action to configure HMRC options.</param>
+    /// <param name="configureClient">The action to configure the HTTP client.</param>
+    /// <returns>The updated service collection.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IServiceCollection AddHmrc<TAccessTokenProvider, TTenantProvider>(this IServiceCollection services, Action<HmrcOptions> configureOptions)
+    public static IServiceCollection AddHmrc<TAccessTokenProvider, TTenantProvider>(this IServiceCollection services, Action<HmrcOptions> configureOptions, Action<HttpClient>? configureClient = null)
       where TAccessTokenProvider : class, IHmrcAccessTokenProvider
       where TTenantProvider : class, IHmrcTenantProvider {
       if (services == null) {
         throw new ArgumentNullException(nameof(services));
       }
 
-      services.AddHmrcTenantProvider<TTenantProvider>();
+      return services
+        .AddHmrcTenantProvider<TTenantProvider>()
+        .AddHmrc<TAccessTokenProvider>(configureOptions, configureClient);
+    }
 
-      return services.AddHmrc<TAccessTokenProvider>(configureOptions);
+    /// <summary>
+    /// Registers HMRC API services with the <see cref="IServiceCollection"/> using the specified access token provider, tenant provider, and options provider.
+    /// </summary>
+    /// <typeparam name="TAccessTokenProvider">The type of the access token provider.</typeparam>
+    /// <typeparam name="TTenantProvider">The type of the tenant provider.</typeparam>
+    /// <typeparam name="TOptionsProvider">The type of the options provider.</typeparam>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configureClient">The action to configure the HTTP client.</param>
+    /// <returns>The updated service collection.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IServiceCollection AddHmrc<TAccessTokenProvider, TTenantProvider, TOptionsProvider>(this IServiceCollection services, Action<HttpClient>? configureClient = null)
+      where TAccessTokenProvider : class, IHmrcAccessTokenProvider
+      where TOptionsProvider : class, IHmrcOptionsProvider
+      where TTenantProvider : class, IHmrcTenantProvider {
+      if (services == null) {
+        throw new ArgumentNullException(nameof(services));
+      }
+
+      return services
+        .AddHmrcTenantProvider<TTenantProvider>()
+        .AddHmrc<TAccessTokenProvider, TOptionsProvider>(configureClient);
     }
 
     /// <summary>
@@ -52,14 +75,41 @@ namespace TipsTrade.HMRC.Extensions {
         where TAccessTokenProvider : class, IHmrcAccessTokenProvider {
       if (services == null) {
         throw new ArgumentNullException(nameof(services));
+      } else if (configureOptions == null) {
+        throw new ArgumentNullException(nameof(configureOptions));
       }
 
       services.Configure(configureOptions);
 
-      services.AddSingleton<Api.ApplicationTokenCache>();
-      services.AddSingleton<IHmrcAccessTokenProvider, TAccessTokenProvider>();
+      return services.AddHmrc<TAccessTokenProvider, HmrcOptionsProvider>(configureClient);
+    }
+
+    /// <summary>
+    /// Registers HMRC API services with the <see cref="IServiceCollection"/> using the specified access token provider and options provider.
+    /// </summary>
+    /// <typeparam name="TAccessTokenProvider">The type of the access token provider.</typeparam>
+    /// <typeparam name="TOptionsProvider">The type of the options provider.</typeparam>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configureClient">The action to configure the HTTP client.</param>
+    /// <returns>The updated service collection.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <remarks>All services apart from the <see cref="Api.ApplicationTokenCache"/> are registered as scoped.</remarks>
+    public static IServiceCollection AddHmrc<TAccessTokenProvider, TOptionsProvider>(this IServiceCollection services, Action<HttpClient>? configureClient = null)
+        where TAccessTokenProvider : class, IHmrcAccessTokenProvider
+        where TOptionsProvider : class, IHmrcOptionsProvider {
+      if (services == null) {
+        throw new ArgumentNullException(nameof(services));
+      }
 
       services.AddHmrcHttpClient(configureClient);
+
+      // ApplicationTokenCache is registered as a singleton to ensure that access tokens are cached across the entire application,
+      // allowing for efficient reuse of tokens and reducing the number of token requests made to the HMRC API.
+      services.AddSingleton<Api.ApplicationTokenCache>();
+
+      // Everything else is scoped to ensure that each HTTP request gets a new instance of the access token provider, options provider, and tenant provider,
+      services.AddHmrcAccessTokenProvider<TAccessTokenProvider>();
+      services.AddHmrcOptionsProvider<TOptionsProvider>();
 
       services.AddHmrcOAuthService();
       services.AddBusinessDetailsMtdService();
@@ -77,6 +127,21 @@ namespace TipsTrade.HMRC.Extensions {
     }
 
     /// <summary>
+    /// Registers a custom implementation of <see cref="IHmrcAccessTokenProvider"/> with the <see cref="IServiceCollection"/> as a scoped service.
+    /// </summary>
+    /// <typeparam name="T">The type of the access token provider.</typeparam>
+    /// <param name="services">The service collection to configure.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance so calls can be chained.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IServiceCollection AddHmrcAccessTokenProvider<T>(this IServiceCollection services) where T : class, IHmrcAccessTokenProvider {
+      if (services == null) {
+        throw new ArgumentNullException(nameof(services));
+      }
+
+      return services.AddScoped<IHmrcAccessTokenProvider, T>();
+    }
+
+    /// <summary>
     /// Registers a named <see cref="System.Net.Http.HttpClient"/> with the <see cref="IServiceCollection"/> for use with HMRC API calls, using the specified configuration action.
     /// </summary>
     /// <param name="services">The service collection to configure.</param>
@@ -91,6 +156,23 @@ namespace TipsTrade.HMRC.Extensions {
       configureClient ??= (_) => { };
 
       services.AddHttpClient(HttpClientName, configureClient);
+
+      return services;
+    }
+
+    /// <summary>
+    /// Registers a custom implementation of <see cref="IHmrcOptionsProvider"/> with the <see cref="IServiceCollection"/> as a scoped service.
+    /// </summary>
+    /// <typeparam name="T">The type of the options provider.</typeparam>
+    /// <param name="services">The service collection to configure.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance so calls can be chained.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IServiceCollection AddHmrcOptionsProvider<T>(this IServiceCollection services) where T : class, IHmrcOptionsProvider {
+      if (services == null) {
+        throw new ArgumentNullException(nameof(services));
+      }
+
+      services.AddScoped<IHmrcOptionsProvider, T>();
 
       return services;
     }

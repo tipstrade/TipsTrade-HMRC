@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -11,6 +10,7 @@ using TipsTrade.HMRC.Api.OAuth;
 namespace TipsTrade.HMRC.Api.CreateTestUser {
   /// <summary>Service that exposes Create Test User functions, supporting dependency injection.</summary>
   public class CreateTestUserService : HmrcServiceBase {
+
     /// <inheritdoc/>
     public override string Description => "An API to create test users for testing in our sandbox with user-restricted endpoints.";
 
@@ -27,7 +27,8 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     public override string Version => "1.0";
 
     /// <summary>Initialises a new instance using dependency-injected services.</summary>
-    public CreateTestUserService(IOptions<HmrcOptions> options, IHttpClientFactory httpClientFactory, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(options, httpClientFactory, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) { }
+    public CreateTestUserService(IHttpClientFactory httpClientFactory, IHmrcOptionsProvider hmrcOptionsProvider, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService, IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null) : base(httpClientFactory, hmrcOptionsProvider, accessTokenProvider, applicationTokenCache, oauthService, tenantProvider, logger) {
+    }
 
     /// <summary>Executes a create test user request synchronously.</summary>
     [Obsolete("Synchronous execution is not recommended. Use CreateUserAsync instead.")]

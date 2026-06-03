@@ -10,28 +10,25 @@ using TipsTrade.ApiClient.Core.Logging;
 using TipsTrade.ApiClient.Core.Tenant;
 using TipsTrade.HMRC.Api.Model;
 using TipsTrade.HMRC.Api.OAuth;
+using TipsTrade.HMRC.Extensions;
 using TipsTrade.HMRC.FraudPrevention;
 
 namespace TipsTrade.HMRC.Api {
   /// <summary>Base class for all HMRC API services, providing shared configuration and token management.</summary>
-  public abstract class HmrcServiceBase : IHmrcRestClient, IWithLogger {
+  public abstract class HmrcServiceBase : IWithLogger {
     #region Fields
     private static readonly AsyncKeyedLocker<string> _tokenLocks = new AsyncKeyedLocker<string>();
-    private readonly HmrcOptions _options;
-    private readonly Lazy<RestClient> _restClient;
     #endregion
 
     #region Lifecycle
     /// <summary>Initialises a new instance of <see cref="HmrcServiceBase"/> using an <see cref="IOptions{HmrcOptions}"/> instance.</summary>
     protected HmrcServiceBase(
-      IOptions<HmrcOptions> options,
       IHttpClientFactory httpClientFactory,
-      IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService,
+      IHmrcOptionsProvider hmrcOptionsProvider, IHmrcAccessTokenProvider accessTokenProvider, ApplicationTokenCache applicationTokenCache, HmrcOAuthService oauthService,
       IHmrcTenantProvider? tenantProvider = null,
       ILogger? logger = null
       ) {
-      _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-      _restClient = this.BuildRestClient(httpClientFactory);
+      Options = hmrcOptionsProvider ?? throw new ArgumentNullException(nameof(hmrcOptionsProvider));
 
       AccessTokenProvider = accessTokenProvider ?? throw new ArgumentNullException(nameof(accessTokenProvider));
       ApplicationTokenCache = applicationTokenCache ?? throw new ArgumentNullException(nameof(applicationTokenCache));
@@ -40,6 +37,8 @@ namespace TipsTrade.HMRC.Api {
       // Tenant provider is optional and may not be needed for all services, so if it's not provided we use a default implementation that returns null
       TenantProvider = tenantProvider;
       Logger = logger;
+
+      RestClient = new Lazy<RestClient>(httpClientFactory.CreateHmrcRestClient);
     }
     #endregion
 
@@ -58,24 +57,20 @@ namespace TipsTrade.HMRC.Api {
     /// <inheritdoc/>
     public ILogger? Logger { get; }
 
+    private IHmrcOptionsProvider Options { get; }
+
     /// <summary>
     /// An <see cref="HmrcOAuthService"/> instance used to perform OAuth 2.0 token refresh operations when user access tokens expire, as well as to generate authorization URLs for user consent flows.
     /// </summary>
     private HmrcOAuthService OauthService { get; }
+
+    private Lazy<RestClient> RestClient { get; }
 
     /// <summary>
     /// An optional provider for resolving the tenant context in multi-tenant applications.
     /// If not supplied, a default implementation is used that returns a single default tenant ID, effectively treating the application as single-tenant.
     /// </summary>
     private IHmrcTenantProvider? TenantProvider { get; }
-    #endregion
-
-    #region IHmrcRestClient implementation
-    /// <inheritdoc/>
-    HmrcOptions IHmrcRestClient.Options => _options;
-
-    /// <inheritdoc/>
-    Lazy<RestClient> IHmrcRestClient.RestClient => _restClient;
     #endregion
 
     #region IHmrcService implementation
@@ -118,8 +113,13 @@ namespace TipsTrade.HMRC.Api {
     /// Thrown if required configuration is missing for the request, such as credentials for authorization or fraud prevention headers.
     /// </exception>
     internal async Task<RestRequest> CreateRequestAsync(IApiRequest request, IFraudPrevention? fraudPreventionConfig, CancellationToken cancellationToken) {
-      var options = this.GetOptions();
-      var restRequest = new RestRequest($"{Location}/{request.Location}", request.Method);
+      var options = await Options.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
+
+      // Not ideal, but as we control the Locations.... we can be confident this will produce a valid URI as long as the BaseUrl is valid
+      var uri = new Uri(new Uri(options.BaseUrl), $"{Location}/{request.Location}");
+
+      var restRequest = new RestRequest(uri, request.Method);
+
       restRequest.AddHeader("Accept", GetAcceptHeader(request.AcceptType));
 
       if (options.IsSandbox && request is IGovTestScenario govTest) {
@@ -190,7 +190,7 @@ namespace TipsTrade.HMRC.Api {
     /// <returns>An instance of <typeparamref name="T"/> representing the API response.</returns>
     [Obsolete("Use ExecuteRequestAsync instead. Synchronous methods may cause deadlocks.")]
     internal T ExecuteRequest<T>(RestRequest request) where T : class, new() {
-      var response = this.GetRestClient().Execute<T>(request);
+      var response = RestClient.Value.Execute<T>(request);
 
       return response.HandleResponse();
     }
@@ -218,7 +218,7 @@ namespace TipsTrade.HMRC.Api {
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the async operation.</param>
     /// <returns>A task that resolves to an instance of <typeparamref name="T"/> representing the API response.</returns>
     internal async Task<T> ExecuteRequestAsync<T>(RestRequest request, CancellationToken cancellationToken) where T : class, new() {
-      var response = await this.GetRestClient().ExecuteAsync<T>(request, cancellationToken).ConfigureAwait(false);
+      var response = await RestClient.Value.ExecuteAsync<T>(request, cancellationToken).ConfigureAwait(false);
 
       return response.HandleResponse();
     }
@@ -270,7 +270,7 @@ namespace TipsTrade.HMRC.Api {
     /// The token is cached in memory and reused until it expires.
     /// </summary>
     internal async Task<string> GetApplicationTokenAsync(CancellationToken cancellationToken) {
-      var options = this.GetOptions();
+      var options = await Options.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
       var clientId = options.ClientId ?? throw new InvalidOperationException($"{nameof(options.ClientId)} must be configured to obtain an application token.");
       var clientSecret = options.ClientSecret ?? throw new InvalidOperationException($"{nameof(options.ClientSecret)} must be configured to obtain an application token.");
 
@@ -287,12 +287,13 @@ namespace TipsTrade.HMRC.Api {
           return cached.AccessToken;
         }
 
-        var request = new RestRequest("oauth/token", Method.Post);
+        var uri = new Uri(new Uri(options.BaseUrl), "oauth/token");
+        var request = new RestRequest(uri, Method.Post);
         request.AddParameter("client_secret", clientSecret);
         request.AddParameter("client_id", clientId);
         request.AddParameter("grant_type", "client_credentials");
 
-        var response = await this.GetRestClient().ExecuteAsync<TokenResponse>(request, cancellationToken).ConfigureAwait(false);
+        var response = await RestClient.Value.ExecuteAsync<TokenResponse>(request, cancellationToken).ConfigureAwait(false);
 
         var oauthError = response.Content != null ? ErrorResponse.FromOAuth2Error(response.Content) : null;
         if (oauthError != null) {

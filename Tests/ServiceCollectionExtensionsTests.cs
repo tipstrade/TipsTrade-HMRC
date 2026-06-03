@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -34,7 +33,7 @@ namespace TipsTrade.HMRC.Tests {
     }
 
     [Test]
-    public void AddHmrc_CallsConfigureOptions() {
+    public async Task AddHmrc_CallsConfigureOptions() {
       ConfigureOptionsMock
         .Setup(c => c(It.IsAny<HmrcOptions>()))
         .Callback<HmrcOptions>(options => {
@@ -44,9 +43,10 @@ namespace TipsTrade.HMRC.Tests {
       Services.AddHmrc<MockedAccessTokenProvider>(ConfigureOptionsMock.Object);
 
       var serviceProvider = Services.BuildServiceProvider();
-      var options = serviceProvider.GetRequiredService<IOptions<HmrcOptions>>();
+      var optionsProvider = serviceProvider.GetRequiredService<IHmrcOptionsProvider>();
+      var options = await optionsProvider.GetOptionsAsync();
 
-      Assert.That(options.Value.ClientId, Is.EqualTo("configured_client_id"));
+      Assert.That(options.ClientId, Is.EqualTo("configured_client_id"));
       ConfigureOptionsMock.Verify(c => c(It.IsAny<HmrcOptions>()), Times.Once);
     }
 
