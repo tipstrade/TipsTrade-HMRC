@@ -17,8 +17,8 @@ namespace TipsTrade.HMRC.Api {
   public abstract class HmrcServiceBase : IHmrcRestClient, IWithLogger {
     #region Fields
     private static readonly AsyncKeyedLocker<string> _tokenLocks = new AsyncKeyedLocker<string>();
-    private HmrcOptions _options;
-    private Lazy<RestClient> _restClient;
+    private readonly HmrcOptions _options;
+    private readonly Lazy<RestClient> _restClient;
     #endregion
 
     #region Lifecycle

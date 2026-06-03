@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
@@ -9,7 +10,10 @@ using System.Threading.Tasks;
 using System.Web;
 using TipsTrade.HMRC.Api;
 using TipsTrade.HMRC.Api.HelloWorld;
+using TipsTrade.HMRC.Api.OAuth;
+using TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd;
 using TipsTrade.HMRC.Api.Vat;
+using TipsTrade.HMRC.Tests.Extensions;
 
 namespace TipsTrade.HMRC.Tests {
   public class AuthTests : TestBase {
@@ -83,6 +87,76 @@ namespace TipsTrade.HMRC.Tests {
         Assert.That(ex.Message, Is.Not.Null);
         Assert.That(ex.Status, Is.EqualTo(System.Net.HttpStatusCode.Unauthorized));
       }
+    }
+
+    [Test]
+    public async Task CheckUserAuthenticationStateAsync_ExpiredToken() {
+      AccessTokenProvider.Reset();
+      AccessTokenProvider.Setup(m => m.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Api.Model.TokenResponse() {
+        AccessToken = "expired-token",
+        RefreshToken = "expired-refresh-token",
+        ExpiresIn = 3600,
+        ExpiresTimestamp = DateTime.UtcNow.AddHours(-1), // Expired an hour ago
+        Scope = "hello read:vat write:vat",
+        TokenType = "Bearer"
+      });
+
+      var svc = ServiceProvider.GetRequiredService<HmrcOAuthService>();
+      var (hasToken, isValid, expiresIn) = await svc.CheckUserAuthenticationStateAsync();
+
+      Assert.That(hasToken, Is.True);
+      Assert.That(isValid, Is.False);
+      Assert.That(expiresIn, Is.EqualTo(TimeSpan.Zero));
+    }
+
+    [Test]
+    public async Task CheckUserAuthenticationStateAsync_NoToken() {
+      AccessTokenProvider.Reset();
+      AccessTokenProvider.Setup(m => m.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync((Api.Model.TokenResponse?)null);
+
+      var svc = ServiceProvider.GetRequiredService<HmrcOAuthService>();
+      var (hasToken, isValid, expiresIn) = await svc.CheckUserAuthenticationStateAsync();
+
+      Assert.That(hasToken, Is.False);
+      Assert.That(isValid, Is.False);
+      Assert.That(expiresIn, Is.EqualTo(TimeSpan.Zero));
+      AccessTokenProvider.Verify(m => m.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Test]
+    public async Task CheckUserAuthenticationStateAsync_Throws() {
+      AccessTokenProvider.Reset();
+      AccessTokenProvider.Setup(m => m.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Test exception"));
+
+      var svc = ServiceProvider.GetRequiredService<HmrcOAuthService>();
+      Func<Task> task = () => svc.CheckUserAuthenticationStateAsync();
+
+      var ex = Assert.ThrowsAsync<ApiException>(task);
+      var containsMessage = ex.ExceptionContains("Test exception");
+
+      Assert.That(containsMessage, Is.True);
+      AccessTokenProvider.Verify(m => m.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Test]
+    public async Task CheckUserAuthenticationStateAsync_ValidToken() {
+      AccessTokenProvider.Reset();
+      AccessTokenProvider.Setup(m => m.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Api.Model.TokenResponse() {
+        AccessToken = "test-token",
+        RefreshToken = "test-refresh-token",
+        ExpiresIn = 3600,
+        ExpiresTimestamp = DateTime.UtcNow.AddHours(1),
+        Scope = "hello read:vat write:vat",
+        TokenType = "Bearer"
+      });
+
+      var svc = ServiceProvider.GetRequiredService<HmrcOAuthService>();
+      var (hasToken, isValid, expiresIn) = await svc.CheckUserAuthenticationStateAsync();
+
+      Assert.That(hasToken, Is.True);
+      Assert.That(isValid, Is.True);
+      Assert.That(expiresIn, Is.InRange(TimeSpan.FromMinutes(50), TimeSpan.FromMinutes(70)));
+      AccessTokenProvider.Verify(m => m.GetCredentialAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Test]

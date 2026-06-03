@@ -26,7 +26,7 @@ namespace TipsTrade.HMRC.Tests {
 
     protected IConfiguration Configuration { get; }
 
-    private IServiceProvider ServiceProvider { get; set; }
+    protected IServiceProvider ServiceProvider { get; set; }
 
     #region State properties
     #endregion

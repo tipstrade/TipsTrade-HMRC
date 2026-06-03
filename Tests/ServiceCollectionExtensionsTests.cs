@@ -41,7 +41,7 @@ namespace TipsTrade.HMRC.Tests {
           options.ClientId = "configured_client_id";
         });
 
-      Services.AddHmrc<DummyAccessTokenProvider>(ConfigureOptionsMock.Object);
+      Services.AddHmrc<MockedAccessTokenProvider>(ConfigureOptionsMock.Object);
 
       var serviceProvider = Services.BuildServiceProvider();
       var options = serviceProvider.GetRequiredService<IOptions<HmrcOptions>>();
@@ -67,19 +67,17 @@ namespace TipsTrade.HMRC.Tests {
       ConfigureHttpClientMock.Verify(c => c(It.IsAny<HttpClient>()), Times.Once);
     }
 
-    public class DummyAccessTokenProvider : IHmrcAccessTokenProvider {
-      public Task<TokenResponse> GetCredentialAsync(string key, CancellationToken cancellationToken = default) {
-        return Task.FromResult(new TokenResponse {
-          AccessToken = "dummy_access",
-          ExpiresIn = 3600,
-          RefreshToken = "dummy_refresh",
-          Scope = "dummy_scope",
-          TokenType = "Bearer"
-        });
+    public class MockedAccessTokenProvider : IHmrcAccessTokenProvider {
+      public Mock<Func<string, CancellationToken, Task<TokenResponse?>>> GetCredentialAsyncMock { get; } = new Mock<Func<string, CancellationToken, Task<TokenResponse?>>>();
+
+      public Mock<Func<string, TokenResponse, CancellationToken, Task>> SetCredentialAsyncMock { get; } = new Mock<Func<string, TokenResponse, CancellationToken, Task>>();
+
+      public Task<TokenResponse?> GetCredentialAsync(string key, CancellationToken cancellationToken = default) {
+        return GetCredentialAsyncMock.Object(key, cancellationToken);
       }
 
       public Task SetCredentialAsync(string key, TokenResponse credential, CancellationToken cancellationToken = default) {
-        return Task.CompletedTask;
+        return SetCredentialAsyncMock.Object(key, credential, cancellationToken);
       }
     }
   }

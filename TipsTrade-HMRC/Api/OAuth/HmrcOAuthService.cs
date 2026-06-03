@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RestSharp;
 using System;
@@ -7,29 +8,46 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using TipsTrade.ApiClient.Core.Credential;
+using TipsTrade.ApiClient.Core.Logging;
+using TipsTrade.ApiClient.Core.Tenant;
 using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api.OAuth {
   /// <summary>Provides OAuth 2.0 authorisation flows for the HMRC API.</summary>
-  public class HmrcOAuthService : IHmrcRestClient {
-    private HmrcOptions _options;
-    private Lazy<RestClient> _restclient;
+  public class HmrcOAuthService : IHmrcRestClient, IWithLogger {
     #region Fields
+    private readonly HmrcOptions _options;
+    private readonly Lazy<RestClient> _restclient;
     #endregion
 
     #region Lifecycle
     /// <summary>Initialises a new instance of <see cref="HmrcOAuthService"/>.</summary>
-    public HmrcOAuthService(IHttpClientFactory httpClientFactory, IOptions<HmrcOptions> options) {
+    public HmrcOAuthService(IHttpClientFactory httpClientFactory, IOptions<HmrcOptions> options,
+      IHmrcAccessTokenProvider accessTokenProvider,
+      IHmrcTenantProvider? tenantProvider = null, ILogger? logger = null
+      ) {
+      AccessTokenProvider = accessTokenProvider ?? throw new ArgumentNullException(nameof(accessTokenProvider));
+
       _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
       _restclient = this.BuildRestClient(httpClientFactory);
-    }
 
+      TenantProvider = tenantProvider;
+      Logger = logger;
+    }
     #endregion
 
     #region Properties
-    Lazy<RestClient> IHmrcRestClient.RestClient => _restclient;
+    private IHmrcAccessTokenProvider AccessTokenProvider { get; }
 
     HmrcOptions IHmrcRestClient.Options => _options;
+
+    Lazy<RestClient> IHmrcRestClient.RestClient => _restclient;
+
+    private IHmrcTenantProvider? TenantProvider { get; }
+
+    /// <inheritdoc/>
+    public ILogger? Logger { get; }
     #endregion
 
     /// <summary>Gets the Uri for the Authorization endpoint.</summary>
@@ -124,6 +142,38 @@ namespace TipsTrade.HMRC.Api.OAuth {
       response.ThrowOnError();
 
       return response.Data ?? throw new ApiException("Failed to obtain user tokens.");
+    }
+
+    /// <summary>
+    /// Checks the current authentication state of the user by attempting to retrieve an access token from the <see cref="IHmrcAccessTokenProvider"/>.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A tuple indicating whether the user has a token, whether it is valid, and the time remaining until it expires.</returns>
+    public async Task<(bool HasToken, bool IsValid, TimeSpan ExpiresIn)> CheckUserAuthenticationStateAsync(CancellationToken cancellationToken = default) {
+      string? tenantId = null;
+
+      try {
+        // This wraps the tenant retrieval in a try/catch to convert any exceptions into ApiExceptions with additional context for easier debugging.
+        tenantId = await TenantProvider.GetTenantOrThrowAsync(cancellationToken).ConfigureAwait(false);
+      } catch (InvalidOperationException ex) {
+        throw new ApiException("No tenant could be identified for the current context.", ex);
+      }
+
+      try {
+        // This wraps the token retrieval in a try/catch to convert any exceptions into ApiExceptions with additional context about the tenant for easier debugging.
+        var token = await AccessTokenProvider.GetCredentialOrThrowAsync(tenantId, cancellationToken).ConfigureAwait (false);
+
+        if (token == null) {
+          return (false, false, TimeSpan.Zero);
+        } else {
+          var expiresIn = token.ExpiresTimestamp - DateTime.UtcNow;
+          return (true, expiresIn > TimeSpan.Zero, expiresIn > TimeSpan.Zero ? expiresIn : TimeSpan.Zero);
+        }
+      } catch (InvalidOperationException ex) {
+        throw new ApiException("Failed to obtain access token.", ex) {
+          Data = { { "TenantId", tenantId } }
+        };
+      }
     }
 
     /// <summary>
