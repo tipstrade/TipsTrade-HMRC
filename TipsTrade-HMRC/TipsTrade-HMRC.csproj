@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net8;net481</TargetFrameworks>
 		<RootNamespace>TipsTrade.HMRC</RootNamespace>
-		<Version>8.0.0</Version>
+		<Version>8.0.0-beta1</Version>
 		<Authors>John Bayly</Authors>
 		<Company>TipsTrade Ltd.</Company>
 		<Description>A strongly typed .NET client for interacting with the HMRC APIs</Description>
@@ -31,7 +31,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="Tests"/>
+		<InternalsVisibleTo Include="Tests" />
 	</ItemGroup>
 
 	<ItemGroup>
