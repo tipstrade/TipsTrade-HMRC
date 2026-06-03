@@ -193,6 +193,10 @@ namespace TipsTrade.HMRC.Tests {
         var dictionary = new Dictionary<string, string>();
 
         switch (headers.ConnectionMethod) {
+          case ConnectionMethod.MOBILE_APP_VIA_SERVER:
+          case ConnectionMethod.MOBILE_APP_DIRECT:
+            dictionary.Add("my-app", "bob");
+            break;
           case ConnectionMethod.WEB_APP_VIA_SERVER:
             dictionary.Add("account", $"{Guid.NewGuid()}@example.com");
             break;

@@ -33,7 +33,7 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     [Obsolete("Synchronous execution is not recommended. Use CreateUserAsync instead.")]
     public TResult CreateUser<TResult>(ICreateTestUserRequest<TResult> request) where TResult : UserResultBase, new() {
       if (request is IApiRequest apiRequest) {
-        return ExecuteRequest<TResult>(apiRequest);
+        return ExecuteRequest<TResult>(apiRequest, null);
       }
 
       throw new ArgumentException($"The request must implement IApiRequest to be executed. Request type: {request.GetType().FullName}", nameof(request));
@@ -42,7 +42,7 @@ namespace TipsTrade.HMRC.Api.CreateTestUser {
     /// <summary>Executes a create test user request asynchronously.</summary>
     public async Task<TResult> CreateUserAsync<TResult>(ICreateTestUserRequest<TResult> request, CancellationToken cancellationToken = default) where TResult : UserResultBase, new() {
       if (request is IApiRequest apiRequest) {
-        return await ExecuteRequestAsync<TResult>(apiRequest, cancellationToken).ConfigureAwait(false);
+        return await ExecuteRequestAsync<TResult>(apiRequest, null, cancellationToken).ConfigureAwait(false);
       }
 
       throw new ArgumentException($"The request must implement IApiRequest to be executed. Request type: {request.GetType().FullName}", nameof(request));

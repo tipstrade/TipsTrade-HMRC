@@ -31,28 +31,40 @@ namespace TipsTrade.HMRC.Api.TestFraudPrevention {
 
     /// <summary>Submits feedback about the fraud prevention headers sent with an API request.</summary>
     [Obsolete("Use GetFeedbackAsync instead. Synchronous methods may cause deadlocks.")]
-    public FeedbackResult GetFeedback(string api, ConnectionMethod connectionMethod) {
-      return ExecuteRequest<FeedbackResult>(new FeedbackRequest { Api = api, ConnectionMethod = connectionMethod });
+    public FeedbackResult GetFeedback(string api, ConnectionMethod connectionMethod, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<FeedbackResult>(new FeedbackRequest { Api = api, ConnectionMethod = connectionMethod }, fraudPrevention);
     }
 
     /// <summary>Asynchronously submits feedback about the fraud prevention headers sent with an API request.</summary>
-    public async Task<FeedbackResult> GetFeedbackAsync(string api, ConnectionMethod connectionMethod, CancellationToken cancellationToken = default) {
+    public async Task<FeedbackResult> GetFeedbackAsync(string api, ConnectionMethod connectionMethod, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
       return await ExecuteRequestAsync<FeedbackResult>(
         new FeedbackRequest { Api = api, ConnectionMethod = connectionMethod },
+        fraudPrevention,
         cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Asynchronously submits feedback about the fraud prevention headers sent with an API request.</summary>
+    public Task<FeedbackResult> GetFeedbackAsync(string api, ConnectionMethod connectionMethod, CancellationToken cancellationToken = default) {
+      return GetFeedbackAsync(api, connectionMethod, null, cancellationToken);
     }
 
     /// <summary>Validates fraud prevention headers submitted with this HTTP request.</summary>
     [Obsolete("Use ValidateAsync instead. Synchronous methods may cause deadlocks.")]
-    public ValidateResult Validate() {
-      return ExecuteRequest<ValidateResult>(new ValidateRequest());
+    public ValidateResult Validate(IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<ValidateResult>(new ValidateRequest(), fraudPrevention);
     }
 
     /// <summary>Validates fraud prevention headers submitted with this HTTP request asynchronously.</summary>
-    public async Task<ValidateResult> ValidateAsync(CancellationToken cancellationToken = default) {
+    public async Task<ValidateResult> ValidateAsync(IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
       return await ExecuteRequestAsync<ValidateResult>(
         new ValidateRequest(),
+        fraudPrevention,
         cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Validates fraud prevention headers submitted with this HTTP request asynchronously.</summary>
+    public Task<ValidateResult> ValidateAsync(CancellationToken cancellationToken = default) {
+      return ValidateAsync(null, cancellationToken);
     }
   }
 }

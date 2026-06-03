@@ -4,6 +4,10 @@ using TipsTrade.HMRC.Api.Model;
 
 namespace TipsTrade.HMRC.Api {
   /// <summary>Represents errors that are thrown by the HMRC API.</summary>
+  /// <remarks>
+  /// The Data property of the exception may contain additional information about the error, such as the API error code and message, and
+  /// HTTP request and response details. As such it should be treated as sensitive and not logged or exposed to end users.
+  /// </remarks>
   public class ApiException : Exception {
     /// <summary>The API error that caused to exception to be thrown.</summary>
     public ErrorResponse? ApiError { get; set; }

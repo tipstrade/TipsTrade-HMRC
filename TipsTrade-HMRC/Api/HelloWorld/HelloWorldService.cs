@@ -32,16 +32,12 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
     /// <summary>Says "Hello Application"</summary>
     [Obsolete("This method is deprecated and may be removed in a future version. Please use SayHelloApplicationAsync instead.")]
     public string? SayHelloApplication() {
-      return ExecuteRequest<MessageResponse>(
-        new HelloRequest("application", Authorization.Application)
-        ).Message;
+      return ExecuteRequest<MessageResponse>(new HelloRequest("application", Authorization.Application), null).Message;
     }
 
     /// <summary>Says "Hello Application" asynchronously.</summary>
     public async Task<string?> SayHelloApplicationAsync(CancellationToken cancellationToken = default) {
-      var response = await ExecuteRequestAsync<MessageResponse>(
-        new HelloRequest("application", Authorization.Application),
-        cancellationToken).ConfigureAwait(false);
+      var response = await ExecuteRequestAsync<MessageResponse>(new HelloRequest("application", Authorization.Application), null, cancellationToken).ConfigureAwait(false);
 
       return response.Message;
     }
@@ -49,17 +45,12 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
     /// <summary>Says "Hello User"</summary>
     [Obsolete("This method is deprecated and may be removed in a future version. Please use SayHelloUserAsync instead.")]
     public string? SayHelloUser() {
-      return ExecuteRequest<MessageResponse>(
-        new HelloRequest("user", Authorization.User)
-        ).Message;
+      return ExecuteRequest<MessageResponse>(new HelloRequest("user", Authorization.User), null).Message;
     }
 
     /// <summary>Says "Hello User" asynchronously.</summary>
     public async Task<string?> SayHelloUserAsync(CancellationToken cancellationToken = default) {
-      var response = await ExecuteRequestAsync<MessageResponse>(
-        new HelloRequest("user", Authorization.User),
-        cancellationToken
-        ).ConfigureAwait(false);
+      var response = await ExecuteRequestAsync<MessageResponse>(new HelloRequest("user", Authorization.User), null, cancellationToken).ConfigureAwait(false);
 
       return response.Message;
     }
@@ -67,17 +58,12 @@ namespace TipsTrade.HMRC.Api.HelloWorld {
     /// <summary>Says "Hello World"</summary>
     [Obsolete("This method is deprecated and may be removed in a future version. Please use SayHelloUser or SayHelloApplication instead.")]
     public string? SayHelloWorld() {
-      return ExecuteRequest<MessageResponse>(
-        new HelloRequest("world", Authorization.Open)
-        ).Message;
+      return ExecuteRequest<MessageResponse>(new HelloRequest("world", Authorization.Open), null).Message;
     }
 
     /// <summary>Says "Hello World" asynchronously.</summary>
     public async Task<string?> SayHelloWorldAsync(CancellationToken cancellationToken = default) {
-      var response = await ExecuteRequestAsync<MessageResponse>(
-        new HelloRequest("world", Authorization.Open),
-        cancellationToken
-      ).ConfigureAwait(false);
+      var response = await ExecuteRequestAsync<MessageResponse>(new HelloRequest("world", Authorization.Open), null, cancellationToken).ConfigureAwait(false);
 
       return response.Message;
     }

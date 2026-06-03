@@ -93,10 +93,11 @@ namespace TipsTrade.HMRC.Tests {
         Assert.That(headerKeys.Any(string.IsNullOrEmpty), Is.False, "Header keys contain null or empty strings.");
       }
 
-      // Inject the headers in the HmrcOptionsMock
+      // Do not inject the fraud prevention headers into the HmrcOptions for this test, as we want to ensure that the ValidateAsync method can
+      // successfully generate the necessary headers from the IFraudPrevention instance without relying on any pre-populated configuration.
       HmrcOptionsMock.Reset();
       HmrcOptionsMock.Setup(x => x.Value).Returns(new HmrcOptions {
-        FraudPreventionConfig = value,
+        FraudPreventionConfig = null,
         ClientId = ClientId,
         ClientSecret = ClientSecret,
         IsSandbox = IsSandbox
@@ -106,7 +107,7 @@ namespace TipsTrade.HMRC.Tests {
       TestContext.Out.WriteLine(JsonConvert.SerializeObject(value.GetHeaders().ToDictionary(x => x.Name, x => x.Value), Formatting.Indented));
 
       var svc = GetService<TestFraudPreventionService>();
-      var response = await svc.ValidateAsync();
+      var response = await svc.ValidateAsync(value);
 
       TestContext.Out.WriteLine();
       TestContext.Out.WriteLine("Response from ValidateAsync:");

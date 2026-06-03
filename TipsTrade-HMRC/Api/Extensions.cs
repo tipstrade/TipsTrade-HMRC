@@ -132,7 +132,11 @@ namespace TipsTrade.HMRC.Api {
 
       throw new ApiException(error?.Message ?? response?.StatusDescription ?? "", response?.ErrorException) {
         Status = response?.StatusCode,
-        ApiError = error
+        ApiError = error,
+        Data = {
+          { "Request", response?.Request },
+          { "Response", response }
+        }
       };
     }
 

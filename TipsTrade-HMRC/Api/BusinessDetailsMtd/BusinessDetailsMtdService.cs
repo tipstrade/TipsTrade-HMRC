@@ -31,35 +31,50 @@ namespace TipsTrade.HMRC.Api.BusinessDetailsMtd {
 
     /// <summary>Create or amend the type of quarterly reporting period used for a business for a specific tax year.</summary>
     [Obsolete("This method is deprecated, use CreateOrAmendQuarterlyPeriodTypeAsync instead.")]
-    public AmendQuarterlyPeriodTypeResponse CreateOrAmendQuarterlyPeriodType(AmendQuarterlyPeriodTypeRequest request) {
-      return ExecuteRequest<AmendQuarterlyPeriodTypeResponse>(request);
+    public AmendQuarterlyPeriodTypeResponse CreateOrAmendQuarterlyPeriodType(AmendQuarterlyPeriodTypeRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<AmendQuarterlyPeriodTypeResponse>(request, fraudPrevention);
     }
 
     /// <summary>Asynchronously create or amend the type of quarterly reporting period used for a business for a specific tax year.</summary>
-    public async Task<AmendQuarterlyPeriodTypeResponse> CreateOrAmendQuarterlyPeriodTypeAsync(AmendQuarterlyPeriodTypeRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<AmendQuarterlyPeriodTypeResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<AmendQuarterlyPeriodTypeResponse> CreateOrAmendQuarterlyPeriodTypeAsync(AmendQuarterlyPeriodTypeRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<AmendQuarterlyPeriodTypeResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Asynchronously create or amend the type of quarterly reporting period used for a business for a specific tax year.</summary>
+    public Task<AmendQuarterlyPeriodTypeResponse> CreateOrAmendQuarterlyPeriodTypeAsync(AmendQuarterlyPeriodTypeRequest request, CancellationToken cancellationToken = default) {
+      return CreateOrAmendQuarterlyPeriodTypeAsync(request, null, cancellationToken);
     }
 
     /// <summary>Gets additional information for a specific business income source.</summary>
     [Obsolete("This method is deprecated, use GetBusinessDetailsAsync instead.")]
-    public GetBusinessDetailsResponse GetBusinessDetails(GetBusinessDetailsRequest request) {
-      return ExecuteRequest<GetBusinessDetailsResponse>(request);
+    public GetBusinessDetailsResponse GetBusinessDetails(GetBusinessDetailsRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<GetBusinessDetailsResponse>(request, fraudPrevention);
     }
 
     /// <summary>Asynchronously gets additional information for a specific business income source.</summary>
-    public async Task<GetBusinessDetailsResponse> GetBusinessDetailsAsync(GetBusinessDetailsRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<GetBusinessDetailsResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<GetBusinessDetailsResponse> GetBusinessDetailsAsync(GetBusinessDetailsRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<GetBusinessDetailsResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Asynchronously gets additional information for a specific business income source.</summary>
+    public Task<GetBusinessDetailsResponse> GetBusinessDetailsAsync(GetBusinessDetailsRequest request, CancellationToken cancellationToken = default) {
+      return GetBusinessDetailsAsync(request, null, cancellationToken);
     }
 
     /// <summary>Gets all details of a user's business income sources.</summary>
     [Obsolete("This method is deprecated, use ListBusinessDetailsAsync instead.")]
-    public ListBusinessDetailsResponse ListBusinessDetails(ListBusinessDetailsRequest request) {
-      return ExecuteRequest<ListBusinessDetailsResponse>(request);
+    public ListBusinessDetailsResponse ListBusinessDetails(ListBusinessDetailsRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<ListBusinessDetailsResponse>(request, fraudPrevention);
     }
 
     /// <summary>Asynchronously gets all details of a user's business income sources.</summary>
-    public async Task<ListBusinessDetailsResponse> ListBusinessDetailsAsync(ListBusinessDetailsRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<ListBusinessDetailsResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<ListBusinessDetailsResponse> ListBusinessDetailsAsync(ListBusinessDetailsRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<ListBusinessDetailsResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Asynchronously gets all details of a user's business income sources.</summary>
+    public Task<ListBusinessDetailsResponse> ListBusinessDetailsAsync(ListBusinessDetailsRequest request, CancellationToken cancellationToken = default) {
+      return ListBusinessDetailsAsync(request, null, cancellationToken);
     }
   }
 }

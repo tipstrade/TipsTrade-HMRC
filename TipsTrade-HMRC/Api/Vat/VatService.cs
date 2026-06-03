@@ -31,62 +31,82 @@ namespace TipsTrade.HMRC.Api.Vat {
 
     /// <summary>Retrieve VAT liabilities.</summary>
     [Obsolete("Use GetLiabilitiesAsync instead. Synchronous methods may cause deadlocks.")]
-    public LiabilitiesResponse GetLiabilities(LiabilitiesRequest request) {
-      var restRequest = CreateRequest(request);
-      return ExecuteRequest<LiabilitiesResponse>(restRequest);
+    public LiabilitiesResponse GetLiabilities(LiabilitiesRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<LiabilitiesResponse>(request, fraudPrevention);
     }
 
     /// <summary>Retrieve VAT obligations.</summary>
     [Obsolete("Use GetObligationsAsync instead. Synchronous methods may cause deadlocks.")]
-    public ObligationResponse GetObligations(ObligationsRequest request) {
-      var restRequest = CreateRequest(request);
-      return ExecuteRequest<ObligationResponse>(restRequest);
+    public ObligationResponse GetObligations(ObligationsRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<ObligationResponse>(request, fraudPrevention);
     }
 
     /// <summary>Retrieve VAT payments.</summary>
     [Obsolete("Use GetPaymentsAsync instead. Synchronous methods may cause deadlocks.")]
-    public PaymentsResponse GetPayments(PaymentsRequest request) {
-      var restRequest = CreateRequest(request);
-      return ExecuteRequest<PaymentsResponse>(restRequest);
+    public PaymentsResponse GetPayments(PaymentsRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<PaymentsResponse>(request, fraudPrevention);
     }
 
     /// <summary>Retrieve a submitted VAT return.</summary>
     [Obsolete("Use GetReturnAsync instead. Synchronous methods may cause deadlocks.")]
-    public ReturnResponse GetReturn(ReturnRequest request) {
-      var restRequest = CreateRequest(request);
-      return ExecuteRequest<ReturnResponse>(restRequest);
+    public ReturnResponse GetReturn(ReturnRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<ReturnResponse>(request, fraudPrevention);
     }
 
     /// <summary>Submit VAT return for period.</summary>
     [Obsolete("Use SubmitReturnAsync instead. Synchronous methods may cause deadlocks.")]
-    public SubmitResponse SubmitReturn(SubmitRequest request) {
-      var restRequest = CreateRequest(request);
-      return ExecuteRequest<SubmitResponse>(restRequest);
+    public SubmitResponse SubmitReturn(SubmitRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<SubmitResponse>(request, fraudPrevention);
     }
 
     /// <summary>Retrieve VAT liabilities asynchronously.</summary>
-    public async Task<LiabilitiesResponse> GetLiabilitiesAsync(LiabilitiesRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<LiabilitiesResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<LiabilitiesResponse> GetLiabilitiesAsync(LiabilitiesRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<LiabilitiesResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Retrieve VAT liabilities asynchronously.</summary>
+    public Task<LiabilitiesResponse> GetLiabilitiesAsync(LiabilitiesRequest request, CancellationToken cancellationToken = default) {
+      return GetLiabilitiesAsync(request, null, cancellationToken);
     }
 
     /// <summary>Retrieve VAT obligations asynchronously.</summary>
-    public async Task<ObligationResponse> GetObligationsAsync(ObligationsRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<ObligationResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<ObligationResponse> GetObligationsAsync(ObligationsRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<ObligationResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Retrieve VAT obligations asynchronously.</summary>
+    public Task<ObligationResponse> GetObligationsAsync(ObligationsRequest request, CancellationToken cancellationToken = default) {
+      return GetObligationsAsync(request, null, cancellationToken);
     }
 
     /// <summary>Retrieve VAT payments asynchronously.</summary>
-    public async Task<PaymentsResponse> GetPaymentsAsync(PaymentsRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<PaymentsResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<PaymentsResponse> GetPaymentsAsync(PaymentsRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<PaymentsResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Retrieve VAT payments asynchronously.</summary>
+    public Task<PaymentsResponse> GetPaymentsAsync(PaymentsRequest request, CancellationToken cancellationToken = default) {
+      return GetPaymentsAsync(request, null, cancellationToken);
     }
 
     /// <summary>Retrieve a submitted VAT return asynchronously.</summary>
-    public async Task<ReturnResponse> GetReturnAsync(ReturnRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<ReturnResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<ReturnResponse> GetReturnAsync(ReturnRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<ReturnResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Retrieve a submitted VAT return asynchronously.</summary>
+    public Task<ReturnResponse> GetReturnAsync(ReturnRequest request, CancellationToken cancellationToken = default) {
+      return GetReturnAsync(request, null, cancellationToken);
     }
 
     /// <summary>Submit VAT return for period asynchronously.</summary>
-    public async Task<SubmitResponse> SubmitReturnAsync(SubmitRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<SubmitResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<SubmitResponse> SubmitReturnAsync(SubmitRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<SubmitResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Submit VAT return for period asynchronously.</summary>
+    public Task<SubmitResponse> SubmitReturnAsync(SubmitRequest request, CancellationToken cancellationToken = default) {
+      return SubmitReturnAsync(request, null, cancellationToken);
     }
   }
 }

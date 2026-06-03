@@ -141,7 +141,12 @@ namespace TipsTrade.HMRC.Api.OAuth {
       var response = await this.GetRestClient().ExecuteAsync<TokenResponse>(request, cancellationToken).ConfigureAwait(false);
       response.ThrowOnError();
 
-      return response.Data ?? throw new ApiException("Failed to obtain user tokens.");
+      return response.Data ?? throw new ApiException("Failed to obtain user tokens.") {
+        Data = {
+          { "Request", request },
+          { "Response", response }
+        }
+      };
     }
 
     /// <summary>
@@ -156,12 +161,14 @@ namespace TipsTrade.HMRC.Api.OAuth {
         // This wraps the tenant retrieval in a try/catch to convert any exceptions into ApiExceptions with additional context for easier debugging.
         tenantId = await TenantProvider.GetTenantOrThrowAsync(cancellationToken).ConfigureAwait(false);
       } catch (InvalidOperationException ex) {
-        throw new ApiException("No tenant could be identified for the current context.", ex);
+        throw new ApiException("No tenant could be identified for the current context.", ex) {
+          Data = { { "TenantId", tenantId } }
+        };
       }
 
       try {
         // This wraps the token retrieval in a try/catch to convert any exceptions into ApiExceptions with additional context about the tenant for easier debugging.
-        var token = await AccessTokenProvider.GetCredentialOrThrowAsync(tenantId, cancellationToken).ConfigureAwait (false);
+        var token = await AccessTokenProvider.GetCredentialOrThrowAsync(tenantId, cancellationToken).ConfigureAwait(false);
 
         if (token == null) {
           return (false, false, TimeSpan.Zero);
@@ -184,7 +191,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
     /// <returns>A <see cref="TokenResponse"/> containing the new access token and optionally a new refresh token.</returns>
     /// <exception cref="ArgumentException">Thrown when the provided refresh token is null or empty.</exception>
     /// <exception cref="ApiException">Thrown when an error occurs while refreshing the access token.</exception>
-    public async Task<TokenResponse> RefreshAccessTokenAsync(string refreshToken, CancellationToken cancellationToken) {
+    public async Task<TokenResponse> RefreshAccessTokenAsync(string refreshToken, CancellationToken cancellationToken = default) {
       if (string.IsNullOrEmpty(refreshToken)) {
         throw new ArgumentException($"{nameof(refreshToken)} cannot be empty.", nameof(refreshToken));
       }
@@ -203,13 +210,22 @@ namespace TipsTrade.HMRC.Api.OAuth {
       if (oauthError != null) {
         throw new ApiException(oauthError?.Message ?? "OAuth2 error occurred.") {
           ApiError = oauthError,
-          Status = response?.StatusCode
+          Status = response?.StatusCode,
+          Data = {
+            { "Request", request },
+            { "Response", response   }
+          }
         };
       }
 
       response.ThrowOnError();
 
-      return response.Data ?? throw new ApiException("Failed to obtain user tokens.");
+      return response.Data ?? throw new ApiException("Failed to obtain user tokens.") {
+        Data = {
+          { "Request", request },
+          { "Response", response }
+        }
+      };
     }
   }
 }

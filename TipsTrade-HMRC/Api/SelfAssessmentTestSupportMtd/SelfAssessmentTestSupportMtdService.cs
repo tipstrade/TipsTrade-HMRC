@@ -37,7 +37,7 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
     /// <summary>Delete stateful test data using a request object.</summary>
     [Obsolete("Use DeleteStatefulTestDataAsync instead. Synchronous methods may cause deadlocks.")]
     public DeleteStatefulTestDataResponse DeleteStatefulTestData(DeleteStatefulTestDataRequest request) {
-      return ExecuteRequest<DeleteStatefulTestDataResponse>(request);
+      return ExecuteRequest<DeleteStatefulTestDataResponse>(request, null);
     }
 
     /// <summary>Asynchronously delete stateful test data, optionally scoped to a National Insurance number.</summary>
@@ -47,29 +47,29 @@ namespace TipsTrade.HMRC.Api.SelfAssessmentTestSupportMtd {
 
     /// <summary>Asynchronously delete stateful test data using a request object.</summary>
     public async Task<DeleteStatefulTestDataResponse> DeleteStatefulTestDataAsync(DeleteStatefulTestDataRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<DeleteStatefulTestDataResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<DeleteStatefulTestDataResponse>(request, null, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Create a test business income source for use within the sandbox environment.</summary>
     [Obsolete("Use CreateBusinessIncomeSourceAsync instead. Synchronous methods may cause deadlocks.")]
     public CreateTestBusinessResponse CreateBusinessIncomeSource(CreateTestBusinessRequest request) {
-      return ExecuteRequest<CreateTestBusinessResponse>(request);
+      return ExecuteRequest<CreateTestBusinessResponse>(request, null);
     }
 
     /// <summary>Asynchronously create a test business income source for use within the sandbox environment.</summary>
     public async Task<CreateTestBusinessResponse> CreateBusinessIncomeSourceAsync(CreateTestBusinessRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<CreateTestBusinessResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<CreateTestBusinessResponse>(request, null, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Create or amend a test ITSA status for a specified customer.</summary>
     [Obsolete("Use CreateTestItsaStatusAsync instead. Synchronous methods may cause deadlocks.")]
     public CreateTestItsaStatusResponse CreateTestItsaStatus(CreateTestItsaStatusRequest request) {
-      return ExecuteRequest<CreateTestItsaStatusResponse>(request);
+      return ExecuteRequest<CreateTestItsaStatusResponse>(request, null);
     }
 
     /// <summary>Asynchronously create or amend a test ITSA status for a specified customer.</summary>
     public async Task<CreateTestItsaStatusResponse> CreateTestItsaStatusAsync(CreateTestItsaStatusRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<CreateTestItsaStatusResponse>(request, cancellationToken).ConfigureAwait(false);
+      return await ExecuteRequestAsync<CreateTestItsaStatusResponse>(request, null, cancellationToken).ConfigureAwait(false);
     }
   }
 }

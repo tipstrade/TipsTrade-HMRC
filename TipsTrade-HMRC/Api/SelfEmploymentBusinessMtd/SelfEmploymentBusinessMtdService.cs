@@ -31,24 +31,34 @@ namespace TipsTrade.HMRC.Api.SelfEmploymentBusinessMtd {
 
     /// <summary>Submit or amend the cumulative period income and expenses for a self-employment business.</summary>
     [Obsolete("Use CreateOrAmendCumulativePeriodSummaryAsync instead. Synchronous methods may cause deadlocks.")]
-    public AmendCumulativePeriodSummaryResponse CreateOrAmendCumulativePeriodSummary(AmendCumulativePeriodSummaryRequest request) {
-      return ExecuteRequest<AmendCumulativePeriodSummaryResponse>(request);
+    public AmendCumulativePeriodSummaryResponse CreateOrAmendCumulativePeriodSummary(AmendCumulativePeriodSummaryRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<AmendCumulativePeriodSummaryResponse>(request, fraudPrevention);
     }
 
     /// <summary>Asynchronously submit or amend the cumulative period income and expenses for a self-employment business.</summary>
-    public async Task<AmendCumulativePeriodSummaryResponse> CreateOrAmendCumulativePeriodSummaryAsync(AmendCumulativePeriodSummaryRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<AmendCumulativePeriodSummaryResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<AmendCumulativePeriodSummaryResponse> CreateOrAmendCumulativePeriodSummaryAsync(AmendCumulativePeriodSummaryRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<AmendCumulativePeriodSummaryResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Asynchronously submit or amend the cumulative period income and expenses for a self-employment business.</summary>
+    public Task<AmendCumulativePeriodSummaryResponse> CreateOrAmendCumulativePeriodSummaryAsync(AmendCumulativePeriodSummaryRequest request, CancellationToken cancellationToken = default) {
+      return CreateOrAmendCumulativePeriodSummaryAsync(request, null, cancellationToken);
     }
 
     /// <summary>Retrieve the cumulative period income and expenses for a self-employment business.</summary>
     [Obsolete("Use GetCumulativePeriodSummaryAsync instead. Synchronous methods may cause deadlocks.")]
-    public GetCumulativePeriodSummaryResponse GetCumulativePeriodSummary(GetCumulativePeriodSummaryRequest request) {
-      return ExecuteRequest<GetCumulativePeriodSummaryResponse>(request);
+    public GetCumulativePeriodSummaryResponse GetCumulativePeriodSummary(GetCumulativePeriodSummaryRequest request, IFraudPrevention? fraudPrevention = null) {
+      return ExecuteRequest<GetCumulativePeriodSummaryResponse>(request, fraudPrevention);
     }
 
     /// <summary>Asynchronously retrieve the cumulative period income and expenses for a self-employment business.</summary>
-    public async Task<GetCumulativePeriodSummaryResponse> GetCumulativePeriodSummaryAsync(GetCumulativePeriodSummaryRequest request, CancellationToken cancellationToken = default) {
-      return await ExecuteRequestAsync<GetCumulativePeriodSummaryResponse>(request, cancellationToken).ConfigureAwait(false);
+    public async Task<GetCumulativePeriodSummaryResponse> GetCumulativePeriodSummaryAsync(GetCumulativePeriodSummaryRequest request, IFraudPrevention? fraudPrevention, CancellationToken cancellationToken = default) {
+      return await ExecuteRequestAsync<GetCumulativePeriodSummaryResponse>(request, fraudPrevention, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Asynchronously retrieve the cumulative period income and expenses for a self-employment business.</summary>
+    public Task<GetCumulativePeriodSummaryResponse> GetCumulativePeriodSummaryAsync(GetCumulativePeriodSummaryRequest request, CancellationToken cancellationToken = default) {
+      return GetCumulativePeriodSummaryAsync(request, null, cancellationToken);
     }
   }
 }
