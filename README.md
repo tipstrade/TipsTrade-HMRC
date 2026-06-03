@@ -22,7 +22,7 @@ The following services are currently supported:
 
 ### v.8.10.x
 
-In order to keep the major version in sync with the .NET target version, this release includes breaking changes. The following changes were made in `8.10.0`:
+In order to keep the major version in sync with the .NET target version, this release includes major breaking changes. The following changes were made in `8.10.0`:
 
 * Service-based refactor (see below) which removes the old API wrapper layer and introduces service classes for each API.
 * `*Api` types have been replaced by `*Service` types (for example, `VatApi` -> `VatService`, `HelloWorldApi` -> `HelloWorldService`).
@@ -32,6 +32,7 @@ In order to keep the major version in sync with the .NET target version, this re
 * DI registration is now available via `ServiceCollection` extension methods (`AddHmrc(...)` and per-service add methods).
 * The `AntiFraud` namespace and related types have been replaced by the `FraudPrevention` namespace. Fraud prevention is now configured via `HmrcOptions.FraudPreventionConfig` using an `IFraudPrevention` implementation (e.g. `BatchProcessDirect`, `DesktopAppDirect`).
 * The `ServerToken` has been removed. Access tokens must now be obtained via `HmrcOAuthService` and an `IHmrcAccessTokenProvider` implementation.
+* The `TokenResponse.ExpiresTimestamp` has been removed and replaced by `TokenResponse.CreatedAt` to ensure persistence of the validity period of refresh tokens.
 
 ## HMRC Developer Account
 A HMRC developer account is required - [Login Here][1]. To make requests you need to create an application which provides:
