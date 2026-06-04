@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TipsTrade.HMRC.Api.Model;
+using TipsTrade.HMRC.Api.OAuth;
+using TipsTrade.HMRC.Api.Vat;
 using TipsTrade.HMRC.Extensions;
 
 namespace TipsTrade.HMRC.Tests {
@@ -65,6 +67,44 @@ namespace TipsTrade.HMRC.Tests {
 
       Assert.That(client.Timeout, Is.EqualTo(TimeSpan.FromSeconds(123)));
       ConfigureHttpClientMock.Verify(c => c(It.IsAny<HttpClient>()), Times.Once);
+    }
+
+    [Test]
+    public async Task TenantProvider_IsCalled() {
+      var expectedTenantId = "tenant_id";
+      var expectedTokenResponse = new TokenResponse {
+        AccessToken = "access_token",
+        CreatedAt = DateTime.UtcNow,
+        ExpiresIn = 3600,
+        RefreshToken = "refresh_token",
+        Scope = "scope",
+        TokenType = "Bearer"
+      };
+
+      var tenantProviderMock = new Mock<IHmrcTenantProvider>();
+      tenantProviderMock.Setup(m => m.GetTenantAsync(It.IsAny<CancellationToken>())).ReturnsAsync(expectedTenantId);
+
+      Services.AddScoped(_ => tenantProviderMock.Object);
+      Services.AddHmrc<MockedAccessTokenProvider>(ConfigureOptionsMock.Object);
+
+      var serviceProvider = Services.BuildServiceProvider();
+      var accessTokenProvider = (MockedAccessTokenProvider)serviceProvider.GetRequiredService<IHmrcAccessTokenProvider>();
+      var oauthService = serviceProvider.GetRequiredService<HmrcOAuthService>();
+
+      accessTokenProvider.GetCredentialAsyncMock.Setup(m => m(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+        .ReturnsAsync((string key, CancellationToken cancellationToken) => {
+          // Verify that the tenant provider is called to get the tenant ID, and that the tenant ID is included in the key used to get the credential.
+          Assert.That(key, Does.Contain(expectedTenantId));
+
+          return expectedTokenResponse;
+        });
+
+      var resp = await oauthService.CheckUserAuthenticationStateAsync();
+
+      Assert.That(resp.IsValid, Is.True);
+      tenantProviderMock.Verify(m => m.GetTenantAsync(It.IsAny<CancellationToken>()), Times.Once);
+      accessTokenProvider.GetCredentialAsyncMock.Verify(m => m(It.Is<string>(k => k == expectedTenantId), It.IsAny<CancellationToken>()), Times.Once);
+
     }
 
     public class MockedAccessTokenProvider : IHmrcAccessTokenProvider {

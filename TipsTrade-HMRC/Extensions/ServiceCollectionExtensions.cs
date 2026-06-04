@@ -190,7 +190,7 @@ namespace TipsTrade.HMRC.Extensions {
         throw new ArgumentNullException(nameof(services));
       }
 
-      services.AddScoped<T>();
+      services.AddScoped<IHmrcTenantProvider, T>();
 
       return services;
     }
