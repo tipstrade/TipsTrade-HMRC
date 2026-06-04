@@ -130,14 +130,9 @@ namespace TipsTrade.HMRC.Api {
         }
       } catch { }
 
-      throw new ApiException(error?.Message ?? response?.StatusDescription ?? "", response?.ErrorException) {
+      throw new ApiException(error?.Message ?? response?.StatusDescription ?? "An unexpected error occurred.", response?.ErrorException) {
         Status = response?.StatusCode,
-        ApiError = error,
-        Data = {
-          { "Request", response?.Request },
-          { "Response", response }
-        }
-      };
+      }.AddApiError(error).AddResponseData(response);
     }
 
     /// <summary>

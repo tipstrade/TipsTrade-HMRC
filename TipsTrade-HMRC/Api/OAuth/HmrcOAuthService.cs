@@ -139,12 +139,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
       var response = await RestClient.Value.ExecuteAsync<TokenResponse>(request, cancellationToken).ConfigureAwait(false);
       response.ThrowOnError();
 
-      return response.Data ?? throw new ApiException("Failed to obtain user tokens.") {
-        Data = {
-          { "Request", request },
-          { "Response", response }
-        }
-      };
+      return response.Data ?? throw new ApiException("Failed to obtain user tokens.").AddResponseData(response);
     }
 
     /// <summary>
@@ -159,9 +154,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
         // This wraps the tenant retrieval in a try/catch to convert any exceptions into ApiExceptions with additional context for easier debugging.
         tenantId = await TenantProvider.GetTenantOrThrowAsync(cancellationToken).ConfigureAwait(false);
       } catch (InvalidOperationException ex) {
-        throw new ApiException("No tenant could be identified for the current context.", ex) {
-          Data = { { "TenantId", tenantId } }
-        };
+        throw new ApiException("No tenant could be identified for the current context.", ex).AddTenantId(tenantId);
       }
 
       try {
@@ -175,9 +168,7 @@ namespace TipsTrade.HMRC.Api.OAuth {
           return (true, expiresIn > TimeSpan.Zero, expiresIn > TimeSpan.Zero ? expiresIn : TimeSpan.Zero);
         }
       } catch (InvalidOperationException ex) {
-        throw new ApiException("Failed to obtain access token.", ex) {
-          Data = { { "TenantId", tenantId } }
-        };
+        throw new ApiException("Failed to obtain access token.", ex).AddTenantId(tenantId);
       }
     }
 
@@ -206,24 +197,12 @@ namespace TipsTrade.HMRC.Api.OAuth {
 
       var oauthError = response.Content != null ? ErrorResponse.FromOAuth2Error(response.Content) : null;
       if (oauthError != null) {
-        throw new ApiException(oauthError?.Message ?? "OAuth2 error occurred.") {
-          ApiError = oauthError,
-          Status = response?.StatusCode,
-          Data = {
-            { "Request", request },
-            { "Response", response   }
-          }
-        };
+        throw new ApiException(oauthError?.Message ?? "OAuth2 error occurred.").AddApiError(oauthError).AddResponseData(response);
       }
 
       response.ThrowOnError();
 
-      return response.Data ?? throw new ApiException("Failed to obtain user tokens.") {
-        Data = {
-          { "Request", request },
-          { "Response", response }
-        }
-      };
+      return response.Data ?? throw new ApiException("Failed to obtain user tokens.").AddResponseData(response);
     }
   }
 }

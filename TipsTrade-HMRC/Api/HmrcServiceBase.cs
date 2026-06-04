@@ -145,11 +145,8 @@ namespace TipsTrade.HMRC.Api {
         var config = fraudPreventionConfig ?? options.FraudPreventionConfig;
 
         if (config == null) {
-          throw new ApiException("The request requires fraud prevention headers, but the client's FraudPrevention configuration is null and no custom fraud prevention was supplied.") {
-            Data = {
-              { "Request", request },
-            }
-          };
+          throw new ApiException("The request requires fraud prevention headers, but the client's FraudPrevention configuration is null and no custom fraud prevention was supplied.")
+            .AddRequestData(restRequest);
         }
 
         config.AddHeadersToRequest(restRequest);
@@ -297,24 +294,12 @@ namespace TipsTrade.HMRC.Api {
 
         var oauthError = response.Content != null ? ErrorResponse.FromOAuth2Error(response.Content) : null;
         if (oauthError != null) {
-          throw new ApiException(oauthError?.Message ?? "OAuth2 error occurred.") {
-            ApiError = oauthError,
-            Status = response?.StatusCode,
-            Data = {
-              { "Request", request },
-              { "Response", response }
-            }
-          };
+          throw new ApiException(oauthError?.Message ?? "OAuth2 error occurred.").AddApiError(oauthError).AddResponseData(response);
         }
 
         response.ThrowOnError();
 
-        var token = response.Data ?? throw new ApiException("Failed to obtain application token.") {
-          Data = {
-            { "Request", request },
-            { "Response", response }
-          }
-        };
+        var token = response.Data ?? throw new ApiException("Failed to obtain application token.").AddResponseData(response);
         ApplicationTokenCache.Set(clientId, token);
 
         return token.AccessToken;

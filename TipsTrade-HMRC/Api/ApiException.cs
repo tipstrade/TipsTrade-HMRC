@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RestSharp;
+using System;
+using System.Linq;
 using System.Net;
 using TipsTrade.HMRC.Api.Model;
 
@@ -36,6 +38,60 @@ namespace TipsTrade.HMRC.Api {
 
     /// <summary>Initializes a new instance of the TipsTrade.HMRC.Api.ApiException class with a specified error message.</summary>
     public ApiException(string message, Exception? innerException) : base(message, innerException) {
+    }
+  }
+
+  internal static class ApiExceptionExtensions {
+    public static ApiException AddApiError(this ApiException exception, ErrorResponse? apiError) {
+      if (exception == null) {
+        throw new ArgumentNullException(nameof(exception));
+      }
+
+      exception.ApiError = apiError;
+
+      return exception;
+    }
+
+    public static ApiException AddRequestData(this ApiException exception, RestRequest? request) {
+      if (exception == null) {
+        throw new ArgumentNullException(nameof(exception));
+      }
+
+      if (request != null) {
+        exception.Data.Add("RequestMethod", request.Method);
+        exception.Data.Add("RequestUri", request.Resource);
+        exception.Data.Add("ParameterNames", string.Join(", ", request.Parameters.Select(x => x.Name)));
+      }
+
+      return exception;
+    }
+
+    public static ApiException AddResponseData(this ApiException exception, RestResponse? response) {
+      if (exception == null) {
+        throw new ArgumentNullException(nameof(exception));
+      }
+
+      if (response != null) {
+        if (exception.Status == null) {
+          exception.Status = response.StatusCode;
+        }
+
+        exception.Data.Add("ResponseContent", response.Content);
+      }
+
+      return exception.AddRequestData(response?.Request);
+    }
+
+    public static ApiException AddTenantId(this ApiException exception, string? tenantId) {
+      if (exception == null) {
+        throw new ArgumentNullException(nameof(exception));
+      }
+
+      if (tenantId != null) {
+        exception.Data.Add("TenantId", tenantId);
+      }
+
+      return exception;
     }
   }
 }
