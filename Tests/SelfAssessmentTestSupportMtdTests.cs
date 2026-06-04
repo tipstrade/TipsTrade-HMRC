@@ -67,7 +67,7 @@ namespace TipsTrade.HMRC.Tests {
         TaxYear = DateTime.Now.GetTaxYear(),
         ItsaStatusDetails = [
           new ItsaStatusDetails {
-            SubmittedOnDate = DateTime.Now.GetTaxYearStart().AddMonths(-1),
+            SubmittedOnDate = DateTime.Now.GetTaxYearStart().AddMonths(1),
             Status = ItsaStatus.MtdMandated,
             StatusReason = ItsaStatusReasons.SignUpReturnAvailable
           }
