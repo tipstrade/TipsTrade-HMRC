@@ -219,7 +219,7 @@ namespace TipsTrade.HMRC.Tests {
       }
 
       if (headers is IVendorProductName vendorProductName) {
-        vendorProductName.VendorProductName = "TipsTrade.HMRC.Tests";
+        vendorProductName.VendorProductName = "TipsTrade.HMRC.Tests&Version x.y.z";
       }
 
       if (headers is IVendorPublicIP vendorPublicIP) {
