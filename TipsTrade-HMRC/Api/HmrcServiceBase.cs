@@ -17,7 +17,9 @@ namespace TipsTrade.HMRC.Api {
   /// <summary>Base class for all HMRC API services, providing shared configuration and token management.</summary>
   public abstract class HmrcServiceBase : IWithLogger {
     #region Fields
-    private static readonly AsyncKeyedLocker<string> _tokenLocks = new AsyncKeyedLocker<string>();
+    private static readonly AsyncKeyedLocker<string> _applicationTokenLocks = new AsyncKeyedLocker<string>();
+
+    private static readonly AsyncKeyedLocker<string> _userTokenLocks = new AsyncKeyedLocker<string>();
     #endregion
 
     #region Lifecycle
@@ -256,7 +258,21 @@ namespace TipsTrade.HMRC.Api {
       }
 
       if (token.HasAccessTokenExpired()) {
-        token = await OauthService.RefreshAccessTokenAsync(token.RefreshToken, cancellationToken).ConfigureAwait(false);
+        using (await _userTokenLocks.LockAsync(tenantId, cancellationToken).ConfigureAwait(false)) {
+          // Fetch the token again inside the lock in case another thread already refreshed it while we were waiting
+          token = await AccessTokenProvider.GetCredentialAsync(tenantId, cancellationToken).ConfigureAwait(false);
+
+          if (token == null) {
+            Logger?.LogInformation("No access token found for tenant '{TenantId}'.", tenantId);
+            throw new ApiException("No access token found. Ensure that the tenant has been configured with valid credentials.");
+          }
+
+          if (token.HasAccessTokenExpired()) {
+            token = await OauthService.RefreshAccessTokenAsync(token.RefreshToken, cancellationToken).ConfigureAwait(false);
+
+            await AccessTokenProvider.SetCredentialAsync(tenantId, token, cancellationToken).ConfigureAwait(false);
+          }
+        }
       }
 
       return token.AccessToken;
@@ -277,7 +293,7 @@ namespace TipsTrade.HMRC.Api {
         return cached.AccessToken;
       }
 
-      using (await _tokenLocks.LockAsync(clientId, cancellationToken)) {
+      using (await _applicationTokenLocks.LockAsync(clientId, cancellationToken).ConfigureAwait(false)) {
         // Check the cache again inside the lock in case another thread already refreshed the token while we were waiting
         cached = ApplicationTokenCache.Get(clientId);
         if (cached != null) {
