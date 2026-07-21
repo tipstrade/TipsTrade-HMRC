@@ -142,6 +142,9 @@ services.AddHmrcAccessTokenProvider<MyAccessTokenProvider>();
 // Or register a custom options provider to dynamically supply HmrcOptions
 services.AddHmrcOptionsProvider<MyOptionsProvider>();
 
+// Optionally register a tenant provider for multi-tenant applications
+services.AddHmrcTenantProvider<MyTenantProvider>();
+
 services.AddBusinessDetailsMtdService();
 services.AddCreateTestUserService();
 services.AddHelloWorldService();
@@ -174,6 +177,31 @@ services.AddHmrcOptionsProvider<MyOptionsProvider>();
 ```
 
 The built-in `HmrcOptionsProvider` class is used by default when options are configured via `IOptions<HmrcOptions>` (e.g. via `AddHmrc`).
+
+### Tenant resolution
+
+HMRC services use a tenant value when retrieving credentials from `IHmrcAccessTokenProvider`. Multi-tenant applications can implement `IHmrcTenantProvider` and register it with `AddHmrcTenantProvider<T>`:
+
+```csharp
+public class MyTenantProvider : IHmrcTenantProvider {
+  public Task<string> GetTenantAsync(CancellationToken cancellationToken = default) {
+    return Task.FromResult("current-tenant");
+  }
+}
+
+services.AddHmrcTenantProvider<MyTenantProvider>();
+```
+
+The tenant can also be set directly on an individual service instance. A non-empty `Tenant` value takes precedence over the registered tenant provider; when it is `null` or empty, the provider is used instead:
+
+```csharp
+var vatService = serviceProvider.GetRequiredService<VatService>();
+vatService.Tenant = "tenant-override";
+
+var obligations = await vatService.GetObligationsAsync(obRequest);
+```
+
+If no custom tenant provider or service override is supplied, the built-in provider uses the default single-tenant context.
 
 ## OAuth
 To authenticate a user, build the authorization URL and navigate the user to it. After the user authenticates, handle the redirect URI to obtain `TokenResponse` (access + refresh tokens). `HmrcOAuthService` exposes `GetAuthorizationEndpoint` and `HandleEndpointResultAsync` to help with this flow.

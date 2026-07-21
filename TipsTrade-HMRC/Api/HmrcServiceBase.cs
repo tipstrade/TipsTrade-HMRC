@@ -69,8 +69,14 @@ namespace TipsTrade.HMRC.Api {
     private Lazy<RestClient> RestClient { get; }
 
     /// <summary>
+    /// The tenant for the current context, used in multi-tenant applications to identify which tenant's data is being accessed.
+    /// </summary>
+    /// <remarks>If not provided, the tenant provider will be used.</remarks>
+    public string? Tenant { get; set; } = null;
+
+    /// <summary>
     /// An optional provider for resolving the tenant context in multi-tenant applications.
-    /// If not supplied, a default implementation is used that returns a single default tenant ID, effectively treating the application as single-tenant.
+    /// If not supplied, a default implementation is used that returns a single default tenant, effectively treating the application as single-tenant.
     /// </summary>
     private IHmrcTenantProvider? TenantProvider { get; }
     #endregion
@@ -235,9 +241,15 @@ namespace TipsTrade.HMRC.Api {
     }
 
     /// <summary>
-    /// Gets the tenant ID for the current context using the tenant provider, or "(default)" if no tenant provider is configured.
+    /// Gets the tenant for the current context, either from the <see cref="Tenant"/> property or from the <see cref="IHmrcTenantProvider"/>.
     /// </summary>
-    protected async Task<string> GetTenantAsync(CancellationToken cancellationToken) {
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>The tenant for the current context.</returns>
+    internal async Task<string> GetTenantAsync(CancellationToken cancellationToken) {
+      if (!string.IsNullOrEmpty(Tenant)) {
+        return Tenant!;
+      }
+
       return await TenantProvider.GetTenantOrDefaultAsync(cancellationToken);
     }
 
